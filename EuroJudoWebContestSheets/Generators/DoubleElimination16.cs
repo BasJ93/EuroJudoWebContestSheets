@@ -8,7 +8,17 @@ namespace EuroJudoWebContestSheets.Generators
 {
     public class DoubleElimination16 : GenerateSVG
     {
-        public override string GenerateImage(Category category)
+        private string _Image;
+
+        public override string Image
+        {
+            get
+            {
+                return _Image;
+            }
+        }
+
+        public DoubleElimination16(Category category)
         {
             string SVG = "";
 
@@ -159,7 +169,7 @@ namespace EuroJudoWebContestSheets.Generators
             SVG = SVG + "<text x=\"1232\" y=\"445\" fill=\"black\">16</text>";
             SVG = SVG + "</svg>";
 
-            return SVG;
+            _Image = SVG;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace EuroJudoWebContestSheets.Controllers
                     }
                 }
             };
-            ViewBag.SVGText = Generators.GenerateSVG.GenerateSVGImage(test);
+            ViewBag.SVGText = Generators.SVGFactory.Get(test);
             return View();//Ok();//(Generators.SVGGenerator(1), "image/svg+xml");
         }
 
