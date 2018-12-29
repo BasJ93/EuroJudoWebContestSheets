@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace EuroJudoWebContestSheets.Models
 {
     public class Category
     {
+        //Perhaps a property for the contests for 9th and 11th place.
         public int ID { get; set; }
         public int TournamentID { get; set; }
         public string CategoryName { get; set; }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace EuroJudoWebContestSheets.Generators
 {
-    public class DoubleElimination16 : GenerateSVG
+    public class DoubleElimination32 : GenerateSVG
     {
         private string _Image;
 
@@ -15,7 +15,8 @@ namespace EuroJudoWebContestSheets.Generators
             }
         }
 
-        public DoubleElimination16(Category category)
+        //@TODO: Extend to 32 compeditors.
+        public DoubleElimination32(Category category)
         {
             string SVG = "";
 
