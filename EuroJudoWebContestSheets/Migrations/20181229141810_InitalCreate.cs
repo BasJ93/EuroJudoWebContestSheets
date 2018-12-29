@@ -2,7 +2,7 @@
 
 namespace EuroJudoWebContestSheets.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitalCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,6 +12,7 @@ namespace EuroJudoWebContestSheets.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    TournamentID = table.Column<int>(nullable: false),
                     CategoryName = table.Column<string>(nullable: true),
                     SheetSize = table.Column<int>(nullable: false)
                 },
@@ -48,7 +49,7 @@ namespace EuroJudoWebContestSheets.Migrations
                     WazaariWhite = table.Column<int>(nullable: false),
                     ShidoWhite = table.Column<int>(nullable: false),
                     IponBlue = table.Column<int>(nullable: false),
-                    WazaarieBlue = table.Column<int>(nullable: false),
+                    WazaariBlue = table.Column<int>(nullable: false),
                     ShidoBlue = table.Column<int>(nullable: false),
                     ShowSimpleScore = table.Column<bool>(nullable: false)
                 },

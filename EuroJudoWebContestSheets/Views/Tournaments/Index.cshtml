@@ -6,3 +6,7 @@
 
 <h2>Index</h2>
 
+@foreach(Tournament tournament in ViewBag.Tournaments)
+{
+    <a href="tournaments/Categories?tournamentID=@tournament.ID">@tournament.TournamentName</a>
+}

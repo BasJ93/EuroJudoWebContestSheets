@@ -24,6 +24,8 @@ namespace EuroJudoWebContestSheets.Migrations
 
                     b.Property<int>("SheetSize");
 
+                    b.Property<int>("TournamentID");
+
                     b.HasKey("ID");
 
                     b.ToTable("Categories");
@@ -54,9 +56,9 @@ namespace EuroJudoWebContestSheets.Migrations
 
                     b.Property<int>("TournamentID");
 
-                    b.Property<int>("WazaariWhite");
+                    b.Property<int>("WazaariBlue");
 
-                    b.Property<int>("WazaarieBlue");
+                    b.Property<int>("WazaariWhite");
 
                     b.HasKey("ID");
 

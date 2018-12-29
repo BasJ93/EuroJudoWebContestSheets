@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EuroJudoWebContestSheets.Migrations
 {
     [DbContext(typeof(dbContext))]
-    [Migration("20181111160858_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20181229141810_InitalCreate")]
+    partial class InitalCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,6 +25,8 @@ namespace EuroJudoWebContestSheets.Migrations
                     b.Property<string>("CategoryName");
 
                     b.Property<int>("SheetSize");
+
+                    b.Property<int>("TournamentID");
 
                     b.HasKey("ID");
 
@@ -56,9 +58,9 @@ namespace EuroJudoWebContestSheets.Migrations
 
                     b.Property<int>("TournamentID");
 
-                    b.Property<int>("WazaariWhite");
+                    b.Property<int>("WazaariBlue");
 
-                    b.Property<int>("WazaarieBlue");
+                    b.Property<int>("WazaariWhite");
 
                     b.HasKey("ID");
 

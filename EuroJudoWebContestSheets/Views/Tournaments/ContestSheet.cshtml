@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Html
+@{
+    ViewData["Title"] = ViewBag.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var categoryID = @ViewBag.CategoryID;
+    var tournamentID = @ViewBag.TournamentID;
+</script>
+
+<!--Show the name of the category as the heading.-->
+<h2>@ViewBag.Title</h2>
+
+@(new HtmlString(ViewBag.SVGText))
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/category.js"></script>

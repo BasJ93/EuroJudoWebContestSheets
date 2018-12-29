@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using EuroJudoWebContestSheets.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using EuroJudoWebContestSheets.Hubs;
 
 namespace EuroJudoWebContestSheets.Controllers
 {
@@ -11,12 +15,14 @@ namespace EuroJudoWebContestSheets.Controllers
     {
 
         dbContext _db;
+        private readonly IHubContext<TournamentHub> _hub;
 
         //Create a partial view for the navbar, so that it can be filled based on the data.
 
-        public TournamentsController(dbContext db)
+        public TournamentsController(dbContext db, IHubContext<TournamentHub> hub)
         {
             _db = db;
+            _hub = hub;
         }
 
         [HttpGet]
@@ -27,6 +33,102 @@ namespace EuroJudoWebContestSheets.Controllers
         }
 
         [HttpGet]
+        public IActionResult Categories([FromQuery] int tournamentID)
+        {
+            ViewBag.Categories = _db.Categories.Where(o => o.TournamentID == tournamentID).ToList();
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ContestSheet([FromQuery] int tID, [FromQuery] int cID)
+        {
+            Category category = await _db.Categories.Include(o => o.SheetData).Where(o => o.ID == cID && o.TournamentID == tID).FirstOrDefaultAsync();
+            ViewBag.Title = category.CategoryName;
+            ViewBag.CategoryID = category.ID;
+            ViewBag.TournamentID = category.TournamentID;
+            ViewBag.SVGText = Generators.SVGFactory.Get(category);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetContestSheetData([FromQuery] int TournamentId)
+        {
+            List<ContestSheetData> sheetData = _db.ContestSheetData.Where(o => o.TournamentID == TournamentId).ToList();
+            return new JsonResult(sheetData);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostContestSheetData([FromBody, Required] ContestSheetData contestData)
+        {
+            if(ModelState.IsValid)
+            {
+                ContestSheetData existingContest = await _db.ContestSheetData.Where(o => o.CategoryID == contestData.CategoryID && o.Contest == contestData.Contest).FirstOrDefaultAsync();
+                if (existingContest == null)
+                {
+                    try
+                    {
+                        await _db.ContestSheetData.AddAsync(contestData);
+                        await _db.SaveChangesAsync();
+                        await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", contestData);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
+                    return Ok();
+                }
+                else
+                {
+                    existingContest.UpdateFromQuery(contestData);
+                    await _db.SaveChangesAsync();
+                    await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", contestData);
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostCategoryData([FromBody, Required] Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _db.Categories.AddAsync(category);
+                    await _db.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostTournamentData([FromBody, Required] Tournament tournament)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _db.Tournaments.AddAsync(tournament);
+                    await _db.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+                return Ok();
+            }
+            return BadRequest();
+        }
+    }
+}
+
+/*
+ [HttpGet]
         public IActionResult ShowSVG()
         {
             Category test = new Category
@@ -87,20 +189,4 @@ namespace EuroJudoWebContestSheets.Controllers
             ViewBag.SVGText = Generators.SVGFactory.Get(test);
             return View();//Ok();//(Generators.SVGGenerator(1), "image/svg+xml");
         }
-
-        [HttpGet]
-        public IActionResult GetContestSheetData([FromQuery] int TournamentId)
-        {
-            List<ContestSheetData> sheetData = _db.ContestSheetData.Where(o => o.TournamentID == TournamentId).ToList();
-            return new JsonResult(sheetData);
-        }
-
-        [HttpPost]
-        public IActionResult PostContestSheetData([FromBody] ContestSheetData contestData)
-        {
-            //List<ContestSheetData> sheetData = _db.ContestSheetData.Where(o => o.TournamentID == TournamentId).ToList();
-            //return new JsonResult(sheetData);
-            return Ok();
-        }
-    }
-}
+        */

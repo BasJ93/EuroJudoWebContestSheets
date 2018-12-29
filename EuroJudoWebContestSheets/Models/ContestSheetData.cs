@@ -17,8 +17,22 @@ namespace EuroJudoWebContestSheets.Models
         public int WazaariWhite { get; set; }
         public int ShidoWhite { get; set; }
         public int IponBlue { get; set; }
-        public int WazaarieBlue { get; set; }
+        public int WazaariBlue { get; set; }
         public int ShidoBlue { get; set; }
         public bool ShowSimpleScore { get; set; }
+
+        public void UpdateFromQuery(ContestSheetData queryData)
+        {
+            CompeditorWhite = queryData.CompeditorWhite;
+            CompeditorBlue = queryData.CompeditorBlue;
+            IponWhite = queryData.IponWhite;
+            WazaariWhite = queryData.WazaariWhite;
+            ShidoWhite = queryData.ShidoWhite;
+            IponBlue = queryData.IponBlue;
+            WazaariBlue = queryData.WazaariBlue;
+            ShidoBlue = queryData.ShidoBlue;
+            ShowSimpleScore = queryData.ShowSimpleScore;
+        }
+
     }
 }
