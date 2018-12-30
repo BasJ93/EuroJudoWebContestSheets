@@ -501,7 +501,7 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG = SVG + "<text x=\"480\" y=\"880\" fill=\"black\" id=\"28B\">" + contest.CompeditorBlue + "</text>";
             }
 
-
+            //Add 3rd places
 
 
             SVG = SVG + "</svg>";

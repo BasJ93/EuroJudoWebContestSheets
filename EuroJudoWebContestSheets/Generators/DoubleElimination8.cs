@@ -258,6 +258,7 @@ namespace EuroJudoWebContestSheets.Generators
             SVG = SVG + "<line x1=\"940\" y1=\"130\" x2=\"790\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" />";
             SVG = SVG + "<line x1=\"940\" y1=\"350\" x2=\"790\" y2=\"350\" stroke=\"black\" stroke-width=\"1\" />";
 
+            //Add 3rd places
 
             SVG = SVG + "</svg>";
 

@@ -28,6 +28,23 @@ namespace EuroJudoWebContestSheets.Generators
                 case 15:
                 case 16:
                     return new DoubleElimination16(category).Image;
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                case 27:
+                case 28:
+                case 29:
+                case 30:
+                case 31:
+                case 32:
+                    return new DoubleElimination32(category).Image;
                 default:
                     throw new NotImplementedException();
             }
