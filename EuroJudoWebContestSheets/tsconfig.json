@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "target": "es5",
+    "allowJs": true,
+    "outDir": "ClientApp/js",
+    "jsx": "react"
+  },
+  "files": [
+    "ClientApp/app.js",
+    "ClientApp/ContestOrderList.jsx",
+    "ClientApp/ContestOrderApp.jsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "wwwroot",
+    "out"
+  ],
+  "compileOnSave": true,
+  "typeAcquisition": {
+    "enable": true
+  }
+}

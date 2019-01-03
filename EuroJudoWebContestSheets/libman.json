@@ -9,16 +9,6 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
-    },
-    {
-      "provider": "cdnjs",
-      "library": "react@16.7.0",
-      "destination": "wwwroot/lib/react/"
-    },
-    {
-      "provider": "cdnjs",
-      "library": "react-dom@16.7.0",
-      "destination": "wwwroot/lib/react-dom/"
     }
   ]
 }

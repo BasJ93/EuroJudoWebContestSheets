@@ -1,9 +1,10 @@
 ﻿//https://blog.hellojs.org/fetching-api-data-with-react-js-460fe8bbf8f2
 
 
-import ContestOrderList from './ContestOrderList.jsx';
+import React from 'react';
+import ContestOrderList from './ContestOrderList';
 
-class ContestOrderApp extends React.Component {
+export default class ContestOrderApp extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -17,8 +18,10 @@ class ContestOrderApp extends React.Component {
                 return results.json();
             })
             .then(data => {
+                //let width = { Math.floor(12.0 / data.lenght()) };
+                let width = "col-lg-2";
                 let lists = data.map((list) => {
-                    return (<ContestOrderList tatami={list.tatami} contests={list.contests} />);
+                    return (<ContestOrderList columnWidth={width} tatami={list.tatami} contests={list.contests} />);
                 });
                 this.setState({ ContestOrders: lists });
             });
@@ -27,9 +30,4 @@ class ContestOrderApp extends React.Component {
     render() {
         return this.state.ContestOrders;
     }
-}
-
-ReactDOM.render(
-    <ContestOrderApp />,
-    document.getElementById('contestorderapp')
-);
+}76
