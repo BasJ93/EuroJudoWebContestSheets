@@ -1,0 +1,33 @@
+﻿@page
+@{ 
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    React info: http://react.tips/how-to-create-reactjs-components-dynamically/
+*@
+@{
+}
+
+@using React.AspNet;
+
+<div class="container-fluid" id="contestorderapp"></div>
+
+@section scripts
+{
+<environment include="Development">
+    <!--<script src="~/lib/react/cjs/react.development.js"></script>
+    <script src="~/lib/react-dom/cjs/react-dom.development.js"></script>-->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script type="module" src="@Url.Content("~/js/ContestOrderApp.jsx")"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/lib/react/cjs/react.production.min.js"></script>
+    <script src="~/lib/react-dom/cjs/react-dom.production.min.js"></script>
+    <script type="module" src="@Url.Content("~/js/ContestOrderApp.jsx")"></script>
+</environment>
+}
