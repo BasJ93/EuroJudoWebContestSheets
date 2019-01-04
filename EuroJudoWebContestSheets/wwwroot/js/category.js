@@ -1,6 +1,8 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/tournamentHub").build();
+var connection = new signalR.HubConnectionBuilder()
+    .withUrl("/tournamentHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling } )
+    .build();
 
 connection.on("updateSheet", function (contestData) {
     $('#' + contestData.contest + 'W').text(contestData.compeditorWhite);
@@ -11,6 +13,20 @@ connection.on("connected", function (data) {
     connection.invoke("AddToGroup", "t" + tournamentID + "c" + categoryID).catch(function (err) {
         return console.error(err.toString());
     });
+});
+
+async function start() {
+    try {
+        await connection.start();
+        console.log('connected');
+    } catch (err) {
+        console.log(err);
+        setTimeout(() => start(), 5000);
+    }
+};
+
+connection.onclose(async () => {
+    await start();
 });
 
 connection.start().catch(function (err) {

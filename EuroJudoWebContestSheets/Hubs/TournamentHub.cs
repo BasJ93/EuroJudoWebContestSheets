@@ -11,6 +11,7 @@ namespace EuroJudoWebContestSheets.Hubs
     {
         public override async Task OnConnectedAsync()
         {
+            Console.WriteLine($"New SignalR client connected {Context.ConnectionId}");
             await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello");
             await base.OnConnectedAsync();
         }
