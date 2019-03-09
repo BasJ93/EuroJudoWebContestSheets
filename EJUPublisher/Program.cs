@@ -9,7 +9,7 @@ namespace EJUPublisher
         {
             int serverPort = 50228;
 
-            TcpClient client = new TcpClient("127.0.0.1", serverPort);
+            TcpClient client = new TcpClient("192.168.2.3", serverPort);
             NetworkStream _stream = client.GetStream();
 
             while(client.Connected)
@@ -19,7 +19,7 @@ namespace EJUPublisher
                 string command = System.Text.Encoding.ASCII.GetString(buffer, 0, 255);
                 if(command.Contains("^ID"))
                 {
-                    Byte[] data = System.Text.Encoding.ASCII.GetBytes("!OC0010061006       D.");
+                    Byte[] data = System.Text.Encoding.ASCII.GetBytes("!IDEJUPUB");//"!OC0010061006       D."
                     _stream.Write(data, 0, data.Length);
                     Console.Write($"ID received, send response. {command}");
                     Console.Write($"Responded with: {System.Text.Encoding.ASCII.GetString(data, 0, data.Length)}");
