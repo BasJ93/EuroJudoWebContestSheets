@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Sockets;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace EJUPublisher
 {
@@ -69,7 +70,7 @@ namespace EJUPublisher
                     }
 
                     //Upload to webserver
-                    StringContent requestBody = new StringContent(JsonConvert.SerializeObject(contestOrder));
+                    StringContent requestBody = new StringContent(JsonConvert.SerializeObject(contestOrder), Encoding.UTF8, "application/json");
                     _httpClient.PostAsync(WebServer, requestBody);
                 }
             }
