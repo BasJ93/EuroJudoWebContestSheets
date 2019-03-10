@@ -27,7 +27,9 @@ var ConstestOrderList = /** @class */ (function (_super) {
                             this.props.tatami))),
                 React.createElement("tbody", null, this.props.contests.map(function (contest, i) {
                     return (React.createElement("tr", { key: i },
-                        React.createElement("td", null, contest)));
+                        React.createElement("td", null, contest.number),
+                        React.createElement("td", null, contest.short),
+                        React.createElement("td", null, contest.weight)));
                 })))));
     };
     return ConstestOrderList;

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using EuroJudoWebContestSheets.Hubs;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 
 namespace EuroJudoWebContestSheets
 {
@@ -29,6 +28,7 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddMemoryCache();
 
             services.AddDbContext<dbContext>();
 
@@ -43,10 +43,6 @@ namespace EuroJudoWebContestSheets
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true
-                });
             }
             else
             {

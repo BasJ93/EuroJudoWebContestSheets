@@ -13,7 +13,9 @@ export default class ConstestOrderList extends React.Component {
                     {this.props.contests.map(function (contest, i) {
                             return (
                             <tr key={i}>
-                                <td>{contest}</td>
+                                    <td>{contest.number}</td>
+                                    <td>{contest.short}</td>
+                                    <td>{contest.weight}</td>
                             </tr>
                         );
                         })

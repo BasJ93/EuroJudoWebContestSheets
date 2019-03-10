@@ -8,6 +8,6 @@ namespace EuroJudoWebContestSheets.Models.ContestOrder
     public class ContestOrder
     {
         public int Tatami { get; set; }
-        public List<String> Contests { get; set; }
+        public List<Contest> Contests { get; set; }
     }
 }

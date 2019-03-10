@@ -4,26 +4,47 @@ using System.Linq;
 using System.Threading.Tasks;
 using EuroJudoWebContestSheets.Models.ContestOrder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EuroJudoWebContestSheets.Controllers
 {
     public class ContestOrderController : Controller
     {
+        private IMemoryCache _memCache;
+
+        public ContestOrderController(IMemoryCache memCache)
+        {
+            _memCache = memCache;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult ContestOrderLists()
         {
-            return new JsonResult(new List<ContestOrder>() {
-                new ContestOrder(){Tatami = 1, Contests = new List<string>(){"A1", "B1", "C1"}},
-                new ContestOrder(){Tatami = 2, Contests = new List<string>(){"A2", "B2", "C2"}},
-                new ContestOrder(){Tatami = 3, Contests = new List<string>(){"A3", "B3", "C3"}},
-                new ContestOrder(){Tatami = 4, Contests = new List<string>(){"A4", "B4", "C4"}},
-                new ContestOrder(){Tatami = 5, Contests = new List<string>(){"A5", "B5", "C5"}},
-                new ContestOrder(){Tatami = 6, Contests = new List<string>(){"A5", "B6", "C6"}},
-            });
+
+            List<ContestOrder> contestOrders = new List<ContestOrder>();
+
+            if(!_memCache.TryGetValue("contestOrders", out contestOrders))
+            {
+                return NotFound();
+            }
+
+            return new JsonResult(contestOrders);
+        }
+
+        [HttpPost]
+        public IActionResult PostContestOrderLists([FromBody] List<ContestOrder> contestOrders)
+        {
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetPriority(CacheItemPriority.NeverRemove);
+
+            _memCache.Set("contestOrders", contestOrders, cacheEntryOptions);
+
+            return Ok();
         }
     }
 }
