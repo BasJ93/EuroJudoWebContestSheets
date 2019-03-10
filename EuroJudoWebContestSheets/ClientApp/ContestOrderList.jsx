@@ -16,6 +16,8 @@ export default class ConstestOrderList extends React.Component {
                                     <td>{contest.number}</td>
                                     <td>{contest.short}</td>
                                     <td>{contest.weight}</td>
+                                    <td>{contest.compeditorWhite}</td>
+                                    <td>{contest.compeditorBlue}</td>
                             </tr>
                         );
                         })

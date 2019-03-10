@@ -29,7 +29,9 @@ var ConstestOrderList = /** @class */ (function (_super) {
                     return (React.createElement("tr", { key: i },
                         React.createElement("td", null, contest.number),
                         React.createElement("td", null, contest.short),
-                        React.createElement("td", null, contest.weight)));
+                        React.createElement("td", null, contest.weight),
+                        React.createElement("td", null, contest.compeditorWhite),
+                        React.createElement("td", null, contest.compeditorBlue)));
                 })))));
     };
     return ConstestOrderList;
