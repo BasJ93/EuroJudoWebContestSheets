@@ -1,6 +1,8 @@
-﻿using System;
+﻿using EJUPublisher.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Sockets;
 
 namespace EJUPublisher
@@ -13,10 +15,23 @@ namespace EJUPublisher
 
             int numberOfTatami = 8;
 
-            TcpClient client = new TcpClient("192.168.2.3", serverPort);
-            NetworkStream _stream = client.GetStream();
+            string EJUServer = "127.0.0.1";// "192.168.2.3";
 
-            while(client.Connected)
+            string WebServer = "localhost:50256/";
+
+            HttpClient _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "EJUPublisher");
+
+            List<ContestOrder> contestOrder = new List<ContestOrder>();
+            for(int i=0; i<numberOfTatami; i++)
+            {
+                contestOrder.Add(new ContestOrder() { Tatami = i });
+            }
+
+            TcpClient HTTPClient = new TcpClient(EJUServer, serverPort);
+            NetworkStream _stream = HTTPClient.GetStream();
+
+            while(HTTPClient.Connected)
             {
                 var buffer = new Byte[1500 * numberOfTatami];
                 _stream.Read(buffer, 0, 1500 * numberOfTatami);
@@ -35,14 +50,49 @@ namespace EJUPublisher
                     command = command.Substring(0, command.IndexOf('\0'));
                     List<string> contests = command.Split("\n").ToList();
                     Console.WriteLine($"Data received at {DateTime.Now.ToLongTimeString()} consisting of {contests.Count} contests:");
+
+                    foreach(var tatami in contestOrder)
+                    {
+                        tatami.Contests.Clear();
+                    }
+
+                    //Convert to contestOrder lists
                     foreach (var contest in contests)
                     {
                         Console.WriteLine(contest);
+                        var _contest = EJU2Contest(contest);
+                        if (_contest.Tatami > 0)
+                        {
+                            contestOrder[_contest.Tatami - 1].Contests.Add(_contest);
+                        }
                     }
+
+                    //Upload to webserver
+                    
                 }
             }
+        }
 
-            //Console.WriteLine("Hello World!");
+        private static Contest EJU2Contest(string EJU)
+        {
+            if (EJU.Contains(';'))
+            {
+                List<string> components = EJU.Split(';').ToList();
+                Contest _contest = new Contest()
+                {
+                    Tatami = Convert.ToInt32(components[0]),
+                    Number = Convert.ToInt32(components[1]),
+                    Weight = components[2],
+                    CompeditorWhite = components[3],
+                    CompeditorBlue = components[7]
+                };
+
+                return _contest;
+            }
+            else
+            {
+                return new Contest();
+            }
         }
     }
 }
