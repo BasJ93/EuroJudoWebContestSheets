@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Sockets;
+using Newtonsoft.Json;
 
 namespace EJUPublisher
 {
@@ -17,7 +18,7 @@ namespace EJUPublisher
 
             string EJUServer = "127.0.0.1";// "192.168.2.3";
 
-            string WebServer = "localhost:50256/";
+            string WebServer = "localhost:50256/ContestOrder/PostContestOrderLists";
 
             HttpClient _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "EJUPublisher");
@@ -68,7 +69,8 @@ namespace EJUPublisher
                     }
 
                     //Upload to webserver
-                    
+                    StringContent requestBody = new StringContent(JsonConvert.SerializeObject(contestOrder));
+                    _httpClient.PostAsync(WebServer, requestBody);
                 }
             }
         }
