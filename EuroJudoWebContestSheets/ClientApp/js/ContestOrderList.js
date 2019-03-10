@@ -18,7 +18,7 @@ var ConstestOrderList = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     ConstestOrderList.prototype.render = function () {
-        return (React.createElement("div", { key: this.props.tatami, className: "col-lg-4" },
+        return (React.createElement("div", { key: this.props.tatami, className: "col-lg-4 col-md-6 col-sm-12" },
             React.createElement("table", { className: "table table-striped" },
                 React.createElement("thead", null,
                     React.createElement("tr", null,

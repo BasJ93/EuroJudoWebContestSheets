@@ -2,7 +2,7 @@
 export default class ConstestOrderList extends React.Component {
     render() {
         return (
-            <div key={this.props.tatami} className="col-lg-4">
+            <div key={this.props.tatami} className="col-lg-4 col-md-6 col-sm-12">
                 <table className="table table-striped">
                     <thead>
                         <tr>
