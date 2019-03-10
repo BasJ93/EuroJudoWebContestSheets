@@ -18,7 +18,7 @@ namespace EJUPublisher
 
             string EJUServer = "127.0.0.1";// "192.168.2.3";
 
-            string WebServer = "localhost:50256/ContestOrder/PostContestOrderLists";
+            string WebServer = "http://localhost:50256/ContestOrder/PostContestOrderLists";
 
             HttpClient _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "EJUPublisher");
