@@ -9,6 +9,3 @@ ReactDOM.render(
     <ContestOrderApp />,
     document.getElementById('contestorderapp')
 );
-
-
-//module.hot.accept();

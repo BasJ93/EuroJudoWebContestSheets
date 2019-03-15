@@ -55,6 +55,7 @@ namespace EuroJudoWebContestSheets
             app.UseSignalR(routes =>
             {
                 routes.MapHub<TournamentHub>("/tournamentHub");
+                routes.MapHub<TournamentHub>("/contestOrderHub");
             });
 
             app.UseMvc(routes =>

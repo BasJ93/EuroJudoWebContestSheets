@@ -12,15 +12,19 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+//https://stackoverflow.com/questions/46190574/how-to-import-signalr-in-react-component
 import React from 'react';
 import ContestOrderList from './ContestOrderList';
+require('signalr');
 var ContestOrderApp = /** @class */ (function (_super) {
     __extends(ContestOrderApp, _super);
-    function ContestOrderApp() {
-        var _this = _super.call(this) || this;
+    function ContestOrderApp(props) {
+        var _this = _super.call(this, props) || this;
         _this.state = {
             ContestOrders: []
         };
+        _this.connection = null;
+        _this.updateContestOrder = _this.updateContestOrder.bind(_this);
         return _this;
     }
     ContestOrderApp.prototype.componentWillMount = function () {
@@ -38,10 +42,28 @@ var ContestOrderApp = /** @class */ (function (_super) {
             _this.setState({ ContestOrders: lists });
         });
     };
+    ContestOrderApp.prototype.componentDidMount = function () {
+        // create the connection instance
+        this.connection = new signalR.HubConnectionBuilder()
+            .withUrl("/contestOrderHub")
+            .build();
+        this.connection.on('updateContestOrder', this.updateContestOrder);
+        this.connection.start()
+            .then(function () { return console.info('SignalR Connected'); })
+            .catch(function (err) { return console.error('SignalR Connection Error: ', err); });
+    };
+    ContestOrderApp.prototype.componentWillUnmount = function () {
+        this.connection.stop();
+    };
+    ContestOrderApp.prototype.updateContestOrder = function (contestOrder) {
+        var lists = contestOrder.map(function (list) {
+            return (React.createElement(ContestOrderList, { columnWidth: width, tatami: list.tatami, contests: list.contests }));
+        });
+        this.setState({ ContestOrders: lists });
+    };
     ContestOrderApp.prototype.render = function () {
         return this.state.ContestOrders;
     };
     return ContestOrderApp;
 }(React.Component));
 export default ContestOrderApp;
-76;

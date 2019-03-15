@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models.ContestOrder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace EuroJudoWebContestSheets.Controllers
@@ -11,9 +13,11 @@ namespace EuroJudoWebContestSheets.Controllers
     public class ContestOrderController : Controller
     {
         private IMemoryCache _memCache;
+        private readonly IHubContext<ContestOrderHub> _hub;
 
-        public ContestOrderController(IMemoryCache memCache)
+        public ContestOrderController(IMemoryCache memCache, IHubContext<ContestOrderHub> hub)
         {
+            _hub = hub;
             _memCache = memCache;
         }
 
@@ -37,12 +41,13 @@ namespace EuroJudoWebContestSheets.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostContestOrderLists([FromBody] List<ContestOrder> contestOrders)
+        public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrder> contestOrders)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetPriority(CacheItemPriority.NeverRemove);
 
             _memCache.Set("contestOrders", contestOrders, cacheEntryOptions);
+            await _hub.Clients.All.SendAsync("updateContestOrder", contestOrders);
 
             return Ok();
         }
