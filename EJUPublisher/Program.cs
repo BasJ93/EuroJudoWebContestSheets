@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace EJUPublisher
 {
@@ -13,13 +15,24 @@ namespace EJUPublisher
     {
         static void Main(string[] args)
         {
-            int serverPort = 50228;
 
-            int numberOfTatami = 8;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-            string EJUServer = "127.0.0.1";// "192.168.2.3";
+            IConfigurationRoot configuration = builder.Build();
 
-            string WebServer = "http://localhost:50256/ContestOrder/PostContestOrderLists";
+            Console.WriteLine(configuration.GetConnectionString("Storage"));
+
+            int serverPort = Convert.ToInt32(configuration["EJUPort"]);
+
+            int numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
+
+            int numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
+
+            string EJUServer = configuration["EJUServer"];
+
+            string WebServer = configuration["WebServer"];
 
             HttpClient _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "EJUPublisher");
@@ -27,7 +40,7 @@ namespace EJUPublisher
             List<ContestOrder> contestOrder = new List<ContestOrder>();
             for(int i=0; i<numberOfTatami; i++)
             {
-                contestOrder.Add(new ContestOrder() { Tatami = i });
+                contestOrder.Add(new ContestOrder() { Tatami = i + 1});
             }
 
             TcpClient HTTPClient = new TcpClient(EJUServer, serverPort);
@@ -35,8 +48,8 @@ namespace EJUPublisher
 
             while(HTTPClient.Connected)
             {
-                var buffer = new Byte[1500 * numberOfTatami];
-                _stream.Read(buffer, 0, 1500 * numberOfTatami);
+                var buffer = new Byte[2048 * numberOfTatami];
+                _stream.Read(buffer, 0, 2048 * numberOfTatami);
                 string command = System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
                 if(command.Contains("^ID"))
                 {
@@ -65,7 +78,10 @@ namespace EJUPublisher
                         var _contest = EJU2Contest(contest);
                         if (_contest.Tatami > 0)
                         {
-                            contestOrder[_contest.Tatami - 1].Contests.Add(_contest);
+                            if (contestOrder[_contest.Tatami - 1].Contests.Count < numberOfContests)
+                            {
+                                contestOrder[_contest.Tatami - 1].Contests.Add(_contest);
+                            }
                         }
                     }
 
