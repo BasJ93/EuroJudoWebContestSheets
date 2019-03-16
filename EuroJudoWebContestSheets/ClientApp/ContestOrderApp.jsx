@@ -4,7 +4,6 @@
 
 import React from 'react';
 import ContestOrderList from './ContestOrderList';
-require('signalr');
 
 export default class ContestOrderApp extends React.Component {
     constructor(props) {
@@ -14,6 +13,7 @@ export default class ContestOrderApp extends React.Component {
         };
 
         this.connection = null;
+        this.connected = this.connected.bind(this);
         this.updateContestOrder = this.updateContestOrder.bind(this);
     }
 
@@ -35,9 +35,11 @@ export default class ContestOrderApp extends React.Component {
     componentDidMount() {
         // create the connection instance
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("/contestOrderHub")
+            .withUrl("/contestOrderHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
+            .configureLogging(signalR.LogLevel.Trace)
             .build();
 
+        this.connection.on('connected', this.connected);
         this.connection.on('updateContestOrder', this.updateContestOrder);
         
         this.connection.start()
@@ -49,7 +51,12 @@ export default class ContestOrderApp extends React.Component {
         this.connection.stop();
     }
 
+    connected(message) {
+        console.log(message);
+    }
+
     updateContestOrder(contestOrder) {
+        console.log("Received new contest data");
         let lists = contestOrder.map((list) => {
             return (<ContestOrderList columnWidth={width} tatami={list.tatami} contests={list.contests} />);
         });

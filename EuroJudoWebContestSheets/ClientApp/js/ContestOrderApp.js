@@ -15,7 +15,6 @@ var __extends = (this && this.__extends) || (function () {
 //https://stackoverflow.com/questions/46190574/how-to-import-signalr-in-react-component
 import React from 'react';
 import ContestOrderList from './ContestOrderList';
-require('signalr');
 var ContestOrderApp = /** @class */ (function (_super) {
     __extends(ContestOrderApp, _super);
     function ContestOrderApp(props) {
@@ -24,6 +23,7 @@ var ContestOrderApp = /** @class */ (function (_super) {
             ContestOrders: []
         };
         _this.connection = null;
+        _this.connected = _this.connected.bind(_this);
         _this.updateContestOrder = _this.updateContestOrder.bind(_this);
         return _this;
     }
@@ -45,8 +45,10 @@ var ContestOrderApp = /** @class */ (function (_super) {
     ContestOrderApp.prototype.componentDidMount = function () {
         // create the connection instance
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("/contestOrderHub")
+            .withUrl("/contestOrderHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
+            .configureLogging(signalR.LogLevel.Trace)
             .build();
+        this.connection.on('connected', this.connected);
         this.connection.on('updateContestOrder', this.updateContestOrder);
         this.connection.start()
             .then(function () { return console.info('SignalR Connected'); })
@@ -55,7 +57,11 @@ var ContestOrderApp = /** @class */ (function (_super) {
     ContestOrderApp.prototype.componentWillUnmount = function () {
         this.connection.stop();
     };
+    ContestOrderApp.prototype.connected = function (message) {
+        console.log(message);
+    };
     ContestOrderApp.prototype.updateContestOrder = function (contestOrder) {
+        console.log("Received new contest data");
         var lists = contestOrder.map(function (list) {
             return (React.createElement(ContestOrderList, { columnWidth: width, tatami: list.tatami, contests: list.contests }));
         });

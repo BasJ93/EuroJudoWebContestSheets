@@ -1,6 +1,9 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/tournamentHub").build();
+var connection = new signalR.HubConnectionBuilder()
+    .withUrl("/tournamentHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
+    .configureLogging(signalR.LogLevel.Trace)
+    .build();
 
 connection.on("updateSheet", function (contestData) {
     $('#' + contestData.contest + 'W').text(contestData.compeditorWhite);
