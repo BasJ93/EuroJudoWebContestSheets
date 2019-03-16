@@ -34,12 +34,9 @@ var ContestOrderApp = /** @class */ (function (_super) {
             return results.json();
         })
             .then(function (data) {
-            //let width = { Math.floor(12.0 / data.lenght()) };
-            var width = "col-lg-2";
-            var lists = data.map(function (list) {
-                return (React.createElement(ContestOrderList, { columnWidth: width, tatami: list.tatami, contests: list.contests }));
-            });
-            _this.setState({ ContestOrders: lists });
+            if (data.length > 0) {
+                _this.generateLists(contestOrder);
+            }
         });
     };
     ContestOrderApp.prototype.componentDidMount = function () {
@@ -62,8 +59,11 @@ var ContestOrderApp = /** @class */ (function (_super) {
     };
     ContestOrderApp.prototype.updateContestOrder = function (contestOrder) {
         console.log("Received new contest data");
+        this.generateLists(contestOrder);
+    };
+    ContestOrderApp.prototype.generateLists = function (contestOrder) {
         var lists = contestOrder.map(function (list) {
-            return (React.createElement(ContestOrderList, { columnWidth: width, tatami: list.tatami, contests: list.contests }));
+            return (React.createElement(ContestOrderList, { key: list.tatami.toString(), tatami: list.tatami, contests: list.contests }));
         });
         this.setState({ ContestOrders: lists });
     };

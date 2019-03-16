@@ -23,12 +23,9 @@ export default class ContestOrderApp extends React.Component {
                 return results.json();
             })
             .then(data => {
-                //let width = { Math.floor(12.0 / data.lenght()) };
-                let width = "col-lg-2";
-                let lists = data.map((list) => {
-                    return (<ContestOrderList columnWidth={width} tatami={list.tatami} contests={list.contests} />);
-                });
-                this.setState({ ContestOrders: lists });
+                if (data.length > 0) {
+                    this.generateLists(contestOrder);
+                }
             });
     }
 
@@ -57,8 +54,12 @@ export default class ContestOrderApp extends React.Component {
 
     updateContestOrder(contestOrder) {
         console.log("Received new contest data");
+        this.generateLists(contestOrder);
+    }
+
+    generateLists(contestOrder) {
         let lists = contestOrder.map((list) => {
-            return (<ContestOrderList columnWidth={width} tatami={list.tatami} contests={list.contests} />);
+            return (<ContestOrderList key={list.tatami.toString()} tatami={list.tatami} contests={list.contests} />);
         });
         this.setState({ ContestOrders: lists });
     }

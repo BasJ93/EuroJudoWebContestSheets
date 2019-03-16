@@ -44,7 +44,7 @@ namespace EuroJudoWebContestSheets.Controllers
         public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrder> contestOrders)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetPriority(CacheItemPriority.NeverRemove);
+                .SetPriority(CacheItemPriority.Normal);
 
             _memCache.Set("contestOrders", contestOrders, cacheEntryOptions);
             await _hub.Clients.All.SendAsync("updateContestOrder", contestOrders);

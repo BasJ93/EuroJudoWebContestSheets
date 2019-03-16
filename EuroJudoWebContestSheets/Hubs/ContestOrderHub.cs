@@ -12,7 +12,7 @@ namespace EuroJudoWebContestSheets.Hubs
     {
         public override async Task OnConnectedAsync()
         {
-            await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello");
+            await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello from ContestOrderHub");
             await base.OnConnectedAsync();
         }
 
