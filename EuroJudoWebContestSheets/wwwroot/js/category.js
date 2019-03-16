@@ -5,6 +5,7 @@ var connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.on("updateSheet", function (contestData) {
+    console.log(contestData);
     $('#' + contestData.contest + 'W').text(contestData.compeditorWhite);
     $('#' + contestData.contest + 'B').text(contestData.compeditorBlue);
 });
@@ -29,6 +30,10 @@ connection.onclose(async () => {
     await start();
 });
 
-connection.start().catch(function (err) {
+/*connection.start().catch(function (err) {
     return console.error(err.toString());
+});*/
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await start();
 });

@@ -63,7 +63,7 @@ namespace EuroJudoWebContestSheets.Controllers
             if(ModelState.IsValid)
             {
                 Console.WriteLine($"{contestData.TournamentID}\t{contestData.CategoryID}\t{contestData.Contest}\t{contestData.CompeditorWhite}");
-                ContestSheetData existingContest = await _db.ContestSheetData.Where(o => o.CategoryID == contestData.CategoryID && o.Contest == contestData.Contest).FirstOrDefaultAsync();
+                ContestSheetData existingContest = await _db.ContestSheetData.Where(o => o.TournamentID == contestData.TournamentID && o.CategoryID == contestData.CategoryID && o.Contest == contestData.Contest).FirstOrDefaultAsync();
                 if (existingContest == null)
                 {
                     try
