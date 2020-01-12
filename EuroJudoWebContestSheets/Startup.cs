@@ -30,6 +30,7 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddMemoryCache();
 
             services.AddDbContext<dbContext>();
 
@@ -65,6 +66,7 @@ namespace EuroJudoWebContestSheets
             app.UseSignalR(routes =>
             {
                 routes.MapHub<TournamentHub>("/tournamentHub");
+                routes.MapHub<ContestOrderHub>("/contestOrderHub");
             });
 
             app.UseMvc(routes =>
