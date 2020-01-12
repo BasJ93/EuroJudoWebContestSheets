@@ -62,7 +62,8 @@ namespace EuroJudoWebContestSheets.Controllers
         {
             if(ModelState.IsValid)
             {
-                ContestSheetData existingContest = await _db.ContestSheetData.Where(o => o.CategoryID == contestData.CategoryID && o.Contest == contestData.Contest).FirstOrDefaultAsync();
+                Console.WriteLine($"{contestData.TournamentID}\t{contestData.CategoryID}\t{contestData.Contest}\t{contestData.CompeditorWhite}");
+                ContestSheetData existingContest = await _db.ContestSheetData.Where(o => o.TournamentID == contestData.TournamentID && o.CategoryID == contestData.CategoryID && o.Contest == contestData.Contest).FirstOrDefaultAsync();
                 if (existingContest == null)
                 {
                     try
@@ -73,16 +74,25 @@ namespace EuroJudoWebContestSheets.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest(e);
+                        return BadRequest(e.ToString());
                     }
                     return Ok();
                 }
                 else
                 {
+                    Console.WriteLine($"{existingContest.ID}");
                     existingContest.UpdateFromQuery(contestData);
-                    await _db.SaveChangesAsync();
-                    await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", contestData);
+                    try
+                    {
+                        await _db.SaveChangesAsync();
+                    }
+                    catch(Exception e)
+                    {
+                        return BadRequest(e.ToString());
+                    }
+                    await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", existingContest);
                 }
+                return Ok();
             }
             return BadRequest();
         }

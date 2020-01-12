@@ -1,4 +1,6 @@
-﻿namespace EuroJudoWebContestSheets.Models
+﻿using System;
+
+namespace EuroJudoWebContestSheets.Models
 {
     public class ContestSheetData
     {
@@ -18,8 +20,8 @@
 
         public void UpdateFromQuery(ContestSheetData queryData)
         {
-            CompeditorWhite = queryData.CompeditorWhite;
-            CompeditorBlue = queryData.CompeditorBlue;
+            CompeditorWhite = String.IsNullOrEmpty(CompeditorWhite) ? queryData.CompeditorWhite : CompeditorWhite;
+            CompeditorBlue = String.IsNullOrEmpty(CompeditorBlue) ? queryData.CompeditorBlue : CompeditorBlue ;
             IponWhite = queryData.IponWhite;
             WazaariWhite = queryData.WazaariWhite;
             ShidoWhite = queryData.ShidoWhite;
