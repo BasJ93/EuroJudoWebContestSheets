@@ -4,6 +4,7 @@ WORKDIR /app
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY EuroJudoWebContestSheets/*.csproj ./EuroJudoWebContestSheets/
+COPY EJUPublisher/*.csproj ./EJUPublisher/
 RUN dotnet restore
 
 # copy everything else and build app
