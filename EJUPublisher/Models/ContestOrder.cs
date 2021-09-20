@@ -1,6 +1,6 @@
-﻿using System;
+﻿using EuroJudoProtocols.ShowFights.Models;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace EJUPublisher.Models
 {
@@ -12,6 +12,12 @@ namespace EJUPublisher.Models
         public ContestOrder()
         {
             Contests = new List<Contest>();
+        }
+
+        public ContestOrder(int tatami, IEnumerable<Contest> contests)
+        {
+            Tatami = tatami;
+            Contests = contests.ToList();
         }
     }
 }
