@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
 using System;
@@ -34,17 +35,22 @@ namespace EuroJudoWebContestSheets
 
             services.AddDbContext<dbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddControllers();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
-            services.AddSignalR(hubOptions => {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            services.AddSignalR(hubOptions =>
+            {
                 hubOptions.EnableDetailedErrors = true;
                 hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-                }
+            }
             );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -63,18 +69,20 @@ namespace EuroJudoWebContestSheets
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<TournamentHub>("/tournamentHub");
-                routes.MapHub<ContestOrderHub>("/contestOrderHub");
-            });
+            app.UseRouting();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Tournaments}/{action=Index}");
-            });
+                    pattern: "{controller=Tournaments}/{action=Index}");
+
+                    endpoints.MapControllers();
+                    endpoints.MapRazorPages();
+                    endpoints.MapHub<TournamentHub>("/tournamentHub");
+                    endpoints.MapHub<ContestOrderHub>("/contestOrderHub");
+                }
+            );
         }
     }
 }
