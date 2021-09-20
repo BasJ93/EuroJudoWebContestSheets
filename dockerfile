@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /app
 
-RUN dotnet nuget add source https://baget.basjanssen.eu/ -n MyPrivateRepo
+RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo
 
 # copy csproj and restore as distinct layers
 COPY *.sln .
