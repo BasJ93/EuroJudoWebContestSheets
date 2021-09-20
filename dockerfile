@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Move the credentials to a jenkins credential and inject them using docker arguments
 
-RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo -u $NUGET_USR -p $NUGET_PW --store-password-in-clear-text
+RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo -u ${NUGET_USR} -p ${NUGET_PW} --store-password-in-clear-text
 
 # copy csproj and restore as distinct layers
 COPY *.sln .
