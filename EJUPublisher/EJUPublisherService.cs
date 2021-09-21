@@ -28,6 +28,7 @@ namespace EJUPublisher
         private string WebServer;
         private HttpClient httpClient;
         private int numberOfContests;
+        private int BufferSizePerTatami;
 
         public EventHandler<string> DataReceivedLogEvent { get; set; }
 
@@ -43,6 +44,8 @@ namespace EJUPublisher
             this.httpClient = new HttpClient();
             this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
             this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
+
+            this.BufferSizePerTatami = 8192;
 
             this.cancellationToken = new CancellationTokenSource();
 
@@ -66,7 +69,7 @@ namespace EJUPublisher
                 EjuServerPort = serverPort,
                 NumberOfTatami = numberOfTatami,
                 NumberOfFights = numberOfContests,
-                BufferSizePerTatami = 1024
+                BufferSizePerTatami = BufferSizePerTatami
             };
 
             this.showFights?.UpdateConfiguration(showfightsConfig);
@@ -80,7 +83,7 @@ namespace EJUPublisher
                 EjuServerPort = serverPort,
                 NumberOfTatami = numberOfTatami,
                 NumberOfFights = numberOfContests,
-                BufferSizePerTatami = 2048
+                BufferSizePerTatami = BufferSizePerTatami
             };
 
             this.showFights = new ShowFightsClient(Logger, showfightsConfig);
