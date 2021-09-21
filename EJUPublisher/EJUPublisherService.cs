@@ -18,6 +18,7 @@ namespace EJUPublisher
     {
         private ILog Logger;
         private IShowFightsClient showFights;
+        private IConfiguration configuration;
 
         private CancellationTokenSource cancellationToken;
 
@@ -28,9 +29,12 @@ namespace EJUPublisher
         private HttpClient httpClient;
         private int numberOfContests;
 
+        public EventHandler<string> DataReceivedLogEvent { get; set; }
+
         public EJUPublisherService(IConfiguration configuration, ILog logger)
         {
             this.Logger = logger;
+            this.configuration = configuration;
             this.WebServer = configuration["WebServer"];
 
             this.serverPort = Convert.ToInt32(configuration["EJUPort"]);
@@ -44,37 +48,69 @@ namespace EJUPublisher
 
         }
 
-        public void Publish()
+        // Provide a configuration object to this method
+        public void RefreshConfiguration()
         {
-            this.showFights = new ShowFightsClient(Logger, EJUServer, serverPort, numberOfTatami, numberOfContests, 4096);
+            this.WebServer = configuration["WebServer"];
+
+            this.serverPort = Convert.ToInt32(configuration["EJUPort"]);
+            this.EJUServer = configuration["EJUServer"];
+
+            this.httpClient = new HttpClient();
+            this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
+            this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
+
+            var showfightsConfig = new ShowFightsConfiguration
+            {
+                EjuServer = EJUServer,
+                EjuServerPort = serverPort,
+                NumberOfTatami = numberOfTatami,
+                NumberOfFights = numberOfContests,
+                BufferSizePerTatami = 1024
+            };
+
+            this.showFights?.UpdateConfiguration(showfightsConfig);
+        }
+
+        public void Start()
+        {
+            var showfightsConfig = new ShowFightsConfiguration
+            {
+                EjuServer = EJUServer,
+                EjuServerPort = serverPort,
+                NumberOfTatami = numberOfTatami,
+                NumberOfFights = numberOfContests,
+                BufferSizePerTatami = 2048
+            };
+
+            this.showFights = new ShowFightsClient(Logger, showfightsConfig);
 
             this.showFights.ContestsUpdated += PublishContests;
 
+            if(cancellationToken.IsCancellationRequested)
+            {
+                cancellationToken = new CancellationTokenSource();
+            }
+
             this.showFights.StartListener(cancellationToken.Token);
 
-            while(true)
-            {
-                Thread.Sleep(1000);
-            }
+            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now.ToLongTimeString()} Started ShowFights Listener for {this.EJUServer}:{this.serverPort}");
+        }
+
+        public void Stop()
+        {
+            this.cancellationToken.Cancel();
+            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now.ToLongTimeString()} Stopped ShowFights Listener");
         }
 
         private void PublishContests(object sender, IEnumerable<Contest> contests)
         {
-            List<ContestOrder> contestOrder = new List<ContestOrder>();
-
-            for (int i = 0; i < numberOfTatami; i++)
-            {
-                contestOrder.Add(new ContestOrder() { Tatami = i + 1 });
-            }
-
-            Console.WriteLine($"Data received at {DateTime.Now.ToLongTimeString()} consisting of {contests.Count()} contests:");
-
-            foreach (var tatami in contestOrder)
-            {
-                tatami.Contests.Clear();
-            }
-
-            contestOrder = contests.GroupBy(c => c.Tatami).OrderBy(g => g.Key).Skip(1).Select(group => new ContestOrder(group.Key, group.Take(numberOfContests))).ToList();
+            List<ContestOrder> contestOrder = contests
+                .GroupBy(c => c.Tatami)
+                .OrderBy(g => g.Key)
+                .Skip(1)
+                .Select(group => new ContestOrder(group.Key, group.Take(numberOfContests)))
+                .ToList();
 
             //Upload to webserver
             StringContent requestBody = new StringContent(JsonConvert.SerializeObject(contestOrder), Encoding.UTF8, "application/json");
@@ -82,6 +118,8 @@ namespace EJUPublisher
             //File.WriteAllTextAsync("json_example.json", JsonConvert.SerializeObject(contestOrder));
 
             var result = this.httpClient.PostAsync(WebServer, requestBody).Result;
+
+            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contests.Count()} contests. Upload succes: {result.IsSuccessStatusCode}");
         }
     }
 }

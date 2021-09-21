@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"
+        Width="640" Height="480"
+        x:Class="EJUPublisher.MainView"
+        Title="EJUPublisher">
+  <Window.Styles>
+    <Style Selector="Label.h1">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="FontSize" Value="20" />
+    </Style>
+    <Style Selector="Label">
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="FontSize" Value="14" />
+    </Style>    
+  </Window.Styles>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1*" />
+      <ColumnDefinition Width="1*" />
+    </Grid.ColumnDefinitions>
+
+    <Grid Grid.Column="0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="1*"/>
+        <RowDefinition Height="9*"/>
+      </Grid.RowDefinitions>
+      
+      <Label Grid.Row="0" Content="Debug log" Classes="h1" />
+      
+      <ListBox Grid.Row="1" Items="{Binding LogLines}" />
+      
+    </Grid>
+
+    <Grid Grid.Column="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="1*" />
+        <ColumnDefinition Width="1*" />
+        <ColumnDefinition Width="1*" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="5*" />
+      </Grid.RowDefinitions>
+
+      <Label Grid.Row="0" Grid.ColumnSpan="3" Content="Configuration" Classes="h1"/>
+      
+      <Label Grid.Row="1" Grid.Column="0" Content="EJU Server" />
+      <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding EJUServer, Mode=TwoWay}" />
+
+      <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of tatami" />
+      <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding NumberOfTatami, Mode=TwoWay}" />
+
+      <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of contests" />
+      <TextBox Grid.Column="2" Grid.Row="3" Text="{Binding NumberOfContests, Mode=TwoWay}" />
+      
+      <Button Grid.Row="4" Content="Start" Command="{Binding StartListenerCommand}"/>
+      <Button Grid.Row="4" Grid.Column="1" Content="Update" Command="{Binding UpdateListenerCommand}" />
+      <Button Grid.Row="4" Grid.Column="2" Content="Stop" Command="{Binding StopListenerCommand}" />
+    </Grid>
+    
+  </Grid>
+</Window>
