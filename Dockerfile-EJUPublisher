@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+ARG NUGET_USR
+ARG NUGET_PW
+WORKDIR /app
+
+# Add private repository using credentials from Jenkins
+
+RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo -u $NUGET_USR -p $NUGET_PW --store-password-in-clear-text
+
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY EuroJudoWebContestSheets/*.csproj ./EuroJudoWebContestSheets/
+COPY EJUPublisher/*.csproj ./EJUPublisher/
+RUN dotnet restore
+
+# Copy and build the publisher. Both windows and linux versions
+COPY EJUPublisher/. ./EJUPublisher/
+WORKDIR /app/EJUPublisher
+RUN dotnet publish -r linux-x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained false -c Release -o out/Linux/
+RUN dotnet publish -r win-x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained false -c Release -o out/Windows/
+
+FROM scratch AS exporter
+COPY --from=build /app/EJUPublisher/out .
