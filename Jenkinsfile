@@ -6,7 +6,9 @@ pipeline {
                 NUGET_CREDS = credentials('NuGet')
             }
             steps {
-                sh "docker build -t ejuweb . --build-arg NUGET_USR=$NUGET_CREDS_USR --build-arg NUGET_PW=$NUGET_CREDS_PSW"
+                sh "DOCKER_BUILDKIT=1 docker build -t ejuweb . --build-arg NUGET_USR=$NUGET_CREDS_USR --build-arg NUGET_PW=$NUGET_CREDS_PSW --output out"
+
+                archiveArtifacts artifacts: "**/out/*", fingerprint: true
             }
         }
     }
