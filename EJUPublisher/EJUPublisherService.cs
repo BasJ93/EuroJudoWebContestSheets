@@ -45,7 +45,7 @@ namespace EJUPublisher
             this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
             this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
 
-            this.BufferSizePerTatami = 8192;
+            this.BufferSizePerTatami = 2048;
 
             this.cancellationToken = new CancellationTokenSource();
 

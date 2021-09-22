@@ -71,7 +71,7 @@ namespace EJUPublisher
             hierarchy.Root.AddAppender(fileAppender);
 
             // defining the level and finalizing the configuration
-            hierarchy.Root.Level = Level.Info;
+            hierarchy.Root.Level = Level.Debug;
             hierarchy.Configured = true;
         }
     }
