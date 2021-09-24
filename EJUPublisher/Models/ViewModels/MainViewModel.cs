@@ -2,13 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace EJUPublisher.Models.ViewModels
 {
@@ -51,6 +45,18 @@ namespace EJUPublisher.Models.ViewModels
             }
         }
 
+        private int bufferSizePerTatami;
+
+        public int BufferSizePerTatami
+        {
+            get => bufferSizePerTatami;
+            set
+            {
+                Configuration["BufferSizePerTatami"] = value.ToString();
+                this.RaiseAndSetIfChanged(ref bufferSizePerTatami, value);
+            }
+        }
+
         public AvaloniaList<string> LogLines { get; } = new AvaloniaList<string>();
 
         public ReactiveCommand<Unit, Unit> StartListenerCommand { get; }
@@ -65,6 +71,7 @@ namespace EJUPublisher.Models.ViewModels
             EJUServer = configuration["EJUServer"];
             NumberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
             NumberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
+            BufferSizePerTatami = Convert.ToInt32(configuration["BufferSizePerTatami"]);
 
             StartListenerCommand = ReactiveCommand.Create(PublisherService.Start);
             StopListenerCommand = ReactiveCommand.Create(PublisherService.Stop);

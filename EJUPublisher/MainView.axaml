@@ -60,23 +60,27 @@
         <RowDefinition Height="1*" />
         <RowDefinition Height="1*" />
         <RowDefinition Height="1*" />
-        <RowDefinition Height="5*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="4*" />
       </Grid.RowDefinitions>
 
       <Label Grid.Row="0" Grid.ColumnSpan="3" Content="Configuration" Classes="h1"/>
       
       <Label Grid.Row="1" Grid.Column="0" Content="EJU Server" />
-      <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding EJUServer, Mode=TwoWay}" />
-
-      <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of tatami" />
-      <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding NumberOfTatami, Mode=TwoWay}" />
-
-      <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of contests" />
-      <TextBox Grid.Column="2" Grid.Row="3" Text="{Binding NumberOfContests, Mode=TwoWay}" />
+      <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding EJUServer, Mode=TwoWay}" />
       
-      <Button Grid.Row="4" Content="Start" Command="{Binding StartListenerCommand}"/>
-      <Button Grid.Row="4" Grid.Column="1" Content="Update" Command="{Binding UpdateListenerCommand}" />
-      <Button Grid.Row="4" Grid.Column="2" Content="Stop" Command="{Binding StopListenerCommand}" />
+      <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Buffersize per tatami" />
+      <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding BufferSizePerTatami, Mode=TwoWay}" />
+
+      <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of tatami" />
+      <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding NumberOfTatami, Mode=TwoWay}" />
+
+      <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of contests" />
+      <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding NumberOfContests, Mode=TwoWay}" />
+      
+      <Button Grid.Row="5" Content="Start" Command="{Binding StartListenerCommand}"/>
+      <Button Grid.Row="5" Grid.Column="1" Content="Update" Command="{Binding UpdateListenerCommand}" />
+      <Button Grid.Row="5" Grid.Column="2" Content="Stop" Command="{Binding StopListenerCommand}" />
     </Grid>
     
   </Grid>

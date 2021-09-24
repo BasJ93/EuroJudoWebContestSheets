@@ -44,8 +44,7 @@ namespace EJUPublisher
             this.httpClient = new HttpClient();
             this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
             this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
-
-            this.BufferSizePerTatami = 2048;
+            this.BufferSizePerTatami = Convert.ToInt32(configuration["BufferSizePerTatami"]);
 
             this.cancellationToken = new CancellationTokenSource();
 
@@ -62,6 +61,7 @@ namespace EJUPublisher
             this.httpClient = new HttpClient();
             this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
             this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
+            this.BufferSizePerTatami = Convert.ToInt32(configuration["BufferSizePerTatami"]);
 
             var showfightsConfig = new ShowFightsConfiguration
             {
