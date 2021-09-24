@@ -26,18 +26,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Tournaments" asp-action="Index" class="navbar-brand">EuroJudoWebContestSheets</a>
+                <!--<a asp-area="" asp-controller="Tournaments" asp-action="Index" class="navbar-brand">EuroJudoWebContestSheets</a>-->
+                <a asp-area="" asp-controller="ContestOrder" asp-action="Index" class="navbar-brand">EuroJudoWebContestSheets</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Tournaments" asp-action="Index">Tournaments</a></li>
+                    <!--<li><a asp-area="" asp-controller="Tournaments" asp-action="Index">Tournaments</a></li>-->
                     <li><a asp-area="" asp-controller="ContestOrder" asp-action="Index">Contest Order</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <partial name="_CookieConsentPartial" />
+    <!--<partial name="_CookieConsentPartial" />-->
 
     <div class="container body-content">
         @RenderBody()

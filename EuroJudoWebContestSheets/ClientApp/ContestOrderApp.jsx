@@ -24,7 +24,7 @@ export default class ContestOrderApp extends React.Component {
             })
             .then(data => {
                 if (data.length > 0) {
-                    this.generateLists(contestOrder);
+                    this.generateLists(data);
                 }
             });
     }

@@ -37,7 +37,7 @@ var ContestOrderApp = /** @class */ (function (_super) {
         })
             .then(function (data) {
             if (data.length > 0) {
-                _this.generateLists(contestOrder);
+                _this.generateLists(data);
             }
         });
     };
