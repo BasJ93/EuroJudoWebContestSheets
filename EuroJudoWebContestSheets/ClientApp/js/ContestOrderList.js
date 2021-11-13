@@ -24,7 +24,7 @@ var ConstestOrderList = /** @class */ (function (_super) {
             React.createElement("table", { className: "table table-striped" },
                 React.createElement("thead", null,
                     React.createElement("tr", null,
-                        React.createElement("th", null, "Tatami " + this.props.tatami))),
+                        React.createElement("th", { colSpan: "5" }, "Tatami " + this.props.tatami))),
                 React.createElement("tbody", null, this.props.contests.map(function (contest, i) {
                     return (React.createElement("tr", { key: i },
                         React.createElement("td", null, contest.number),

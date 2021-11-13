@@ -6,7 +6,7 @@ export default class ConstestOrderList extends React.Component {
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th>{"Tatami " + this.props.tatami}</th>
+                            <th colSpan="5">{"Tatami " + this.props.tatami}</th>
                         </tr>
                     </thead>
                     <tbody>
