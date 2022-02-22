@@ -90,7 +90,7 @@ namespace EJUPublisher
 
             this.showFights.ContestsUpdated += PublishContests;
 
-            if(cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested)
             {
                 cancellationToken = new CancellationTokenSource();
             }
@@ -108,12 +108,12 @@ namespace EJUPublisher
 
         private void PublishContests(object sender, IEnumerable<Contest> contests)
         {
-            List<ContestOrder> contestOrder = contests
-                .GroupBy(c => c.Tatami)
-                .OrderBy(g => g.Key)
-                .Skip(1)
-                .Select(group => new ContestOrder(group.Key, group.Take(numberOfContests)))
-                .ToList();
+            var grouped = contests.GroupBy(c => c.Tatami);
+            var ordered = grouped.OrderBy(g => g.Key);
+            var filtered = grouped.Where(g => g.Key != 0);
+            //var skipped = ordered.Skip(1);
+            var selected = filtered.Select(group => new ContestOrder(group.Key, group.Take(numberOfContests)));
+            List<ContestOrder> contestOrder = selected.ToList();
 
             //Upload to webserver
             StringContent requestBody = new StringContent(JsonConvert.SerializeObject(contestOrder), Encoding.UTF8, "application/json");
@@ -122,7 +122,7 @@ namespace EJUPublisher
 
             var result = this.httpClient.PostAsync(WebServer, requestBody).Result;
 
-            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contests.Count()} contests. Upload succes: {result.IsSuccessStatusCode}");
+            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload succes: {result.IsSuccessStatusCode}");
         }
     }
 }
