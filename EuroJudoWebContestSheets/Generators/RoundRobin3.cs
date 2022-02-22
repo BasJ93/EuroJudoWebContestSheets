@@ -198,7 +198,7 @@ namespace EuroJudoWebContestSheets.Generators
                     var contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 2);
                     return new EventResult
                     {
-                        Won = contests.Select(c => c.WhiteWon()).Count().ToString(),
+                        Won = contests.Where(c => c.WhiteWon()).Count().ToString(),
                         Points = contests.Select(c => c.ScoreWhite()).Sum().ToString(),
                     };
                 case 2:
@@ -226,7 +226,7 @@ namespace EuroJudoWebContestSheets.Generators
                     contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 3);
                     return new EventResult
                     {
-                        Won = contests.Select(c => c.WhiteWon() == false).Count().ToString(),
+                        Won = contests.Where(c => !c.WhiteWon()).Count().ToString(),
                         Points = contests.Select(c => c.ScoreBlue()).Sum().ToString(),
                     };
                 default:

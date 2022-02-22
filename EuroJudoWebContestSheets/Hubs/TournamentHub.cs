@@ -15,7 +15,7 @@ namespace EuroJudoWebContestSheets.Hubs
             await base.OnConnectedAsync();
         }
 
-        public async Task updateSheet(ContestSheetData contestData)
+        public async Task UpdateSheet(ContestSheetData contestData)
         {
             //await Clients.All.SendAsync("updateSheet", contestData);
 
