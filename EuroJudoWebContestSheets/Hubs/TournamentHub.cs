@@ -1,8 +1,7 @@
-﻿using EuroJudoWebContestSheets.Models;
+﻿using EuroJudoWebContestSheets.Extentions;
+using EuroJudoWebContestSheets.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EuroJudoWebContestSheets.Hubs
@@ -18,7 +17,9 @@ namespace EuroJudoWebContestSheets.Hubs
 
         public async Task updateSheet(ContestSheetData contestData)
         {
-            await Clients.All.SendAsync("updateSheet", contestData);
+            //await Clients.All.SendAsync("updateSheet", contestData);
+
+            await Clients.Group(contestData.GroupName()).SendAsync("updateSheet", contestData);
         }
 
         public async Task AddToGroup(string groupName)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EuroJudoWebContestSheets.Models
 {
@@ -21,7 +22,7 @@ namespace EuroJudoWebContestSheets.Models
         public void UpdateFromQuery(ContestSheetData queryData)
         {
             CompeditorWhite = String.IsNullOrEmpty(CompeditorWhite) ? queryData.CompeditorWhite : CompeditorWhite;
-            CompeditorBlue = String.IsNullOrEmpty(CompeditorBlue) ? queryData.CompeditorBlue : CompeditorBlue ;
+            CompeditorBlue = String.IsNullOrEmpty(CompeditorBlue) ? queryData.CompeditorBlue : CompeditorBlue;
             IponWhite = queryData.IponWhite;
             WazaariWhite = queryData.WazaariWhite;
             ShidoWhite = queryData.ShidoWhite;
@@ -30,6 +31,5 @@ namespace EuroJudoWebContestSheets.Models
             ShidoBlue = queryData.ShidoBlue;
             ShowSimpleScore = queryData.ShowSimpleScore;
         }
-
     }
 }

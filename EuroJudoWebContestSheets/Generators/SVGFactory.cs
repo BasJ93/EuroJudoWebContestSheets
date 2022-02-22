@@ -12,6 +12,7 @@ namespace EuroJudoWebContestSheets.Generators
                 case 1:
                 case 2:
                 case 3:
+                    return new RoundRobin3(category).Image;
                 case 4:
                     throw new NotImplementedException();
                 case 5:
