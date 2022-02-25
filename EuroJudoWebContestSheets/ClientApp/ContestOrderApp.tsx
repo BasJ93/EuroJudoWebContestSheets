@@ -2,17 +2,24 @@
 
 //https://stackoverflow.com/questions/46190574/how-to-import-signalr-in-react-component
 
-import React from 'react';
-import ContestOrderList from './ContestOrderList';
+import * as React from 'react';
+import { ContestOrderList, IContest, IContestList } from './ContestOrderList';
+import * as signalR from "@microsoft/signalr";
 
-export default class ContestOrderApp extends React.Component {
+interface IContestOrderAppProps {
+    ContestOrders: IContest[]
+}
+
+export default class ContestOrderApp extends React.Component<any, IContestOrderAppProps> {
+    Connection: signalR.HubConnection;
+    
     constructor(props) {
         super(props);
         this.state = {
             ContestOrders: []
         };
 
-        this.connection = null;
+        this.Connection = null;
         this.connected = this.connected.bind(this);
         this.updateContestOrder = this.updateContestOrder.bind(this);
     }
@@ -31,21 +38,21 @@ export default class ContestOrderApp extends React.Component {
 
     componentDidMount() {
         // create the connection instance
-        this.connection = new signalR.HubConnectionBuilder()
+        this.Connection = new signalR.HubConnectionBuilder()
             .withUrl("/contestOrderHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
-            .configureLogging(signalR.LogLevel.Trace)
+            //.configureLogging(signalR.LogLevel.Trace)
             .build();
 
-        this.connection.on('connected', this.connected);
-        this.connection.on('updateContestOrder', this.updateContestOrder);
+        this.Connection.on('connected', this.connected);
+        this.Connection.on('updateContestOrder', this.updateContestOrder);
         
-        this.connection.start()
+        this.Connection.start()
             .then(() => console.info('SignalR Connected'))
             .catch(err => console.error('SignalR Connection Error: ', err));
     }
 
     componentWillUnmount() {
-        this.connection.stop();
+        this.Connection.stop();
     }
 
     connected(message) {
@@ -58,8 +65,8 @@ export default class ContestOrderApp extends React.Component {
     }
 
     generateLists(contestOrder) {
-        let lists = contestOrder.map((list) => {
-            return (<ContestOrderList key={list.tatami.toString()} tatami={list.tatami} contests={list.contests} />);
+        let lists = contestOrder.map((list: IContestList) => {
+            return (<ContestOrderList key={list.tatami.toString()} Tatami={list.tatami} Contests={list.contests} />);
         });
         this.setState({ ContestOrders: lists });
     }

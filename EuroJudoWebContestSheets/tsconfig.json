@@ -9,9 +9,10 @@
     "jsx": "react"
   },
   "files": [
-    "ClientApp/app.js",
-    "ClientApp/ContestOrderList.jsx",
-    "ClientApp/ContestOrderApp.jsx"
+    "ClientApp/contest.ts",
+    "ClientApp/ContestOrderList.tsx",
+    "ClientApp/ContestOrderApp.tsx",
+    "ClientApp/sheet.ts"
   ],
   "exclude": [
     "node_modules",
