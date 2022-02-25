@@ -1,7 +1,6 @@
 using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Models;
-using System;
-using System.Linq;
+using EuroJudoWebContestSheets.Models.DTO;
 using System.Text;
 
 namespace EuroJudoWebContestSheets.Generators
@@ -20,6 +19,13 @@ namespace EuroJudoWebContestSheets.Generators
 
         public RoundRobin3(Category category)
         {
+            bool hasFirstContest = category.TryGet(1, out ContestSheetData contest);
+            RoundRobinSheetDataDto calculated = default;
+            if (hasFirstContest)
+            {
+                calculated = contest.ToRoundRobinDto(category);
+            }
+
             StringBuilder SVG = new StringBuilder();
 
             SVG.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -59,7 +65,7 @@ namespace EuroJudoWebContestSheets.Generators
 
             // Data
 
-            if (category.TryGet(1, out ContestSheetData contest))
+            if (hasFirstContest)
             {
                 // Competitors
                 SVG.Append("<text x=\"30\" y=\"160\" fill=\"black\" id=\"Competitor1\" >");
@@ -125,20 +131,16 @@ namespace EuroJudoWebContestSheets.Generators
             }
 
             // Additional data
-            var competitor1 = CalculateResult(category, 1);
-            var competitor2 = CalculateResult(category, 2);
-            var competitor3 = CalculateResult(category, 3);
-
-            if (competitor1 != default)
+            if (calculated != default)
             {
                 SVG.Append("<text x=\"650\" y=\"135\" fill=\"#000000\" id=\"WinComp1\" >");
-                SVG.Append(competitor1.Won);
+                SVG.Append(calculated.Competitors[0].Won.ToString());
                 SVG.Append("</text>");
                 SVG.Append("<text x=\"650\" y=\"175\" fill=\"#000000\" id=\"PuntComp1\" >");
-                SVG.Append(competitor1.Points);
+                SVG.Append(calculated.Competitors[0].Score.ToString());
                 SVG.Append("</text>");
                 SVG.Append("<text x=\"725\" y=\"160\" fill=\"#000000\" id=\"ResComp1\" >");
-                SVG.Append(competitor1.Position);
+                SVG.Append(calculated.Competitors[0].Position.ToString());
                 SVG.Append("</text>");
             }
             else
@@ -148,16 +150,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"725\" y=\"160\" fill=\"#000000\" id=\"ResComp1\" />");
             }
 
-            if (competitor2 != default)
+            if (calculated != default)
             {
                 SVG.Append("<text x=\"650\" y=\"215\" fill=\"#000000\" id=\"WinComp2\" >");
-                SVG.Append(competitor2.Won);
+                SVG.Append(calculated.Competitors[1].Won.ToString());
                 SVG.Append("</text>");
                 SVG.Append("<text x=\"650\" y=\"255\" fill=\"#000000\" id=\"PuntComp2\" >");
-                SVG.Append(competitor2.Points);
+                SVG.Append(calculated.Competitors[1].Score.ToString());
                 SVG.Append("</text>");
                 SVG.Append("<text x=\"725\" y=\"240\" fill=\"#000000\" id=\"ResComp2\" >");
-                SVG.Append(competitor2.Position);
+                SVG.Append(calculated.Competitors[1].Position.ToString());
                 SVG.Append("</text>");
             }
             else
@@ -167,16 +169,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"725\" y=\"240\" fill=\"#000000\" id=\"ResComp2\" />");
             }
 
-            if (competitor3 != default)
+            if (calculated != default)
             {
                 SVG.Append("<text x=\"650\" y=\"295\" fill=\"#000000\" id=\"WinComp3\" >");
-                SVG.Append(competitor3.Won);
+                SVG.Append(calculated.Competitors[2].Won.ToString());
                 SVG.Append("</text>");
                 SVG.Append("<text x=\"650\" y=\"335\" fill=\"#000000\" id=\"PuntComp3\" >");
-                SVG.Append(competitor3.Points);
+                SVG.Append(calculated.Competitors[2].Score.ToString());
                 SVG.Append("</text>");
                 SVG.Append("<text x=\"725\" y=\"320\" fill=\"#000000\" id=\"ResComp3\" >");
-                SVG.Append(competitor3.Position);
+                SVG.Append(calculated.Competitors[2].Position.ToString());
                 SVG.Append("</text>");
             }
             else
@@ -188,50 +190,6 @@ namespace EuroJudoWebContestSheets.Generators
             SVG.Append("</svg>");
 
             _Image = SVG.ToString();
-        }
-
-        private EventResult CalculateResult(Category category, int competitor)
-        {
-            switch (competitor)
-            {
-                case 1:
-                    var contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 2);
-                    return new EventResult
-                    {
-                        Won = contests.Where(c => c.WhiteWon()).Count().ToString(),
-                        Points = contests.Select(c => c.ScoreWhite()).Sum().ToString(),
-                    };
-                case 2:
-                    var asWhite = category.SheetData.Where(s => s.Contest == 3).FirstOrDefault();
-                    var asBlue = category.SheetData.Where(s => s.Contest == 2).FirstOrDefault();
-                    int won = 0;
-                    int score = 0;
-                    if (asWhite != default)
-                    {
-                        won += asWhite.WhiteWon() ? 1 : 0;
-                        score += asWhite.ScoreWhite();
-                    }
-                    if (asBlue != default)
-                    {
-                        won += asBlue.WhiteWon() ? 0 : 1;
-                        score += asBlue.ScoreBlue();
-                    }
-                                        
-                    return new EventResult
-                    {
-                        Won = won.ToString(),
-                        Points = score.ToString(),
-                    };
-                case 3:
-                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 3);
-                    return new EventResult
-                    {
-                        Won = contests.Where(c => !c.WhiteWon()).Count().ToString(),
-                        Points = contests.Select(c => c.ScoreBlue()).Sum().ToString(),
-                    };
-                default:
-                    return default;
-            }
         }
     }
 }

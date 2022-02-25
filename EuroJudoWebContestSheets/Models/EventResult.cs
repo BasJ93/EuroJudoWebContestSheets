@@ -1,11 +1,11 @@
 namespace EuroJudoWebContestSheets.Models
 {
-    internal class EventResult
+    public class EventResult
     {
-        public string Won { get; set; }
+        public int Won { get; set; }
 
-        public string Points { get; set; }
+        public int Points { get; set; }
 
-        public string Position { get; set; }
+        public int Position { get; set; }
     }
 }
