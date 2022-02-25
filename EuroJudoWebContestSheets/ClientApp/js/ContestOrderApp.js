@@ -15,8 +15,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 //https://stackoverflow.com/questions/46190574/how-to-import-signalr-in-react-component
-import React from 'react';
-import ContestOrderList from './ContestOrderList';
+import * as React from 'react';
+import { ContestOrderList } from './ContestOrderList';
+import * as signalR from "@microsoft/signalr";
 var ContestOrderApp = /** @class */ (function (_super) {
     __extends(ContestOrderApp, _super);
     function ContestOrderApp(props) {
@@ -24,7 +25,7 @@ var ContestOrderApp = /** @class */ (function (_super) {
         _this.state = {
             ContestOrders: []
         };
-        _this.connection = null;
+        _this.Connection = null;
         _this.connected = _this.connected.bind(_this);
         _this.updateContestOrder = _this.updateContestOrder.bind(_this);
         return _this;
@@ -43,18 +44,18 @@ var ContestOrderApp = /** @class */ (function (_super) {
     };
     ContestOrderApp.prototype.componentDidMount = function () {
         // create the connection instance
-        this.connection = new signalR.HubConnectionBuilder()
+        this.Connection = new signalR.HubConnectionBuilder()
             .withUrl("/contestOrderHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
-            .configureLogging(signalR.LogLevel.Trace)
+            //.configureLogging(signalR.LogLevel.Trace)
             .build();
-        this.connection.on('connected', this.connected);
-        this.connection.on('updateContestOrder', this.updateContestOrder);
-        this.connection.start()
+        this.Connection.on('connected', this.connected);
+        this.Connection.on('updateContestOrder', this.updateContestOrder);
+        this.Connection.start()
             .then(function () { return console.info('SignalR Connected'); })
             .catch(function (err) { return console.error('SignalR Connection Error: ', err); });
     };
     ContestOrderApp.prototype.componentWillUnmount = function () {
-        this.connection.stop();
+        this.Connection.stop();
     };
     ContestOrderApp.prototype.connected = function (message) {
         console.log(message);
@@ -65,7 +66,7 @@ var ContestOrderApp = /** @class */ (function (_super) {
     };
     ContestOrderApp.prototype.generateLists = function (contestOrder) {
         var lists = contestOrder.map(function (list) {
-            return (React.createElement(ContestOrderList, { key: list.tatami.toString(), tatami: list.tatami, contests: list.contests }));
+            return (React.createElement(ContestOrderList, { key: list.tatami.toString(), Tatami: list.tatami, Contests: list.contests }));
         });
         this.setState({ ContestOrders: lists });
     };

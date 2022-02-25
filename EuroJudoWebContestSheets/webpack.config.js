@@ -3,10 +3,10 @@ const webpack = require('webpack');
 
 module.exports = {
     mode: 'development',
-    entry: { 'main': './ClientApp/js/app.js'},
+    entry: { 'contest': './ClientApp/js/contest.js', 'sheet': './ClientApp/js/sheet.js'},
     output: {
         path: path.resolve(__dirname, 'wwwroot/js'),
-        filename: 'bundle.js',
+        filename: 'bundle-[name].js',
         publicPath: 'js/'
     }/*,
     plugins: [
