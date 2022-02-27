@@ -11,6 +11,7 @@ RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPriva
 COPY *.sln .
 COPY EuroJudoWebContestSheets/*.csproj ./EuroJudoWebContestSheets/
 COPY EJUPublisher/*.csproj ./EJUPublisher/
+COPY EuroJudoWebContestSheets.Tests/*.csproj ./EuroJudoWebContestSheets.Tests/
 RUN dotnet restore
 
 # Copy and build the publisher. Both windows and linux versions
