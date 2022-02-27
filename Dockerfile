@@ -35,7 +35,7 @@ WORKDIR /app/EuroJudoWebContestSheets
 RUN tsc
 
 # Run Webpack
-RUN npm run wbp
+RUN webpack
 
 #Compile C#
 RUN dotnet publish -c Release -o out
