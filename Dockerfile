@@ -14,8 +14,8 @@ RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
 # Install typescript tools
-RUN npm i -g typescript webpack-cli
-RUN npm i webpack @microsoft/signalr @types/node @types/react @types/react-dom
+RUN npm i -g typescript
+RUN npm i webpack-cli webpack @microsoft/signalr @types/node @types/react @types/react-dom
 
 # Add private repository using credentials from Jenkins
 RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo -u $NUGET_USR -p $NUGET_PW --store-password-in-clear-text
@@ -35,7 +35,7 @@ WORKDIR /app/EuroJudoWebContestSheets
 RUN tsc
 
 # Run Webpack
-RUN webpack
+RUN npx webpack --config webpack.config.js
 
 #Compile C#
 RUN dotnet publish -c Release -o out
