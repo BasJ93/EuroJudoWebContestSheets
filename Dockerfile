@@ -15,7 +15,7 @@ ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
 # Install typescript tools
 RUN npm i -g typescript
-RUN npm i webpack-cli webpack @microsoft/signalr @types/node @types/react @types/react-dom
+RUN npm i webpack-cli webpack
 
 # Add private repository using credentials from Jenkins
 RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo -u $NUGET_USR -p $NUGET_PW --store-password-in-clear-text
@@ -30,6 +30,9 @@ RUN dotnet restore
 # copy everything else and build app
 COPY EuroJudoWebContestSheets/. ./EuroJudoWebContestSheets/
 WORKDIR /app/EuroJudoWebContestSheets
+
+# Install dependancies
+RUN npm i
 
 # Compile typescript
 RUN tsc
