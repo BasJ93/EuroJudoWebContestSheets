@@ -21,6 +21,7 @@ namespace EuroJudoWebContestSheets.Generators
                 case 5:
                     return new RoundRobin5(category).Image;
                 case 6:
+                    return new RoundRobin6(category).Image;
                 case 7:
                 case 8:
                     return new DoubleElimination8(category).Image;

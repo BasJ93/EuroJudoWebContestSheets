@@ -8,5 +8,5 @@
 
 @foreach(Category category in ViewBag.Categories)
 {
-    <a href="ContestSheet?tID=@category.TournamentID&cID=@category.ID">@category.CategoryName</a><br />
+    <a href="/tournaments/ContestSheet?tID=@category.TournamentID&cID=@category.ID">@category.CategoryName</a><br />
 }

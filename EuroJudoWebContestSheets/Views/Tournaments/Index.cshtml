@@ -8,5 +8,5 @@
 
 @foreach(Tournament tournament in ViewBag.Tournaments)
 {
-    <a href="Categories?tournamentID=@tournament.ID">@tournament.TournamentName</a>
+    <a href="/tournaments/Categories?tournamentID=@tournament.ID">@tournament.TournamentName</a>
 }
