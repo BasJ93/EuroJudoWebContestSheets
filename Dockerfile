@@ -14,7 +14,7 @@ RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
 # Install typescript tools
-RUN npm i -g typescript webpack
+RUN npm i -g typescript webpack webpack-cli
 RUN npm i @microsoft/signalr @types/node @types/react @types/react-dom
 
 # Add private repository using credentials from Jenkins
