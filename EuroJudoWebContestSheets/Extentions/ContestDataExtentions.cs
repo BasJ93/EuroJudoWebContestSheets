@@ -408,7 +408,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         Points = contests.Select(c => c.ScoreWhite()).Sum(),
                     };
                 case 2:
-                    var asWhite = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 6);
+                    var asWhite = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 6);
                     var asBlue = category.SheetData.Where(s => s.Contest == 1).FirstOrDefault();
                     int won = asWhite.Where(c => c.WhiteWon()).Count();
                     int score = asWhite.Select(c => c.ScoreWhite()).Sum();

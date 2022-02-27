@@ -10,12 +10,13 @@
     var contestType = "@ViewBag.Type";
 </script>
 
+
+<a href="/tournaments/Categories?tournamentID=@ViewBag.TournamentID" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>Toernooi</a>
 <!--Show the name of the category as the heading.-->
 <h2>@ViewBag.Title</h2>
 
+
 @(new HtmlString(ViewBag.SVGText))
-
-
 
 
 @section scripts

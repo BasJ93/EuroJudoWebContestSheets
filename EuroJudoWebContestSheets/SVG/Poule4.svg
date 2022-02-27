@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1000 480"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg">
+  <line
+     x1="20"
+     y1="40.442131"
+     x2="960"
+     y2="40.442131"
+     stroke="#000000"
+     stroke-width="0.892659"
+     id="line323" />
+  <line
+     x1="20"
+     y1="120.46951"
+     x2="960"
+     y2="120.46951"
+     stroke="#000000"
+     stroke-width="0.892659"
+     id="line323-6" />
+  <line
+     x1="810"
+     y1="80.117348"
+     x2="885"
+     y2="80.117348"
+     stroke="#000000"
+     stroke-width="0.25211"
+     id="line323-6-7" />
+  <line
+     x1="810"
+     y1="160.12605"
+     x2="885"
+     y2="160.12605"
+     stroke="#000000"
+     stroke-width="0.25211"
+     id="line323-6-7-6" />
+  <line
+     x1="810"
+     y1="240.12605"
+     x2="885"
+     y2="240.12605"
+     stroke="#000000"
+     stroke-width="0.25211"
+     id="line323-6-7-6-6" />
+  <line
+     x1="810"
+     y1="320.12607"
+     x2="885"
+     y2="320.12607"
+     stroke="#000000"
+     stroke-width="0.25211"
+     id="line323-6-7-6-6-6" />
+  <line
+     x1="810"
+     y1="400.12607"
+     x2="885"
+     y2="400.12607"
+     stroke="#000000"
+     stroke-width="0.25211"
+     id="line323-6-7-6-6-6-7" />
+  <line
+     x1="20"
+     y1="200.48842"
+     x2="960"
+     y2="200.48842"
+     stroke="#000000"
+     stroke-width="0.892659"
+     id="line323-6-8" />
+  <line
+     x1="20"
+     y1="280.51157"
+     x2="960"
+     y2="280.51157"
+     stroke="#000000"
+     stroke-width="0.892659"
+     id="line323-6-8-0" />
+  <line
+     x1="20"
+     y1="360.53473"
+     x2="960"
+     y2="360.53473"
+     stroke="#000000"
+     stroke-width="0.892659"
+     id="line323-6-8-0-4" />
+  <line
+     x1="20"
+     y1="440.55786"
+     x2="960"
+     y2="440.55786"
+     stroke="#000000"
+     stroke-width="0.892659"
+     id="line323-6-8-0-4-5" /> <!--Done-->
+  <text
+     x="30"
+     y="160"
+     fill="black"
+     id="Competitor1" />
+  <text
+     x="449"
+     y="160"
+     fill="black"
+     id="1W" />
+  <text
+     x="579"
+     y="160"
+     fill="black"
+     id="3W" />
+  <text
+     x="709"
+     y="160"
+     fill="#000000"
+     id="5W" />
+  <text
+     x="845"
+     y="135"
+     fill="#000000"
+     id="WinComp1" />
+  <text
+     x="845"
+     y="175"
+     fill="#000000"
+     id="PuntComp1" />
+  <text
+     x="920"
+     y="160"
+     fill="#000000"
+     id="ResComp1" />
+  <text
+     x="30"
+     y="240"
+     fill="black"
+     id="Competitor2" />
+  <text
+     x="449"
+     y="240"
+     fill="black"
+     id="1B" />
+  <text
+     x="644"
+     y="240"
+     fill="#000000"
+     id="4W" />
+  <text
+     x="774"
+     y="240"
+     fill="black"
+     id="6W" />
+  <text
+     x="845"
+     y="215"
+     fill="#000000"
+     id="WinComp2" />
+  <text
+     x="845"
+     y="255"
+     fill="#000000"
+     id="PuntComp2" />
+  <text
+     x="920"
+     y="240"
+     fill="#000000"
+     id="ResComp2" />
+  <text
+     x="30"
+     y="320"
+     fill="black"
+     id="Competitor3" />
+  <text
+     x="514"
+     y="320"
+     fill="#000000"
+     id="2W" />
+  <text
+     x="644"
+     y="320"
+     fill="#000000"
+     id="4B" />
+  <text
+     x="709"
+     y="320"
+     fill="#000000"
+     id="5B" />
+  <text
+     x="845"
+     y="295"
+     fill="#000000"
+     id="WinComp3" />
+  <text
+     x="845"
+     y="335"
+     fill="#000000"
+     id="PuntComp3" />
+  <text
+     x="920"
+     y="320"
+     fill="#000000"
+     id="ResComp3" />
+  <text
+     x="30"
+     y="400"
+     fill="black"
+     id="Competitor4" />
+  <text
+     x="514"
+     y="400"
+     fill="#000000"
+     id="2B" />
+  <text
+     x="579"
+     y="400"
+     fill="#000000"
+     id="3B" />
+  <text
+     x="774"
+     y="400"
+     fill="#000000"
+     id="6B" />
+  <text
+     x="845"
+     y="375"
+     fill="#000000"
+     id="WinComp4" />
+  <text
+     x="845"
+     y="415"
+     fill="#000000"
+     id="PuntComp4" />
+  <text
+     x="920"
+     y="400"
+     fill="#000000"
+     id="ResComp4" />
+  <line
+     x1="19.804539"
+     y1="40"
+     x2="19.804539"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1"
+     id="line347" />
+  <line
+     x1="420.4523"
+     y1="40"
+     x2="420.4523"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00005"
+     id="line347-3-6" />
+  <line
+     x1="485.50778"
+     y1="40"
+     x2="485.50778"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5" />
+  <line
+     x1="550.51556"
+     y1="40"
+     x2="550.51556"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0" />
+  <line
+     x1="615.52332"
+     y1="40"
+     x2="615.52332"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0-9" />
+  <line
+     x1="680.53107"
+     y1="40"
+     x2="680.53107"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0-9-8" />
+  <line
+     x1="745.53882"
+     y1="40"
+     x2="745.53882"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0-9-8-9" />
+  <line
+     x1="810.54657"
+     y1="40"
+     x2="810.54657"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0-9-8-9-6" />
+  <line
+     x1="960.5"
+     y1="40"
+     x2="960.5"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0-9-8-9-6-1" />
+  <line
+     x1="885.5"
+     y1="40"
+     x2="885.5"
+     y2="440"
+     stroke="#000000"
+     stroke-width="1.00006"
+     id="line347-3-6-5-0-9-8-9-6-8" />
+  <text
+     x="447.58496"
+     y="88.359375"
+     fill="#000000"
+     id="text391-1"
+     style="font-size:18px;stroke-width:0.999997">1</text>
+  <text
+     x="512.58496"
+     y="88.906166"
+     fill="#000000"
+     id="text391"
+     style="font-size:18px;stroke-width:0.999997">2</text>
+  <text
+     x="577.58496"
+     y="88.359375"
+     fill="#000000"
+     id="text391-7"
+     style="font-size:18px;stroke-width:0.999997">3</text>
+  <text
+     x="642.53223"
+     y="88.359375"
+     fill="#000000"
+     id="text391-7-0"
+     style="font-size:18px;stroke-width:0.999997">4</text>
+  <text
+     x="708.32324"
+     y="88.086914"
+     fill="#000000"
+     id="text391-7-0-8"
+     style="font-size:18px;stroke-width:0.999997">5</text>
+  <text
+     x="772.35645"
+     y="88.086914"
+     fill="#000000"
+     id="text391-7-0-8-5"
+     style="font-size:18px;stroke-width:0.999997">6</text>
+  <text
+     x="823.19141"
+     y="68.174805"
+     fill="#000000"
+     id="text391-7-0-8-5-9-3-1-4-1-9"
+     style="font-size:18px;stroke-width:0.999997">Winst</text>
+  <text
+     x="817.24219"
+     y="108.08691"
+     fill="#000000"
+     id="text391-7-0-8-5-9-3-1-4-1"
+     style="font-size:18px;stroke-width:0.999997">Punten</text>
+  <text
+     x="904.95361"
+     y="88.086914"
+     fill="#000000"
+     id="text391-7-0-8-5-9-3-1-4-1-7"
+     style="font-size:18px;stroke-width:0.999997">Res.</text>
+     
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 421.5,400.5 v -39 h 31.5 31.5 v 39 39 H 453 421.5 Z"
+     id="path1718" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 421.5,320.5 v -39 h 31.5 31.5 v 39 39 H 453 421.5 Z"
+     id="path1757" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 486.5,160.5 v -39 h 31.5 31.5 v 39 39 H 518 486.5 Z"
+     id="path2073" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 486.5,240.5 v -39 h 31.5 31.5 v 39 39 H 518 486.5 Z"
+     id="path2112" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 551.5,320.5 v -39 h 31.5 31.5 v 39 39 H 583 551.5 Z"
+     id="path2666" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 551.5,240.5 v -39 h 31.5 31.5 v 39 39 H 583 551.5 Z"
+     id="path2705" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 616.5,160.5 v -39 h 31.5 31.5 v 39 39 H 648 616.5 Z"
+     id="path3341" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 616.5,400.5 v -39 h 31.5 31.5 v 39 39 H 648 616.5 Z"
+     id="path3856" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 681.5,240.5 v -39 h 31.5 31.5 v 39 39 H 713 681.5 Z"
+     id="path3934" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 681.5,400.5 v -39 h 31.5 31.5 v 39 39 H 713 681.5 Z"
+     id="path1009" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 746.5,160.5 v -39 h 31.5 31.5 v 39 39 H 778 746.5 Z"
+     id="path1325" />
+  <path
+     style="fill:#a0a0a0;stroke:none"
+     d="m 746.5,320.5 v -39 h 31.5 31.5 v 39 39 H 778 746.5 Z"
+     id="path1364" />
+</svg>

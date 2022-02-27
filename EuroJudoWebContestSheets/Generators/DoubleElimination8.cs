@@ -30,24 +30,24 @@ namespace EuroJudoWebContestSheets.Generators
             
             if (category.TryGet(1, out ContestSheetData contest))
             {
-                SVG = SVG + "<text x=\"180\" y=\"65\" fill=\"black\" id=\"1W\"></text>";
-                SVG = SVG + "<text x=\"180\" y=\"175\" fill=\"black\" id=\"1B\"></text>";
+                SVG = SVG + "<text x=\"180\" y=\"65\" fill=\"black\" id=\"1W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"180\" y=\"175\" fill=\"black\" id=\"1B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"180\" y=\"65\" fill=\"black\" id=\"1W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"180\" y=\"175\" fill=\"black\" id=\"1B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"180\" y=\"65\" fill=\"black\" id=\"1W\"></text>";
+                SVG = SVG + "<text x=\"180\" y=\"175\" fill=\"black\" id=\"1B\"></text>";
             }
 
             if (category.TryGet(2, out contest))
             {
-                SVG = SVG + "<text x=\"180\" y=\"285\" fill=\"black\" id=\"2W\"></text>";
-                SVG = SVG + "<text x=\"180\" y=\"395\" fill=\"black\" id=\"2B\"></text>";
+                SVG = SVG + "<text x=\"180\" y=\"285\" fill=\"black\" id=\"2W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"180\" y=\"395\" fill=\"black\" id=\"2B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"180\" y=\"285\" fill=\"black\" id=\"2W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"180\" y=\"395\" fill=\"black\" id=\"2B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"180\" y=\"285\" fill=\"black\" id=\"2W\"></text>";
+                SVG = SVG + "<text x=\"180\" y=\"395\" fill=\"black\" id=\"2B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"320\" y1=\"75\" x2=\"320\" y2=\"185\" stroke=\"black\" stroke-width=\"1\" />";
@@ -58,13 +58,13 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(5, out contest))
             {
-                SVG = SVG + "<text x=\"330\" y=\"120\" fill=\"black\" id=\"5W\"></text>";
-                SVG = SVG + "<text x=\"330\" y=\"340\" fill=\"black\" id=\"5B\"></text>";
+                SVG = SVG + "<text x=\"330\" y=\"120\" fill=\"black\" id=\"5W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"330\" y=\"340\" fill=\"black\" id=\"5B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"330\" y=\"120\" fill=\"black\" id=\"5W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"330\" y=\"340\" fill=\"black\" id=\"5B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"330\" y=\"120\" fill=\"black\" id=\"5W\"></text>";
+                SVG = SVG + "<text x=\"330\" y=\"340\" fill=\"black\" id=\"5B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"470\" y1=\"130\" x2=\"470\" y2=\"350\" stroke=\"black\" stroke-width=\"1\" />";
@@ -73,11 +73,11 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(11, out contest))
             {
-                SVG = SVG + "<text x=\"480\" y=\"230\" fill=\"black\" id=\"11W\"></text>";
+                SVG = SVG + "<text x=\"480\" y=\"230\" fill=\"black\" id=\"11W\">" + contest.CompeditorWhite + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"480\" y=\"230\" fill=\"black\" id=\"11W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"480\" y=\"230\" fill=\"black\" id=\"11W\"></text>";
             }
 
             //Draw the right of the 8 person sheet, main bracket
@@ -88,24 +88,24 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(3, out contest))
             {
-                SVG = SVG + "<text x=\"950\" y=\"65\" fill=\"black\" id=\"3W\"></text>";
-                SVG = SVG + "<text x=\"950\" y=\"175\" fill=\"black\" id=\"3B\"></text>";
+                SVG = SVG + "<text x=\"950\" y=\"65\" fill=\"black\" id=\"3W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"950\" y=\"175\" fill=\"black\" id=\"3B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"950\" y=\"65\" fill=\"black\" id=\"3W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"950\" y=\"175\" fill=\"black\" id=\"3B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"950\" y=\"65\" fill=\"black\" id=\"3W\"></text>";
+                SVG = SVG + "<text x=\"950\" y=\"175\" fill=\"black\" id=\"3B\"></text>";
             }            
 
             if (category.TryGet(4, out contest))
             {
-                SVG = SVG + "<text x=\"950\" y=\"285\" fill=\"black\" id=\"4W\"></text>";
-                SVG = SVG + "<text x=\"950\" y=\"395\" fill=\"black\" id=\"4B\"></text>";
+                SVG = SVG + "<text x=\"950\" y=\"285\" fill=\"black\" id=\"4W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"950\" y=\"395\" fill=\"black\" id=\"4B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"950\" y=\"285\" fill=\"black\" id=\"4W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"950\" y=\"395\" fill=\"black\" id=\"4B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"950\" y=\"285\" fill=\"black\" id=\"4W\"></text>";
+                SVG = SVG + "<text x=\"950\" y=\"395\" fill=\"black\" id=\"4B\"></text>";
             }
             
 
@@ -117,13 +117,13 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(6, out contest))
             {
-                SVG = SVG + "<text x=\"800\" y=\"120\" fill=\"black\" id=\"6W\"></text>";
-                SVG = SVG + "<text x=\"800\" y=\"340\" fill=\"black\" id=\"6B\"></text>";
+                SVG = SVG + "<text x=\"800\" y=\"120\" fill=\"black\" id=\"6W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"800\" y=\"340\" fill=\"black\" id=\"6B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"800\" y=\"120\" fill=\"black\" id=\"6W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"800\" y=\"340\" fill=\"black\" id=\"6B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"800\" y=\"120\" fill=\"black\" id=\"6W\"></text>";
+                SVG = SVG + "<text x=\"800\" y=\"340\" fill=\"black\" id=\"6B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"790\" y1=\"130\" x2=\"790\" y2=\"350\" stroke=\"black\" stroke-width=\"1\" />";
@@ -133,11 +133,11 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(11, out contest))
             {
-                SVG = SVG + "<text x=\"650\" y=\"230\" fill=\"black\" id=\"11B\"></text>";
+                SVG = SVG + "<text x=\"650\" y=\"230\" fill=\"black\" id=\"11B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"650\" y=\"230\" fill=\"black\" id=\"11B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"650\" y=\"230\" fill=\"black\" id=\"11B\"></text>";
             }
             
             SVG = SVG + "<text x=\"155\" y=\"80\" fill=\"black\">1</text>";
@@ -166,13 +166,13 @@ namespace EuroJudoWebContestSheets.Generators
             
             if (category.TryGet(7, out contest))
             {
-                SVG = SVG + "<text x=\"180\" y=\"495\" fill=\"black\" id=\"7W\"></text>";
-                SVG = SVG + "<text x=\"180\" y=\"605\" fill=\"black\" id=\"7B\"></text>";
+                SVG = SVG + "<text x=\"180\" y=\"495\" fill=\"black\" id=\"7W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"180\" y=\"605\" fill=\"black\" id=\"7B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"180\" y=\"495\" fill=\"black\" id=\"7W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"180\" y=\"605\" fill=\"black\" id=\"7B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"180\" y=\"495\" fill=\"black\" id=\"7W\"></text>";
+                SVG = SVG + "<text x=\"180\" y=\"605\" fill=\"black\" id=\"7B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"320\" y1=\"505\" x2=\"320\" y2=\"615\" stroke=\"black\" stroke-width=\"1\" />";
@@ -182,13 +182,13 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(9, out contest))
             {
-                SVG = SVG + "<text x=\"330\" y=\"550\" fill=\"black\" id=\"9W\"></text>";
-                SVG = SVG + "<text x=\"330\" y=\"660\" fill=\"black\" id=\"9B\"></text>";
+                SVG = SVG + "<text x=\"330\" y=\"550\" fill=\"black\" id=\"9W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"330\" y=\"660\" fill=\"black\" id=\"9B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"330\" y=\"550\" fill=\"black\" id=\"9W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"330\" y=\"660\" fill=\"black\" id=\"9B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"330\" y=\"550\" fill=\"black\" id=\"9W\"></text>";
+                SVG = SVG + "<text x=\"330\" y=\"660\" fill=\"black\" id=\"9B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"470\" y1=\"560\" x2=\"470\" y2=\"670\" stroke=\"black\" stroke-width=\"1\" />";
@@ -203,13 +203,13 @@ namespace EuroJudoWebContestSheets.Generators
             
             if (category.TryGet(8, out contest))
             {
-                SVG = SVG + "<text x=\"950\" y=\"495\" fill=\"black\" id=\"8W\"></text>";
-                SVG = SVG + "<text x=\"950\" y=\"605\" fill=\"black\" id=\"8B\"></text>";
+                SVG = SVG + "<text x=\"950\" y=\"495\" fill=\"black\" id=\"8W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"950\" y=\"605\" fill=\"black\" id=\"8B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"950\" y=\"495\" fill=\"black\" id=\"8W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"950\" y=\"605\" fill=\"black\" id=\"8B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"950\" y=\"495\" fill=\"black\" id=\"8W\"></text>";
+                SVG = SVG + "<text x=\"950\" y=\"605\" fill=\"black\" id=\"8B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"940\" y1=\"505\" x2=\"940\" y2=\"615\" stroke=\"black\" stroke-width=\"1\" />";
@@ -219,13 +219,13 @@ namespace EuroJudoWebContestSheets.Generators
 
             if (category.TryGet(10, out contest))
             {
-                SVG = SVG + "<text x=\"800\" y=\"550\" fill=\"black\" id=\"10W\"></text>";
-                SVG = SVG + "<text x=\"800\" y=\"660\" fill=\"black\" id=\"10B\"></text>";
+                SVG = SVG + "<text x=\"800\" y=\"550\" fill=\"black\" id=\"10W\">" + contest.CompeditorWhite + "</text>";
+                SVG = SVG + "<text x=\"800\" y=\"660\" fill=\"black\" id=\"10B\">" + contest.CompeditorBlue + "</text>";
             }
             else
             {
-                SVG = SVG + "<text x=\"800\" y=\"550\" fill=\"black\" id=\"10W\">" + contest.CompeditorWhite + "</text>";
-                SVG = SVG + "<text x=\"800\" y=\"660\" fill=\"black\" id=\"10B\">" + contest.CompeditorBlue + "</text>";
+                SVG = SVG + "<text x=\"800\" y=\"550\" fill=\"black\" id=\"10W\"></text>";
+                SVG = SVG + "<text x=\"800\" y=\"660\" fill=\"black\" id=\"10B\"></text>";
             }
 
             SVG = SVG + "<line x1=\"790\" y1=\"560\" x2=\"790\" y2=\"670\" stroke=\"black\" stroke-width=\"1\" />";
@@ -246,7 +246,7 @@ namespace EuroJudoWebContestSheets.Generators
             SVG = SVG + "<line x1=\"940\" y1=\"130\" x2=\"790\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" />";
             SVG = SVG + "<line x1=\"940\" y1=\"350\" x2=\"790\" y2=\"350\" stroke=\"black\" stroke-width=\"1\" />";
 
-            //Add 3rd places
+            //Add Final result grid places
 
             SVG = SVG + "</svg>";
 
