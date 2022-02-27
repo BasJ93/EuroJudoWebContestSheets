@@ -54,5 +54,12 @@ namespace EuroJudoWebContestSheets.Controllers
             List<ContestSheetData> sheetData = _db.ContestSheetData.Where(o => o.TournamentID == TournamentId).ToList();
             return new JsonResult(sheetData);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RenderSVG([FromQuery] int tID, [FromQuery] int cID)
+        {
+            Category category = await _db.Categories.Include(o => o.SheetData).Where(o => o.ID == cID && o.TournamentID == tID).FirstOrDefaultAsync();
+            return Ok(Generators.SVGFactory.Get(category, out ContestType type));
+        }
     }
 }

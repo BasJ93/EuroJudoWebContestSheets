@@ -30,7 +30,6 @@ namespace EuroJudoWebContestSheets.Generators
 
             SVG.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             SVG.Append("<svg viewBox=\"0 0 1240 560\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">");
-            SVG.Append("<link rel=\"stylesheet\" href=\"/css/svg.css\" type=\"text/css\" />");
 
             // Horizontal lines
             SVG.Append("<line x1=\"20\" y1=\"40\" x2=\"1220\" y2=\"40\" stroke=\"#000000\" stroke-width=\"1\" id=\"line323\" />");
@@ -304,9 +303,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"1099\" y=\"175\" fill=\"#000000\" id=\"PuntComp1\" >");
                 SVG.Append(calculated.Competitors[0].Score.ToString());
                 SVG.Append("</text>");
-                SVG.Append("<text x=\"1180\" y=\"160\" fill=\"#000000\" id=\"ResComp1\" >");
-                SVG.Append(calculated.Competitors[0].Position.ToString());
-                SVG.Append("</text>");
+                if (calculated.Competitors[0].Position != 0)
+                {
+                    SVG.Append("<text x=\"1180\" y=\"160\" fill=\"#000000\" id=\"ResComp1\" >");
+                    SVG.Append(calculated.Competitors[0].Position.ToString());
+                    SVG.Append("</text>");
+                }
+                else
+                {
+                    SVG.Append("<text x=\"1180\" y=\"160\" fill=\"#000000\" id=\"ResComp1\" />");
+                }
             }
             else
             {
@@ -323,9 +329,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"1099\" y=\"255\" fill=\"#000000\" id=\"PuntComp2\" >");
                 SVG.Append(calculated.Competitors[1].Score.ToString());
                 SVG.Append("</text>");
-                SVG.Append("<text x=\"1180\" y=\"240\" fill=\"#000000\" id=\"ResComp2\" >");
-                SVG.Append(calculated.Competitors[1].Position.ToString());
-                SVG.Append("</text>");
+                if (calculated.Competitors[1].Position != 0)
+                {
+                    SVG.Append("<text x=\"1180\" y=\"240\" fill=\"#000000\" id=\"ResComp2\" >");
+                    SVG.Append(calculated.Competitors[1].Position.ToString());
+                    SVG.Append("</text>");
+                }
+                else
+                {
+                    SVG.Append("<text x=\"1180\" y=\"240\" fill=\"#000000\" id=\"ResComp2\" />");
+                }
             }
             else
             {
@@ -342,9 +355,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"1099\" y=\"335\" fill=\"#000000\" id=\"PuntComp3\" >");
                 SVG.Append(calculated.Competitors[2].Score.ToString());
                 SVG.Append("</text>");
-                SVG.Append("<text x=\"1180\" y=\"320\" fill=\"#000000\" id=\"ResComp3\" >");
-                SVG.Append(calculated.Competitors[2].Position.ToString());
-                SVG.Append("</text>");
+                if (calculated.Competitors[1].Position != 0)
+                {
+                    SVG.Append("<text x=\"1180\" y=\"320\" fill=\"#000000\" id=\"ResComp3\" >");
+                    SVG.Append(calculated.Competitors[2].Position.ToString());
+                    SVG.Append("</text>");
+                }
+                else
+                {
+                    SVG.Append("<text x=\"1180\" y=\"320\" fill=\"#000000\" id=\"ResComp3\" />");
+                }
             }
             else
             {
@@ -361,9 +381,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"1099\" y=\"415\" fill=\"#000000\" id=\"PuntComp4\" >");
                 SVG.Append(calculated.Competitors[3].Score.ToString());
                 SVG.Append("</text>");
-                SVG.Append("<text x=\"1180\" y=\"400\" fill=\"#000000\" id=\"ResComp4\" >");
-                SVG.Append(calculated.Competitors[3].Position.ToString());
-                SVG.Append("</text>");
+                if (calculated.Competitors[1].Position != 0)
+                {
+                    SVG.Append("<text x=\"1180\" y=\"400\" fill=\"#000000\" id=\"ResComp4\" >");
+                    SVG.Append(calculated.Competitors[3].Position.ToString());
+                    SVG.Append("</text>");
+                }
+                else
+                {
+                    SVG.Append("<text x=\"1180\" y=\"400\" fill=\"#000000\" id=\"ResComp4\" />");
+                }
             }
             else
             {
@@ -380,9 +407,16 @@ namespace EuroJudoWebContestSheets.Generators
                 SVG.Append("<text x=\"1099\" y=\"495\" fill=\"#000000\" id=\"PuntComp5\" >");
                 SVG.Append(calculated.Competitors[4].Score.ToString());
                 SVG.Append("</text>");
-                SVG.Append("<text x=\"1180\" y=\"480\" fill=\"#000000\" id=\"ResComp5\" >");
-                SVG.Append(calculated.Competitors[4].Position.ToString());
-                SVG.Append("</text>");
+                if (calculated.Competitors[1].Position != 0)
+                {
+                    SVG.Append("<text x=\"1180\" y=\"480\" fill=\"#000000\" id=\"ResComp5\" >");
+                    SVG.Append(calculated.Competitors[4].Position.ToString());
+                    SVG.Append("</text>");
+                }
+                else
+                {
+                    SVG.Append("<text x=\"1180\" y=\"480\" fill=\"#000000\" id=\"ResComp5\" />");
+                }
             }
             else
             {

@@ -80,6 +80,8 @@ namespace EuroJudoWebContestSheets.Extentions
             EventResult result5;
             EventResult result6;
 
+            ContestSheetData finalContest;
+
             switch (category.SheetSize)
             {
                 case 3:
@@ -108,6 +110,11 @@ namespace EuroJudoWebContestSheets.Extentions
                         Score = result3.Points,
                         Won = result3.Won,
                     });
+
+                    if (category.TryGet(3, out finalContest))
+                    {
+                        RankCompetitors();
+                    }
                     break;
                 case 4:
                     result1 = category.CalculateRR4Result(1);
@@ -144,6 +151,11 @@ namespace EuroJudoWebContestSheets.Extentions
                             Score = result4.Points,
                             Won = result4.Won,
                         });
+                    }
+
+                    if (category.TryGet(6, out finalContest))
+                    {
+                        RankCompetitors();
                     }
                     break;
                 case 5:
@@ -193,15 +205,81 @@ namespace EuroJudoWebContestSheets.Extentions
                             Won = result5.Won,
                         });
                     }
+
+                    if (category.TryGet(10, out finalContest))
+                    {
+                        RankCompetitors();
+                    }
+                    else
+                    {
+
+                    }
                     break;
-            }
+                case 6:
+                    result1 = category.CalculateRR6Result(1);
+                    category.TryGet(1, out contest1);
+                    competitors.Add(new CompetitorDto
+                    {
+                        Name = contest1.CompeditorWhite,
+                        Score = result1.Points,
+                        Won = result1.Won,
+                    });
 
-            // Rank the competitors by won contests, then by points. Then assing the ranking.
-            var ranked = competitors.OrderByDescending(c => c.Won).ThenByDescending(c => c.Score);
+                    result2 = category.CalculateRR6Result(2);
+                    competitors.Add(new CompetitorDto
+                    {
+                        Name = contest1.CompeditorBlue,
+                        Score = result2.Points,
+                        Won = result2.Won,
+                    });
 
-            for (int i = 1; i < ranked.Count() + 1; i++)
-            {
-                competitors.Where(c => c.Name == ranked.ElementAt(i - 1).Name).First().Position = i;
+                    result3 = category.CalculateRR6Result(3);
+                    if (category.TryGet(2, out contest2))
+                    {
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest2.CompeditorWhite,
+                            Score = result3.Points,
+                            Won = result3.Won,
+                        });
+
+                        result4 = category.CalculateRR6Result(4);
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest2.CompeditorBlue,
+                            Score = result4.Points,
+                            Won = result4.Won,
+                        });
+                    }
+
+                    if (category.TryGet(3, out contest3))
+                    {
+                        result5 = category.CalculateRR6Result(5);
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest3.CompeditorWhite,
+                            Score = result5.Points,
+                            Won = result5.Won,
+                        });
+
+                        result6 = category.CalculateRR6Result(6);
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest3.CompeditorBlue,
+                            Score = result6.Points,
+                            Won = result6.Won,
+                        });
+                    }
+
+                    if (category.TryGet(15, out finalContest))
+                    {
+                        RankCompetitors();
+                    }
+                    else
+                    {
+
+                    }
+                    break;
             }
 
             return new RoundRobinSheetDataDto
@@ -215,6 +293,17 @@ namespace EuroJudoWebContestSheets.Extentions
                 WazaariBlue = contest.WazaariBlue,
                 Competitors = competitors,
             };
+
+            void RankCompetitors()
+            {
+                // Rank the competitors by won contests, then by points. Then assing the ranking.
+                var ranked = competitors.OrderByDescending(c => c.Won).ThenByDescending(c => c.Score);
+
+                for (int i = 1; i < ranked.Count() + 1; i++)
+                {
+                    competitors.Where(c => c.Name == ranked.ElementAt(i - 1).Name).First().Position = i;
+                }
+            }
         }
 
         public static ContestType GetContestType(this Category category)
@@ -228,6 +317,7 @@ namespace EuroJudoWebContestSheets.Extentions
                 case 5:
                     return ContestType.RoundRobin;
                 case 6:
+                    return ContestType.RoundRobin;
                 case 7:
                 case 8:
                     return ContestType.DoubleElimination;
@@ -420,6 +510,71 @@ namespace EuroJudoWebContestSheets.Extentions
                     {
                         Won = contests.Where(c => !c.WhiteWon()).Count(),
                         Points = contests.Select(c => c.ScoreBlue()).Sum(),
+                    };
+                default:
+                    return default;
+            }
+        }
+
+        public static EventResult CalculateRR6Result(this Category category, int competitor)
+        {
+            switch (competitor)
+            {
+                case 1:
+                    var asWhite = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 4 || s.Contest == 7 || s.Contest == 10 || s.Contest == 13);
+                    return new EventResult
+                    {
+                        Won = asWhite.Where(c => c.WhiteWon()).Count(),
+                        Points = asWhite.Select(c => c.ScoreWhite()).Sum(),
+                    };
+                case 2:
+                    asWhite = category.SheetData.Where(s => s.Contest == 5 || s.Contest == 8 || s.Contest == 12 || s.Contest == 14);
+                    var asBlue = category.SheetData.Where(s => s.Contest == 1);
+                    int won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    int score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
+
+                    return new EventResult
+                    {
+                        Won = won,
+                        Points = score,
+                    };
+                case 3:
+                    asWhite = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 9 || s.Contest == 15);
+                    asBlue = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 12);
+                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
+
+                    return new EventResult
+                    {
+                        Won = won,
+                        Points = score,
+                    };
+                case 4:
+                    asWhite = category.SheetData.Where(s => s.Contest == 5 || s.Contest == 11);
+                    asBlue = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 7 || s.Contest == 14);
+                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
+                    return new EventResult
+                    {
+                        Won = won,
+                        Points = score,
+                    };
+                case 5:
+                    asWhite = category.SheetData.Where(s => s.Contest == 3);
+                    asBlue = category.SheetData.Where(s => s.Contest == 6 || s.Contest == 9 || s.Contest == 11 || s.Contest == 13);
+                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
+                    return new EventResult
+                    {
+                        Won = won,
+                        Points = score,
+                    };
+                case 6:
+                    asBlue = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 6 || s.Contest == 9 || s.Contest == 11  || s.Contest == 13);
+                    return new EventResult
+                    {
+                        Won = asBlue.Where(c => !c.WhiteWon()).Count(),
+                        Points = asBlue.Select(c => c.ScoreBlue()).Sum(),
                     };
                 default:
                     return default;

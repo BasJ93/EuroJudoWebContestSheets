@@ -29,21 +29,27 @@ class Sheet {
                 document.getElementById("Competitor1").innerHTML = data.competitors[0].name;
                 document.getElementById("WinComp1").innerHTML = data.competitors[0].won.toString();
                 document.getElementById("PuntComp1").innerHTML = data.competitors[0].score.toString();
-                document.getElementById("ResComp1").innerHTML = data.competitors[0].position.toString();
+                if (data.competitors[0].position != 0) {
+                    document.getElementById("ResComp1").innerHTML = data.competitors[0].position.toString();
+                }
             }
 
             if (data.competitors.length >= 2) {
                 document.getElementById("Competitor2").innerHTML = data.competitors[1].name;
                 document.getElementById("WinComp2").innerHTML = data.competitors[1].won.toString();
                 document.getElementById("PuntComp2").innerHTML = data.competitors[1].score.toString();
-                document.getElementById("ResComp2").innerHTML = data.competitors[1].position.toString();
+                if (data.competitors[1].position != 0) {
+                    document.getElementById("ResComp2").innerHTML = data.competitors[1].position.toString();
+                }
             }
 
             if (data.competitors.length >= 3) {
                 document.getElementById("Competitor3").innerHTML = data.competitors[2].name;
                 document.getElementById("WinComp3").innerHTML = data.competitors[2].won.toString();
                 document.getElementById("PuntComp3").innerHTML = data.competitors[2].score.toString();
-                document.getElementById("ResComp3").innerHTML = data.competitors[2].position.toString();
+                if (data.competitors[2].position != 0) {
+                    document.getElementById("ResComp3").innerHTML = data.competitors[2].position.toString();
+                }
             }
 
             if (!!document.getElementById("Competitor4")) {
@@ -51,7 +57,9 @@ class Sheet {
                     document.getElementById("Competitor4").innerHTML = data.competitors[3].name;
                     document.getElementById("WinComp4").innerHTML = data.competitors[3].won.toString();
                     document.getElementById("PuntComp4").innerHTML = data.competitors[3].score.toString();
-                    document.getElementById("ResComp4").innerHTML = data.competitors[3].position.toString();
+                    if (data.competitors[3].position != 0) {
+                        document.getElementById("ResComp4").innerHTML = data.competitors[3].position.toString();
+                    }
                 }
             }
 
@@ -60,7 +68,9 @@ class Sheet {
                     document.getElementById("Competitor5").innerHTML = data.competitors[4].name;
                     document.getElementById("WinComp5").innerHTML = data.competitors[4].won.toString();
                     document.getElementById("PuntComp5").innerHTML = data.competitors[4].score.toString();
-                    document.getElementById("ResComp5").innerHTML = data.competitors[4].position.toString();
+                    if (data.competitors[4].position != 0) {
+                        document.getElementById("ResComp5").innerHTML = data.competitors[4].position.toString();
+                    }
                 }
             }
 
@@ -69,7 +79,9 @@ class Sheet {
                     document.getElementById("Competitor6").innerHTML = data.competitors[5].name;
                     document.getElementById("WinComp6").innerHTML = data.competitors[5].won.toString();
                     document.getElementById("PuntComp6").innerHTML = data.competitors[5].score.toString();
-                    document.getElementById("ResComp6").innerHTML = data.competitors[5].position.toString();
+                    if (data.competitors[5].position != 0) {
+                        document.getElementById("ResComp6").innerHTML = data.competitors[5].position.toString();
+                    }
                 }
             }
 
