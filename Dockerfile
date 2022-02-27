@@ -3,12 +3,20 @@ ARG NUGET_USR
 ARG NUGET_PW
 WORKDIR /app
 
-# Install typescript tools
+# Install nodejs
+ENV NODE_VERSION=16.14.0
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
+# Install typescript tools
 RUN npm i typescript webpack @microsoft/signalr @types/node @types/react @types/react-dom
 
 # Add private repository using credentials from Jenkins
-
 RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPrivateRepo -u $NUGET_USR -p $NUGET_PW --store-password-in-clear-text
 
 # copy csproj and restore as distinct layers
