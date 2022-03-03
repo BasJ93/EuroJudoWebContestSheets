@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
 using System;
+using EuroJudoWebContestSheets.ApiKey;
+using EuroJudoWebContestSheets.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EuroJudoWebContestSheets
 {
@@ -45,8 +48,25 @@ namespace EuroJudoWebContestSheets
             {
                 hubOptions.EnableDetailedErrors = true;
                 hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-            }
-            );
+            });
+
+            services.AddScoped<IGetApiKeyQuery ,InMemoryGetApiKeyQuery>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+            })
+            .AddApiKeySupport(options => { });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.Admin, policy => policy.Requirements.Add(new AdminRequirement()));
+                options.AddPolicy(Policies.Uploader, policy => policy.Requirements.Add(new UploaderRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, UploaderAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +90,9 @@ namespace EuroJudoWebContestSheets
             app.UseCookiePolicy();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
                 {

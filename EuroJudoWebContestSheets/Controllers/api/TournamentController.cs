@@ -2,9 +2,11 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Authorization;
 using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
     /// </summary>
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class TournamentController : ControllerBase
     {
         dbContext _db;
@@ -36,6 +39,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Consumes("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> PostContestSheetData([FromBody, Required] ContestSheetData contestData)
         {
             if (ModelState.IsValid)
@@ -99,6 +103,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Consumes("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> PostCategoryData([FromBody, Required] Category category)
         {
             if (ModelState.IsValid)
@@ -126,6 +131,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Consumes("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> PostTournamentData([FromBody, Required] Tournament tournament)
         {
             if (ModelState.IsValid)
@@ -154,6 +160,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(int), 200)]
+        [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> GetCategoryId([FromQuery, Required] int tournamentID, [FromQuery, Required] string categoryShort, [FromQuery, Required] string weight)
         {
             if (ModelState.IsValid)
