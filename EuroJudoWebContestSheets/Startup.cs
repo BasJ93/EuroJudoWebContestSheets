@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
 using System;
-using EuroJudoWebContestSheets.ApiKey;
+using EuroJudoWebContestSheets.Authentication;
 using EuroJudoWebContestSheets.Authorization;
 using Microsoft.AspNetCore.Authorization;
 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EuroJudoWebContestSheets.Authorization;
+using EuroJudoWebContestSheets.Models;
 
-namespace EuroJudoWebContestSheets.ApiKey
+namespace EuroJudoWebContestSheets.Authentication
 {
     public class InMemoryGetApiKeyQuery : IGetApiKeyQuery
     {

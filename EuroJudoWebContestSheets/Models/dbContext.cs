@@ -8,6 +8,8 @@ namespace EuroJudoWebContestSheets.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<ContestSheetData> ContestSheetData { get; set; }
 
+        public DbSet<ApiKey> ApiKeys { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=EuroJudoWebContent.db");

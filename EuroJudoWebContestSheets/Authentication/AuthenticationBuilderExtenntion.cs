@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
 
-namespace EuroJudoWebContestSheets.ApiKey
+namespace EuroJudoWebContestSheets.Authentication
 {
     public static class AuthenticationBuilderExtensions
     {

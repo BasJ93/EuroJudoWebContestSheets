@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace EuroJudoWebContestSheets.ApiKey
+namespace EuroJudoWebContestSheets.Authentication
 {
     public class ForbiddenProblemDetails : ProblemDetails
     {

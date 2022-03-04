@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace EuroJudoWebContestSheets.ApiKey
+namespace EuroJudoWebContestSheets.Authentication
 {
     public class ApiKey
     {
-        public ApiKey(int id, string owner, string key, DateTime created, IReadOnlyCollection<string> roles)
+        public ApiKey(int id, string owner, string key, DateTime created, List<string> roles)
         {
             Id = id;
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             Key = key ?? throw new ArgumentNullException(nameof(key));
             Created = created;
-            Roles = roles ?? throw new ArgumentNullException(nameof(roles));
+            Roles = roles.AsReadOnly() ?? throw new ArgumentNullException(nameof(roles));
         }
 
         public int Id { get; }

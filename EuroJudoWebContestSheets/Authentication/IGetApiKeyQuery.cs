@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Models;
 
-namespace EuroJudoWebContestSheets.ApiKey
+namespace EuroJudoWebContestSheets.Authentication
 {
     public interface IGetApiKeyQuery
     {

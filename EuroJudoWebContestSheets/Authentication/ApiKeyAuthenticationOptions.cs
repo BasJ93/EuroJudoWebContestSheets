@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 
-namespace EuroJudoWebContestSheets.ApiKey
+namespace EuroJudoWebContestSheets.Authentication
 {
     public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
     {
