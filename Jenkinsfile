@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Docker push EJUWeb') {
             steps {
-                sh sh 'docker push registry.basjanssen.eu/ejuweb'
+                sh 'docker push registry.basjanssen.eu/ejuweb'
             }
         }
         stage('Docker build EJUPublisher') {
