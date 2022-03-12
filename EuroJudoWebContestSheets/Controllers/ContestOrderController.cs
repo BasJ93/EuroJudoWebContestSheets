@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models.ContestOrder;
@@ -30,7 +28,7 @@ namespace EuroJudoWebContestSheets.Controllers
         public IActionResult ContestOrderLists()
         {
 
-            List<ContestOrder> contestOrders = new List<ContestOrder>();
+            List<ContestOrderDto> contestOrders = new List<ContestOrderDto>();
 
             if(!_memCache.TryGetValue("contestOrders", out contestOrders))
             {
@@ -41,7 +39,7 @@ namespace EuroJudoWebContestSheets.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrder> contestOrders)
+        public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrderDto> contestOrders)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetPriority(CacheItemPriority.Normal);

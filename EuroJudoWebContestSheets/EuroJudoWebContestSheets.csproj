@@ -28,4 +28,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EuroJudoWebContestSheets.Models\EuroJudoWebContestSheets.Models.csproj" />
+  </ItemGroup>
+
 </Project>

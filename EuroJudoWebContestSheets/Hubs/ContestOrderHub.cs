@@ -1,9 +1,6 @@
-﻿using EuroJudoWebContestSheets.Models;
-using EuroJudoWebContestSheets.Models.ContestOrder;
+﻿using EuroJudoWebContestSheets.Models.ContestOrder;
 using Microsoft.AspNetCore.SignalR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EuroJudoWebContestSheets.Hubs
@@ -16,7 +13,7 @@ namespace EuroJudoWebContestSheets.Hubs
             await base.OnConnectedAsync();
         }
 
-        public async Task updateContestOrder(List<ContestOrder> contestOrders)
+        public async Task updateContestOrder(List<ContestOrderDto> contestOrders)
         {
             await Clients.All.SendAsync("updateContestOrder", contestOrders);
         }
