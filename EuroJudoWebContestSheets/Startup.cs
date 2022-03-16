@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
 using System;
+using StackExchange.Redis;
+using EuroJudoWebContestSheets.Cache;
 
 namespace EuroJudoWebContestSheets
 {
@@ -31,8 +33,6 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMemoryCache();
-
             services.AddDbContext<dbContext>();
 
             //services.AddControllers();
@@ -47,6 +47,21 @@ namespace EuroJudoWebContestSheets
                 hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
             }
             );
+
+            if (bool.TryParse(Configuration["UseRedis"], out bool useRedis) && useRedis)
+            {
+                string redisHost = Configuration["RedisHost"] ?? throw new InvalidOperationException("Missing required configuration parameter [RedisHost].");
+                var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
+                services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
+                services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
+            }
+            else
+            {
+                services.AddMemoryCache();
+                services.AddSingleton<IRedisSubscriber, BlankRedisSubscriber>();
+            }
+
+            services.AddScoped<ICacheHelper, CacheHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
