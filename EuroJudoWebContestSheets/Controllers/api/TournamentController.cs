@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Cache;
 using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models;
@@ -21,10 +22,13 @@ namespace EuroJudoWebContestSheets.Controllers.api
         dbContext _db;
         private readonly IHubContext<TournamentHub> _hub;
 
-        public TournamentController(dbContext db, IHubContext<TournamentHub> hub)
+        private readonly IRedisSubscriber _subscriber;
+
+        public TournamentController(dbContext db, IHubContext<TournamentHub> hub, IRedisSubscriber subscriber)
         {
             _db = db;
             _hub = hub;
+            _subscriber = subscriber;
         }
 
         /// <summary>
@@ -49,14 +53,8 @@ namespace EuroJudoWebContestSheets.Controllers.api
                     {
                         await _db.ContestSheetData.AddAsync(contestData);
                         await _db.SaveChangesAsync();
-                        if (category.GetContestType() == ContestType.RoundRobin)
-                        {
-                            await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", contestData.ToRoundRobinDto(category));
-                        }
-                        else
-                        {
-                            await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", contestData.ToDTO());
-                        }
+
+                        await updateClients(category.GetContestType(), contestData, category);
                     }
                     catch (Exception e)
                     {
@@ -76,18 +74,28 @@ namespace EuroJudoWebContestSheets.Controllers.api
                     {
                         return BadRequest(e.ToString());
                     }
-                    if (category.GetContestType() == ContestType.RoundRobin)
-                    {
-                        await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", existingContest.ToRoundRobinDto(category));
-                    }
-                    else
-                    {
-                        await _hub.Clients.Group($"t{contestData.TournamentID}c{contestData.CategoryID}").SendAsync("updateSheet", existingContest.ToDTO());
-                    }
+
+                    await updateClients(category.GetContestType(), contestData, category);
                 }
                 return Ok();
             }
             return BadRequest();
+        }
+
+        private async Task updateClients(ContestType type, ContestSheetData contest, Category category)
+        {
+            if (type == ContestType.RoundRobin)
+            {
+                var rrDto = contest.ToRoundRobinDto(category);
+                await _hub.Clients.Group($"t{contest.TournamentID}c{contest.CategoryID}").SendAsync("updateSheet", rrDto);
+                await _subscriber?.PublishTournament(rrDto.ToRedisDTO(type));
+            }
+            else
+            {
+                var dto = contest.ToDTO();
+                await _hub.Clients.Group($"t{contest.TournamentID}c{contest.CategoryID}").SendAsync("updateSheet", dto);
+                await _subscriber?.PublishTournament(dto.ToRedisDTO(type));
+            }
         }
 
         /// <summary>

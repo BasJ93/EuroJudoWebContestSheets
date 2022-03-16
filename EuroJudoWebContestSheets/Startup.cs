@@ -33,8 +33,6 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-
             services.AddDbContext<dbContext>();
 
             //services.AddControllers();
@@ -55,10 +53,12 @@ namespace EuroJudoWebContestSheets
                 string redisHost = Configuration["RedisHost"] ?? throw new InvalidOperationException("Missing required configuration parameter [RedisHost].");
                 var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
                 services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
+                services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
             }
             else
             {
                 services.AddMemoryCache();
+                services.AddSingleton<IRedisSubscriber, BlankRedisSubscriber>();
             }
 
             services.AddScoped<ICacheHelper, CacheHelper>();
