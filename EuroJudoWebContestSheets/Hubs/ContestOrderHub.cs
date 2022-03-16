@@ -1,19 +1,28 @@
-﻿using EuroJudoWebContestSheets.Models;
+﻿using EuroJudoWebContestSheets.Cache;
 using EuroJudoWebContestSheets.Models.ContestOrder;
 using Microsoft.AspNetCore.SignalR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EuroJudoWebContestSheets.Hubs
 {
     public class ContestOrderHub : Hub
     {
+        private readonly ICacheHelper cache;
+
+        public ContestOrderHub(ICacheHelper cache)
+        {
+            this.cache = cache;
+        }
+
         public override async Task OnConnectedAsync()
         {
-            await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello from ContestOrderHub");
             await base.OnConnectedAsync();
+            await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello from ContestOrderHub");
+            if (!cache.TryGetValue("contestOrders", out List<ContestOrder> contestOrders))
+            {
+                await cache.SetCache<List<ContestOrder>>("contestOrders", contestOrders);
+            }
         }
 
         public async Task updateContestOrder(List<ContestOrder> contestOrders)

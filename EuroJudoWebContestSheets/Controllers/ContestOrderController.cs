@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Cache;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models.ContestOrder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace EuroJudoWebContestSheets.Controllers
 {
     public class ContestOrderController : Controller
     {
-        private IMemoryCache _memCache;
+        private readonly ICacheHelper _cache;
         private readonly IHubContext<ContestOrderHub> _hub;
 
-        public ContestOrderController(IMemoryCache memCache, IHubContext<ContestOrderHub> hub)
+        public ContestOrderController(ICacheHelper cache, IHubContext<ContestOrderHub> hub)
         {
             _hub = hub;
-            _memCache = memCache;
+            _cache = cache;
         }
 
         public IActionResult Index()
@@ -32,7 +30,7 @@ namespace EuroJudoWebContestSheets.Controllers
 
             List<ContestOrder> contestOrders = new List<ContestOrder>();
 
-            if(!_memCache.TryGetValue("contestOrders", out contestOrders))
+            if (!_cache.TryGetValue("contestOrders", out contestOrders))
             {
                 return NotFound();
             }
@@ -43,13 +41,12 @@ namespace EuroJudoWebContestSheets.Controllers
         [HttpPost]
         public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrder> contestOrders)
         {
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetPriority(CacheItemPriority.Normal);
-
-            _memCache.Set("contestOrders", contestOrders, cacheEntryOptions);
+            await _cache.SetCache<List<ContestOrder>>("contestOrders", contestOrders);
             await _hub.Clients.All.SendAsync("updateContestOrder", contestOrders);
 
             return Ok();
         }
+
+        
     }
 }
