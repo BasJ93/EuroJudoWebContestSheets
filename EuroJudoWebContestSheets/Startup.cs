@@ -48,17 +48,22 @@ namespace EuroJudoWebContestSheets
             }
             );
 
-            if (bool.TryParse(Configuration["UseRedis"], out bool useRedis) && useRedis)
+            string useRedisValue = Configuration["UseRedis"];
+            Console.WriteLine($"UseRedis set to [{useRedisValue}].");
+
+            if (bool.TryParse(useRedisValue, out bool useRedis) && useRedis)
             {
                 string redisHost = Configuration["RedisHost"] ?? throw new InvalidOperationException("Missing required configuration parameter [RedisHost].");
                 var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
                 services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
                 services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
+                Console.WriteLine($"Use [Redis] for caching.");
             }
             else
             {
                 services.AddMemoryCache();
                 services.AddSingleton<IRedisSubscriber, BlankRedisSubscriber>();
+                Console.WriteLine($"Use [IMemoryCache] for caching.");
             }
 
             services.AddScoped<ICacheHelper, CacheHelper>();
