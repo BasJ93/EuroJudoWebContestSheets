@@ -57,16 +57,16 @@ namespace EuroJudoWebContestSheets
                 var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
                 services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
                 services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
+                services.AddScoped<ICacheHelper, RedisCacheHelper>();
                 Console.WriteLine($"Use [Redis] for caching.");
             }
             else
             {
                 services.AddMemoryCache();
                 services.AddSingleton<IRedisSubscriber, BlankRedisSubscriber>();
+                services.AddScoped<ICacheHelper, MemoryCacheHelper>();
                 Console.WriteLine($"Use [IMemoryCache] for caching.");
             }
-
-            services.AddScoped<ICacheHelper, CacheHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
