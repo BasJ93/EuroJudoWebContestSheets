@@ -18,6 +18,7 @@ namespace EuroJudoWebContestSheets.Controllers
         {
             _hub = hub;
             _cache = cache;
+            _subscriber = subscriber;
         }
 
         public IActionResult Index()
