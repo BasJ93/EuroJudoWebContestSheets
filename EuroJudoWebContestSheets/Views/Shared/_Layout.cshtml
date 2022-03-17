@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration configuration
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -44,7 +46,12 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - 2022 - Bas Janssen</p>
+            <environment include="Development">
+                <p>&copy; 2018 - 2022 - Bas Janssen - Served by [@configuration["POD_NAME"]] on host [@configuration["NODE_NAME"]]</p>
+            </environment>
+            <environment include="Production">
+                <p>&copy; 2018 - 2022 - Bas Janssen</p>
+            </environment>
         </footer>
     </div>
 
