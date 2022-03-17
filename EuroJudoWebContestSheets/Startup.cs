@@ -41,13 +41,6 @@ namespace EuroJudoWebContestSheets
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddSignalR(hubOptions =>
-            {
-                hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-            }
-            );
-
             string useRedisValue = Configuration["UseRedis"];
             Console.WriteLine($"UseRedis set to [{useRedisValue}].");
 
@@ -56,16 +49,31 @@ namespace EuroJudoWebContestSheets
                 string redisHost = Configuration["RedisHost"] ?? throw new InvalidOperationException("Missing required configuration parameter [RedisHost].");
                 var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
                 services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
-                services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
                 services.AddScoped<ICacheHelper, RedisCacheHelper>();
                 Console.WriteLine($"Use [Redis] for caching.");
+
+                services.AddSignalR(hubOptions =>
+                {
+                    hubOptions.EnableDetailedErrors = true;
+                    hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
+                }
+                ).AddStackExchangeRedis(redisHost, options => 
+                {
+                    options.Configuration.ChannelPrefix = "SignalR";
+                });
             }
             else
             {
                 services.AddMemoryCache();
-                services.AddSingleton<IRedisSubscriber, BlankRedisSubscriber>();
                 services.AddScoped<ICacheHelper, MemoryCacheHelper>();
                 Console.WriteLine($"Use [IMemoryCache] for caching.");
+
+                services.AddSignalR(hubOptions =>
+                {
+                    hubOptions.EnableDetailedErrors = true;
+                    hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
+                }
+                );
             }
         }
 

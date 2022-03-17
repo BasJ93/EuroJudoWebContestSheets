@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using EuroJudoWebContestSheets.Cache;
 using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models;
@@ -22,13 +21,10 @@ namespace EuroJudoWebContestSheets.Controllers.api
         dbContext _db;
         private readonly IHubContext<TournamentHub> _hub;
 
-        private readonly IRedisSubscriber _subscriber;
-
-        public TournamentController(dbContext db, IHubContext<TournamentHub> hub, IRedisSubscriber subscriber)
+        public TournamentController(dbContext db, IHubContext<TournamentHub> hub)
         {
             _db = db;
             _hub = hub;
-            _subscriber = subscriber;
         }
 
         /// <summary>
@@ -88,13 +84,11 @@ namespace EuroJudoWebContestSheets.Controllers.api
             {
                 var rrDto = contest.ToRoundRobinDto(category);
                 await _hub.Clients.Group($"t{contest.TournamentID}c{contest.CategoryID}").SendAsync("updateSheet", rrDto);
-                await _subscriber?.PublishTournament(rrDto.ToRedisDTO(type));
             }
             else
             {
                 var dto = contest.ToDTO();
                 await _hub.Clients.Group($"t{contest.TournamentID}c{contest.CategoryID}").SendAsync("updateSheet", dto);
-                await _subscriber?.PublishTournament(dto.ToRedisDTO(type));
             }
         }
 
