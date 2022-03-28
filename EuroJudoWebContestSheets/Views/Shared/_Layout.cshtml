@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,11 +14,12 @@
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+            asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only"
+            asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
+
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -29,7 +31,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <!--<a asp-area="" asp-controller="Tournaments" asp-action="Index" class="navbar-brand">EuroJudoWebContestSheets</a>-->
-                <a asp-area="" asp-controller="ContestOrder" asp-action="Index" class="navbar-brand">EuroJudo WebContestSheets</a>
+                <a asp-area="" asp-controller="ContestOrder" asp-action="Index" class="navbar-brand">EuroJudo
+                    WebContestSheets</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -44,18 +47,22 @@
 
     <div class="container body-content">
         @RenderBody()
+    </div>
+
+    <div class="container">
         <hr />
         <footer>
             <environment include="Development">
-                <p>&copy; 2018 - 2022 - Bas Janssen - Served by [@configuration["POD_NAME"]] on host [@configuration["NODE_NAME"]]</p>
+                <p>&copy; 2018 - 2022 - Bas Janssen - Served by [@configuration["POD_NAME"]] on host
+                    [@configuration["NODE_NAME"]]</p>
             </environment>
             <environment include="Production">
                 <p>&copy; 2018 - 2022 - Bas Janssen</p>
             </environment>
         </footer>
     </div>
-
     @RenderSection("Scripts", required: false)
 
 </body>
+
 </html>
