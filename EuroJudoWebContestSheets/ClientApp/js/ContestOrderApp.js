@@ -46,10 +46,23 @@ var ContestOrderApp = /** @class */ (function (_super) {
         // create the connection instance
         this.Connection = new signalR.HubConnectionBuilder()
             .withUrl("/contestOrderHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
+            .withAutomaticReconnect([0, 500, 1000, 5000])
             //.configureLogging(signalR.LogLevel.Trace)
             .build();
         this.Connection.on('connected', this.connected);
         this.Connection.on('updateContestOrder', this.updateContestOrder);
+        this.Connection.onreconnecting(function (error) {
+            document.getElementById('overlay').style.visibility = "visible";
+            document.getElementById('reconnect-indicator').style.visibility = "visible";
+        });
+        this.Connection.onreconnected(function (connectionId) {
+            document.getElementById('overlay').style.visibility = "hidden";
+            document.getElementById('reconnect-indicator').style.visibility = "hidden";
+        });
+        this.Connection.onclose(function (error) {
+            document.getElementById('disconnected-indicator').style.visibility = "visible";
+            document.getElementById('overlay').style.visibility = "hidden";
+        });
         this.Connection.start()
             .then(function () { return console.info('SignalR Connected'); })
             .catch(function (err) { return console.error('SignalR Connection Error: ', err); });
@@ -59,6 +72,7 @@ var ContestOrderApp = /** @class */ (function (_super) {
     };
     ContestOrderApp.prototype.connected = function (message) {
         console.log(message);
+        document.getElementById('overlay').style.visibility = "hidden";
     };
     ContestOrderApp.prototype.updateContestOrder = function (contestOrder) {
         console.log("Received new contest data");

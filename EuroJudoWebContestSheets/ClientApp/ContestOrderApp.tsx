@@ -40,12 +40,26 @@ export default class ContestOrderApp extends React.Component<any, IContestOrderA
         // create the connection instance
         this.Connection = new signalR.HubConnectionBuilder()
             .withUrl("/contestOrderHub", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
+            .withAutomaticReconnect([0, 500, 1000, 5000])
             //.configureLogging(signalR.LogLevel.Trace)
             .build();
 
         this.Connection.on('connected', this.connected);
         this.Connection.on('updateContestOrder', this.updateContestOrder);
         
+        this.Connection.onreconnecting(error => {
+            document.getElementById('overlay').style.visibility = "visible";
+            document.getElementById('reconnect-indicator').style.visibility = "visible";
+        });
+        this.Connection.onreconnected(connectionId => {
+            document.getElementById('overlay').style.visibility = "hidden";
+            document.getElementById('reconnect-indicator').style.visibility = "hidden";
+        });
+        this.Connection.onclose(error => {
+            document.getElementById('disconnected-indicator').style.visibility = "visible";
+            document.getElementById('overlay').style.visibility = "hidden";
+        });
+
         this.Connection.start()
             .then(() => console.info('SignalR Connected'))
             .catch(err => console.error('SignalR Connection Error: ', err));
@@ -57,6 +71,7 @@ export default class ContestOrderApp extends React.Component<any, IContestOrderA
 
     connected(message) {
         console.log(message);
+        document.getElementById('overlay').style.visibility = "hidden";
     }
 
     updateContestOrder(contestOrder) {
