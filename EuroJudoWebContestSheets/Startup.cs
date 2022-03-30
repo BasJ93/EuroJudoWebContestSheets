@@ -37,7 +37,7 @@ namespace EuroJudoWebContestSheets
 
             //services.AddControllers();
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            //services.AddRazorPages();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
@@ -106,7 +106,7 @@ namespace EuroJudoWebContestSheets
                     pattern: "{controller=ContestOrder}/{action=Index}");
 
                     endpoints.MapControllers();
-                    endpoints.MapRazorPages();
+                    //endpoints.MapRazorPages();
                     endpoints.MapHub<TournamentHub>("/tournamentHub");
                     endpoints.MapHub<ContestOrderHub>("/contestOrderHub");
                 }

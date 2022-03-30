@@ -7,7 +7,12 @@ interface IContestList {
 }
 
 const appTemplate = document.createElement("template");
-appTemplate.innerHTML = `<div id="contest-order-app" class="container-fluid"></div>`
+appTemplate.innerHTML = `
+    <div class="container-fluid">
+        <div id="contest-order-app" class="row">
+        </div>
+    </div>
+`;
 
 class ContestOrder extends HTMLElement {
     Connection: signalR.HubConnection;
@@ -23,8 +28,14 @@ class ContestOrder extends HTMLElement {
         this.fetchInitialData = this.fetchInitialData.bind(this);
 
         // Setup component
-        this.attachShadow({ mode: 'open' });
+        let shadow = this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(appTemplate.content.cloneNode(true));
+
+        const linkElem = document.createElement('link');
+        linkElem.setAttribute('rel', 'stylesheet');
+        linkElem.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
+
+        shadow.appendChild(linkElem);
     }
 
     connectedCallback() {
@@ -53,6 +64,7 @@ class ContestOrder extends HTMLElement {
         });
         this.Connection.onclose(error => {
             document.getElementById('disconnected-indicator').style.visibility = "visible";
+            document.getElementById('reconnect-indicator').style.visibility = "hidden";
             document.getElementById('overlay').style.visibility = "hidden";
         });
 
@@ -93,7 +105,9 @@ class ContestOrder extends HTMLElement {
 
         // Add the new contest orders
         contestOrder.map((list: IContestList) => {
-            container.appendChild(new ContestOrderList(list.tatami, list.contests));
+            let newList = new ContestOrderList(list.tatami, list.contests);
+            newList.classList.add("col-xl-3", "col-lg-4", "col-md-6", "col-sm-12");
+            container.appendChild(newList);
         });
     }
 }
