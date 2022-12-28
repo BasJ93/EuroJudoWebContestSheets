@@ -8,9 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
-using System;
-using StackExchange.Redis;
-using EuroJudoWebContestSheets.Cache;
+using EuroJudoWebContestSheets.Configuration;
 
 namespace EuroJudoWebContestSheets
 {
@@ -41,44 +39,9 @@ namespace EuroJudoWebContestSheets
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             
-            string useRedisValue = Configuration["UseRedis"];
-            Console.WriteLine($"UseRedis set to [{useRedisValue}].");
+            services.ConfigureAuthentication();
 
-            if (bool.TryParse(useRedisValue, out bool useRedis) && useRedis)
-            {
-                string redisHost = Configuration["RedisHost"] ?? throw new InvalidOperationException("Missing required configuration parameter [RedisHost].");
-                var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
-                services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
-                Console.WriteLine($"Use [Redis] for caching.");
-
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = redisHost;
-                    options.InstanceName = "EJUWebDistributedCache";
-                });
-                
-                services.AddSignalR(hubOptions =>
-                {
-                    hubOptions.EnableDetailedErrors = true;
-                    hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-                }
-                ).AddStackExchangeRedis(redisHost, options => 
-                {
-                    options.Configuration.ChannelPrefix = "SignalR";
-                });
-            }
-            else
-            {
-                services.AddDistributedMemoryCache();
-                Console.WriteLine($"Use [IMemoryCache] for caching.");
-
-                services.AddSignalR(hubOptions =>
-                {
-                    hubOptions.EnableDetailedErrors = true;
-                    hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-                }
-                );
-            }
+            services.AddCaching(Configuration);
 
             services.AddSwaggerDocument();
         }
@@ -107,6 +70,9 @@ namespace EuroJudoWebContestSheets
             app.UseSwaggerUi3();
             
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
                 {

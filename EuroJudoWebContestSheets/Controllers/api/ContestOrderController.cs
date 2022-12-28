@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Authorization;
 using EuroJudoWebContestSheets.Cache;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models.ContestOrder;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -54,6 +56,7 @@ public class ContestOrderController : ControllerBase
     /// <param name="ctx"></param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize(Policy = Policies.Uploader)]
     public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrder> contestOrders, CancellationToken ctx)
     {
         await _cache.SetAsync("contestOrders", contestOrders, ctx);
