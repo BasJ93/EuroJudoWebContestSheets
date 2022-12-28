@@ -14,7 +14,7 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 
 # RUN npm i typescript webpack @microsoft/signalr @types/node @types/react @types/react-dom
 
-RUN dotnet tool install --global dotnet-ef
+RUN dotnet tool install --global dotnet-ef --version 3.1.26
 
 RUN export PATH="$PATH:/home/vscode/.dotnet/tools"
 
