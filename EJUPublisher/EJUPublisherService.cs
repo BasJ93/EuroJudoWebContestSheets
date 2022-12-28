@@ -29,6 +29,7 @@ namespace EJUPublisher
         private HttpClient httpClient;
         private int numberOfContests;
         private int BufferSizePerTatami;
+        private string ApiKey;
 
         public EventHandler<string> DataReceivedLogEvent { get; set; }
 
@@ -36,29 +37,24 @@ namespace EJUPublisher
         {
             this.Logger = logger;
             this.configuration = configuration;
-            this.WebServer = configuration["WebServer"];
-
-            this.serverPort = Convert.ToInt32(configuration["EJUPort"]);
-            this.EJUServer = configuration["EJUServer"];
-
-            this.httpClient = new HttpClient();
-            this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
-            this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
-            this.BufferSizePerTatami = Convert.ToInt32(configuration["BufferSizePerTatami"]);
 
             this.cancellationToken = new CancellationTokenSource();
 
+            RefreshConfiguration();
         }
 
         // Provide a configuration object to this method
         public void RefreshConfiguration()
         {
             this.WebServer = configuration["WebServer"];
+            this.ApiKey = configuration["ApiKey"];
+
+            this.httpClient = new HttpClient();
+            this.httpClient.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
 
             this.serverPort = Convert.ToInt32(configuration["EJUPort"]);
             this.EJUServer = configuration["EJUServer"];
 
-            this.httpClient = new HttpClient();
             this.numberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
             this.numberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
             this.BufferSizePerTatami = Convert.ToInt32(configuration["BufferSizePerTatami"]);

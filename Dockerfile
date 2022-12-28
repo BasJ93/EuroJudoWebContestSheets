@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG NUGET_USR
 ARG NUGET_PW
 WORKDIR /app
@@ -32,7 +32,7 @@ COPY EuroJudoWebContestSheets/. ./EuroJudoWebContestSheets/
 WORKDIR /app/EuroJudoWebContestSheets
 
 # Install dependancies
-RUN npm i
+RUN npm ci
 
 # Compile typescript
 RUN tsc
@@ -44,7 +44,7 @@ RUN npx webpack --config webpack.config.js
 RUN dotnet publish -c Release -o out
 
 # Build the new image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/EuroJudoWebContestSheets/out .
 ENTRYPOINT ["dotnet", "EuroJudoWebContestSheets.dll"]

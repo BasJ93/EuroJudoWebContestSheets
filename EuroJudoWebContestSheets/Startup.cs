@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
-using System;
+using EuroJudoWebContestSheets.Configuration;
 
 namespace EuroJudoWebContestSheets
 {
@@ -31,22 +31,19 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMemoryCache();
-
             services.AddDbContext<dbContext>();
 
             //services.AddControllers();
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            //services.AddRazorPages();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            
+            services.ConfigureAuthentication();
 
-            services.AddSignalR(hubOptions =>
-            {
-                hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-            }
-            );
+            services.AddCaching(Configuration);
+
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,7 +66,13 @@ namespace EuroJudoWebContestSheets
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+            
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
                 {
@@ -78,7 +81,7 @@ namespace EuroJudoWebContestSheets
                     pattern: "{controller=ContestOrder}/{action=Index}");
 
                     endpoints.MapControllers();
-                    endpoints.MapRazorPages();
+                    //endpoints.MapRazorPages();
                     endpoints.MapHub<TournamentHub>("/tournamentHub");
                     endpoints.MapHub<ContestOrderHub>("/contestOrderHub");
                 }

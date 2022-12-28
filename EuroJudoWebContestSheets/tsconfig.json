@@ -3,16 +3,13 @@
     "baseUrl": ".",
     "module": "es2015",
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "es6",
     "allowJs": true,
     "outDir": "ClientApp/js",
     "jsx": "react"
   },
-  "files": [
-    "ClientApp/contest.ts",
-    "ClientApp/ContestOrderList.tsx",
-    "ClientApp/ContestOrderApp.tsx",
-    "ClientApp/sheet.ts"
+  "include": [
+    "ClientApp/*.ts"
   ],
   "exclude": [
     "node_modules",

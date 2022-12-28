@@ -12,7 +12,7 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN npm i typescript webpack @microsoft/signalr @types/node @types/react @types/react-dom
+# RUN npm i typescript webpack @microsoft/signalr @types/node @types/react @types/react-dom
 
 RUN dotnet tool install --global dotnet-ef
 

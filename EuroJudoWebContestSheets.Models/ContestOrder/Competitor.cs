@@ -1,6 +1,6 @@
 ﻿namespace EuroJudoWebContestSheets.Models.ContestOrder
 {
-    public class Compeditor
+    public class Competitor
     {
         public string Name { get; set; }
         public string FirstName { get; set; }

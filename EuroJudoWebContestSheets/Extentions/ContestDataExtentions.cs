@@ -70,6 +70,66 @@ namespace EuroJudoWebContestSheets.Extentions
             };
         }
 
+        public static RedisRoundRobinContestSheetDataDto ToRedisDTO(this ContestSheetDataDto contest, ContestType type)
+        {
+            return new RedisRoundRobinContestSheetDataDto
+            {
+                Contest = contest.Contest,
+                CompetitorWhite = contest.CompetitorWhite,
+                CompetitorBlue = contest.CompetitorBlue,
+                IponWhite = contest.IponWhite,
+                WazaariWhite = contest.WazaariWhite,
+                IponBlue = contest.IponBlue,
+                WazaariBlue = contest.WazaariBlue,
+                ContestType = type,
+            };
+        }
+
+        public static RedisRoundRobinContestSheetDataDto ToRedisDTO(this RoundRobinSheetDataDto contest, ContestType type)
+        {
+            return new RedisRoundRobinContestSheetDataDto
+            {
+                Contest = contest.Contest,
+                CompetitorWhite = contest.CompetitorWhite,
+                CompetitorBlue = contest.CompetitorBlue,
+                IponWhite = contest.IponWhite,
+                WazaariWhite = contest.WazaariWhite,
+                IponBlue = contest.IponBlue,
+                WazaariBlue = contest.WazaariBlue,
+                Competitors = contest.Competitors,
+                ContestType = type,
+            };
+        }
+
+        public static ContestSheetDataDto ToDTO(this RedisRoundRobinContestSheetDataDto contest)
+        {
+            return new ContestSheetDataDto
+            {
+                Contest = contest.Contest,
+                CompetitorWhite = contest.CompetitorWhite,
+                CompetitorBlue = contest.CompetitorBlue,
+                IponWhite = contest.IponWhite,
+                WazaariWhite = contest.WazaariWhite,
+                IponBlue = contest.IponBlue,
+                WazaariBlue = contest.WazaariBlue,
+            };
+        }
+
+        public static RoundRobinSheetDataDto ToRoundRobinDto(this RedisRoundRobinContestSheetDataDto contest)
+        {
+            return new RoundRobinSheetDataDto
+            {
+                Contest = contest.Contest,
+                CompetitorWhite = contest.CompetitorWhite,
+                CompetitorBlue = contest.CompetitorBlue,
+                IponWhite = contest.IponWhite,
+                WazaariWhite = contest.WazaariWhite,
+                IponBlue = contest.IponBlue,
+                WazaariBlue = contest.WazaariBlue,
+                Competitors = contest.Competitors,
+            };
+        }
+
         public static RoundRobinSheetDataDto ToRoundRobinDto(this ContestSheetData contest, Category category)
         {
             List<CompetitorDto> competitors = new List<CompetitorDto>();
@@ -570,7 +630,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         Points = score,
                     };
                 case 6:
-                    asBlue = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 6 || s.Contest == 9 || s.Contest == 11  || s.Contest == 13);
+                    asBlue = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 6 || s.Contest == 9 || s.Contest == 11 || s.Contest == 13);
                     return new EventResult
                     {
                         Won = asBlue.Where(c => !c.WhiteWon()).Count(),
