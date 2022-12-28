@@ -40,7 +40,7 @@ namespace EuroJudoWebContestSheets
             //services.AddRazorPages();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
+            
             string useRedisValue = Configuration["UseRedis"];
             Console.WriteLine($"UseRedis set to [{useRedisValue}].");
 
@@ -49,9 +49,14 @@ namespace EuroJudoWebContestSheets
                 string redisHost = Configuration["RedisHost"] ?? throw new InvalidOperationException("Missing required configuration parameter [RedisHost].");
                 var redisMultiplexer = ConnectionMultiplexer.Connect(redisHost);
                 services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
-                services.AddScoped<ICacheHelper, RedisCacheHelper>();
                 Console.WriteLine($"Use [Redis] for caching.");
 
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisHost;
+                    options.InstanceName = "EJUWebDistributedCache";
+                });
+                
                 services.AddSignalR(hubOptions =>
                 {
                     hubOptions.EnableDetailedErrors = true;
@@ -64,8 +69,7 @@ namespace EuroJudoWebContestSheets
             }
             else
             {
-                services.AddMemoryCache();
-                services.AddScoped<ICacheHelper, MemoryCacheHelper>();
+                services.AddDistributedMemoryCache();
                 Console.WriteLine($"Use [IMemoryCache] for caching.");
 
                 services.AddSignalR(hubOptions =>
@@ -75,6 +79,8 @@ namespace EuroJudoWebContestSheets
                 }
                 );
             }
+
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,6 +103,9 @@ namespace EuroJudoWebContestSheets
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
