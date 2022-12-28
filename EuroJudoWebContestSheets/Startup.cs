@@ -8,10 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
-using System;
-using EuroJudoWebContestSheets.Authentication;
-using EuroJudoWebContestSheets.Authorization;
-using Microsoft.AspNetCore.Authorization;
+using EuroJudoWebContestSheets.Configuration;
 
 namespace EuroJudoWebContestSheets
 {
@@ -34,39 +31,19 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMemoryCache();
-
             services.AddDbContext<dbContext>();
 
             //services.AddControllers();
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            //services.AddRazorPages();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            
+            services.ConfigureAuthentication();
 
-            services.AddSignalR(hubOptions =>
-            {
-                hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(3);
-            });
+            services.AddCaching(Configuration);
 
-            services.AddScoped<IGetApiKeyQuery ,InMemoryGetApiKeyQuery>();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
-                options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
-            })
-            .AddApiKeySupport(options => { });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(Policies.Admin, policy => policy.Requirements.Add(new AdminRequirement()));
-                options.AddPolicy(Policies.Uploader, policy => policy.Requirements.Add(new UploaderRequirement()));
-            });
-
-            services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, UploaderAuthorizationHandler>();
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +66,9 @@ namespace EuroJudoWebContestSheets
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+            
             app.UseRouting();
 
             app.UseAuthentication();
@@ -101,7 +81,7 @@ namespace EuroJudoWebContestSheets
                     pattern: "{controller=ContestOrder}/{action=Index}");
 
                     endpoints.MapControllers();
-                    endpoints.MapRazorPages();
+                    //endpoints.MapRazorPages();
                     endpoints.MapHub<TournamentHub>("/tournamentHub");
                     endpoints.MapHub<ContestOrderHub>("/contestOrderHub");
                 }

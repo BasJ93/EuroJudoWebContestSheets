@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EuroJudoWebContestSheets.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +13,7 @@ namespace EuroJudoWebContestSheets.Controllers
     /// </summary>
     public class TournamentsController : Controller
     {
-
-        dbContext _db;
+        private readonly dbContext _db;
 
         //Create a partial view for the navbar, so that it can be filled based on the data.
 
@@ -23,23 +23,23 @@ namespace EuroJudoWebContestSheets.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(CancellationToken ctx)
         {
-            ViewBag.Tournaments = _db.Tournaments.ToList();
+            ViewBag.Tournaments = await _db.Tournaments.ToListAsync(ctx);
             return View();
         }
 
         [HttpGet]
-        public IActionResult Categories([FromQuery] int tournamentID)
+        public async Task<IActionResult> Categories([FromQuery] int tournamentID, CancellationToken ctx)
         {
-            ViewBag.Categories = _db.Categories.Where(o => o.TournamentID == tournamentID).ToList();
+            ViewBag.Categories = await _db.Categories.Where(o => o.TournamentID == tournamentID).ToListAsync(ctx);
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> ContestSheet([FromQuery] int tID, [FromQuery] int cID)
+        public async Task<IActionResult> ContestSheet([FromQuery] int tID, [FromQuery] int cID, CancellationToken ctx)
         {
-            Category category = await _db.Categories.Include(o => o.SheetData).Where(o => o.ID == cID && o.TournamentID == tID).FirstOrDefaultAsync();
+            Category category = await _db.Categories.Include(o => o.SheetData).Where(o => o.ID == cID && o.TournamentID == tID).FirstOrDefaultAsync(ctx);
             ViewBag.Title = category.CategoryName;
             ViewBag.CategoryID = category.ID;
             ViewBag.TournamentID = category.TournamentID;
@@ -49,16 +49,16 @@ namespace EuroJudoWebContestSheets.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetContestSheetData([FromQuery] int TournamentId)
+        public async Task<IActionResult> GetContestSheetData([FromQuery] int TournamentId, CancellationToken ctx)
         {
-            List<ContestSheetData> sheetData = _db.ContestSheetData.Where(o => o.TournamentID == TournamentId).ToList();
+            List<ContestSheetData> sheetData = await _db.ContestSheetData.Where(o => o.TournamentID == TournamentId).ToListAsync(ctx);
             return new JsonResult(sheetData);
         }
 
         [HttpGet]
-        public async Task<IActionResult> RenderSVG([FromQuery] int tID, [FromQuery] int cID)
+        public async Task<IActionResult> RenderSVG([FromQuery] int tID, [FromQuery] int cID, CancellationToken ctx)
         {
-            Category category = await _db.Categories.Include(o => o.SheetData).Where(o => o.ID == cID && o.TournamentID == tID).FirstOrDefaultAsync();
+            Category category = await _db.Categories.Include(o => o.SheetData).Where(o => o.ID == cID && o.TournamentID == tID).FirstOrDefaultAsync(ctx);
             return Ok(Generators.SVGFactory.Get(category, out ContestType type));
         }
     }
