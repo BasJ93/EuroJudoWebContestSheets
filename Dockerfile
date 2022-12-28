@@ -32,7 +32,7 @@ COPY EuroJudoWebContestSheets/. ./EuroJudoWebContestSheets/
 WORKDIR /app/EuroJudoWebContestSheets
 
 # Install dependancies
-RUN npm i
+RUN npm ci
 
 # Compile typescript
 RUN tsc
