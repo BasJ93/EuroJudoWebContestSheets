@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@microsoft/signalr": "^6.0.0",
-    "@types/node": "^17.0.21",
-    "webpack": "^4.28.3",
-    "webpack-cli": "^3.3.12"
+    "@microsoft/signalr": "^7.0.0",
+    "@types/node": "^18.11.18",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }

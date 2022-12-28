@@ -6,7 +6,7 @@ pipeline {
                 NUGET_CREDS = credentials('NuGet')
             }
             steps {
-                sh 'docker build -t registry.basjanssen.eu/ejuweb:latest -t registry.basjanssen.eu/ejuweb:$BUILD_NUMBER . --build-arg NUGET_USR=$NUGET_CREDS_USR --build-arg NUGET_PW=$NUGET_CREDS_PSW --output out'
+                sh 'docker build --no-cache -t registry.basjanssen.eu/ejuweb:latest -t registry.basjanssen.eu/ejuweb:$BUILD_NUMBER . --build-arg NUGET_USR=$NUGET_CREDS_USR --build-arg NUGET_PW=$NUGET_CREDS_PSW --output out'
             }
         }
         stage('Docker push EJUWeb') {
