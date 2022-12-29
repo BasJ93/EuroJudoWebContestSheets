@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EJUPublisher.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using EuroJudoWebContestSheets.Cache;
 
@@ -22,7 +21,7 @@ namespace EuroJudoWebContestSheets.Hubs
             await base.OnConnectedAsync();
             await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello from ContestOrderHub");
             
-            List<ContestOrder>? contestOrders = await _cache.GetAsync<List<ContestOrder>>("contestOrders");
+            List<ContestOrderDto>? contestOrders = await _cache.GetAsync<List<ContestOrderDto>>("contestOrders");
             
             if (contestOrders != default)
             {

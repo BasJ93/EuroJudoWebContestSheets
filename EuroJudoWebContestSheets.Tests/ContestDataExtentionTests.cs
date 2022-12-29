@@ -1,8 +1,7 @@
 using EuroJudoWebContestSheets.Extentions;
-using EuroJudoWebContestSheets.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using EuroJudoWebContestSheets.Database.Models;
 using Xunit;
 
 namespace EuroJudoWebContestSheets.Tests

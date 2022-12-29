@@ -1,8 +1,8 @@
-﻿using EuroJudoWebContestSheets.Models;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using EuroJudoWebContestSheets.Database.Models;
 
 namespace EuroJudoWebContestSheets.Generators
 {
@@ -24,16 +24,16 @@ namespace EuroJudoWebContestSheets.Generators
 
             foreach(var contest in category.SheetData)
             {
-                if (!string.IsNullOrEmpty(contest.CompeditorWhite))
+                if (!string.IsNullOrEmpty(contest.CompetitorWhite))
                 {
                     var sheetdescendants = sheet.Descendants();
                     var compeditor = sheet.Descendants().Where(o => (string)o.Attribute("id") == (contest.Contest.ToString() + "W" )).First();
-                    compeditor.SetValue(contest.CompeditorWhite);
+                    compeditor.SetValue(contest.CompetitorWhite);
                 }
-                if (!string.IsNullOrEmpty(contest.CompeditorBlue))
+                if (!string.IsNullOrEmpty(contest.CompetitorBlue))
                 {
                     var compeditor = sheet.Descendants().Where(o => (string)o.Attribute("id") == (contest.Contest.ToString() + "B")).First();
-                    compeditor.SetValue(contest.CompeditorBlue);
+                    compeditor.SetValue(contest.CompetitorBlue);
                 }
             }
 

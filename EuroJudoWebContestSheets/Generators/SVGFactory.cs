@@ -1,13 +1,18 @@
 ﻿using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Models;
 using System;
+using EuroJudoWebContestSheets.Database.Models;
 
 namespace EuroJudoWebContestSheets.Generators
 {
     public class SVGFactory
     {
-        public static string Get(Category category, out ContestType type)
+        public static string? Get(Category? category, out ContestType type)
         {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
             type = category.GetContestType();
             switch (category.SheetSize)
             {

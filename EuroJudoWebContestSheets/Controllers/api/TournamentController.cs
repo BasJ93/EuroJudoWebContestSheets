@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Authentication;
 using EuroJudoWebContestSheets.Authorization;
+using EuroJudoWebContestSheets.Database.Models;
+using EuroJudoWebContestSheets.Database.Repositories.Interfaces;
 using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models;
@@ -11,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EuroJudoWebContestSheets.Controllers.api
 {
@@ -23,12 +25,21 @@ namespace EuroJudoWebContestSheets.Controllers.api
     [Authorize]
     public class TournamentController : ControllerBase
     {
-        private readonly dbContext _db;
+        private readonly ILogger<TournamentController> _logger;
+
+        private readonly ITournamentsRepository _tournaments;
+        private readonly ICategoriesRepository _categories;
+        private readonly IContestSheetDataRepository _sheetData;
         private readonly IHubContext<TournamentHub> _hub;
 
-        public TournamentController(dbContext db, IHubContext<TournamentHub> hub)
+        public TournamentController(IHubContext<TournamentHub> hub, ITournamentsRepository tournaments,
+            ICategoriesRepository categories, IContestSheetDataRepository sheetData,
+            ILogger<TournamentController> logger)
         {
-            _db = db;
+            _tournaments = tournaments;
+            _categories = categories;
+            _sheetData = sheetData;
+            _logger = logger;
             _hub = hub;
         }
 
@@ -42,28 +53,30 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Consumes("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(UnauthorizedProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ForbiddenProblemDetails), StatusCodes.Status403Forbidden)]
         [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> PostContestSheetData([FromBody, Required] ContestSheetData contestData,
             CancellationToken ctx)
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine(
-                    $"{contestData.TournamentID}\t{contestData.CategoryID}\t{contestData.Contest}\t{contestData.CompeditorWhite}");
-                ContestSheetData existingContest = await _db.ContestSheetData
-                    .Where(o => o.TournamentID == contestData.TournamentID && o.CategoryID == contestData.CategoryID &&
-                                o.Contest == contestData.Contest).FirstOrDefaultAsync(cancellationToken: ctx);
-                Category category = await _db.Categories.Include(o => o.SheetData)
-                    .Where(c => c.ID == contestData.CategoryID && c.TournamentID == contestData.TournamentID)
-                    .FirstOrDefaultAsync(cancellationToken: ctx);
+                _logger.LogInformation(
+                    $"New data for contest: {contestData.TournamentId}\t{contestData.CategoryId}\t{contestData.Contest}\t{contestData.CompetitorWhite}.");
+
+                ContestSheetData? existingContest = await _sheetData.ByTournamentAndCategory(contestData.TournamentId,
+                    contestData.CategoryId, contestData.Contest, ctx);
+
+                Category? category =
+                    await _categories.WithSheetData(contestData.CategoryId, contestData.TournamentId, ctx);
+
                 if (existingContest == null)
                 {
                     try
                     {
-                        await _db.ContestSheetData.AddAsync(contestData, ctx);
-                        await _db.SaveChangesAsync(ctx);
+                        await _sheetData.Insert(contestData, ctx);
 
-                        await UpdateClients(category.GetContestType(), contestData, category, ctx);
+                        await UpdateClients(contestData, category, ctx);
                     }
                     catch (Exception e)
                     {
@@ -73,40 +86,23 @@ namespace EuroJudoWebContestSheets.Controllers.api
                     return Ok();
                 }
 
-                Console.WriteLine($"{existingContest.ID}");
+                _logger.LogInformation($"Updating existing contest [{existingContest.Id}].");
                 existingContest.UpdateFromQuery(contestData);
                 try
                 {
-                    await _db.SaveChangesAsync(ctx);
+                    await _sheetData.Update(existingContest, ctx);
                 }
                 catch (Exception e)
                 {
                     return BadRequest(e.ToString());
                 }
 
-                await UpdateClients(category.GetContestType(), contestData, category, ctx);
+                await UpdateClients(contestData, category, ctx);
 
                 return Ok();
             }
 
             return BadRequest();
-        }
-
-        private async Task UpdateClients(ContestType type, ContestSheetData contest, Category category,
-            CancellationToken ctx = default)
-        {
-            if (type == ContestType.RoundRobin)
-            {
-                var rrDto = contest.ToRoundRobinDto(category);
-                await _hub.Clients.Group($"t{contest.TournamentID}c{contest.CategoryID}")
-                    .SendAsync("updateSheet", rrDto, ctx);
-            }
-            else
-            {
-                var dto = contest.ToDTO();
-                await _hub.Clients.Group($"t{contest.TournamentID}c{contest.CategoryID}")
-                    .SendAsync("updateSheet", dto, ctx);
-            }
         }
 
         /// <summary>
@@ -119,6 +115,8 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Consumes("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(UnauthorizedProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ForbiddenProblemDetails), StatusCodes.Status403Forbidden)]
         [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> PostCategoryData([FromBody, Required] Category category, CancellationToken ctx)
         {
@@ -126,8 +124,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
             {
                 try
                 {
-                    await _db.Categories.AddAsync(category, ctx);
-                    await _db.SaveChangesAsync(ctx);
+                    await _categories.Insert(category, ctx);
                 }
                 catch (Exception e)
                 {
@@ -150,6 +147,8 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Consumes("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(UnauthorizedProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ForbiddenProblemDetails), StatusCodes.Status403Forbidden)]
         [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> PostTournamentData([FromBody, Required] Tournament tournament,
             CancellationToken ctx)
@@ -158,8 +157,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
             {
                 try
                 {
-                    await _db.Tournaments.AddAsync(tournament, ctx);
-                    await _db.SaveChangesAsync(ctx);
+                    await _tournaments.Insert(tournament, ctx);
                 }
                 catch (Exception e)
                 {
@@ -184,6 +182,8 @@ namespace EuroJudoWebContestSheets.Controllers.api
         [Produces("application/json")]
         [ProducesResponseType(typeof(int), 200)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ForbiddenProblemDetails), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Policy = Policies.Uploader)]
         public async Task<IActionResult> GetCategoryId([FromQuery, Required] int tournamentID,
@@ -191,18 +191,38 @@ namespace EuroJudoWebContestSheets.Controllers.api
         {
             if (ModelState.IsValid)
             {
-                var category = await _db.Categories
-                    .Where(c => c.TournamentID == tournamentID && c.Short == categoryShort && c.Weight == weight)
-                    .FirstOrDefaultAsync(cancellationToken: ctx);
+                Category? category = await _categories.ByShortAndWeight(tournamentID, categoryShort, weight, ctx);
                 if (category != default)
                 {
-                    return new JsonResult(category.ID);
+                    return new JsonResult(category.Id);
                 }
 
                 return NotFound();
             }
 
             return BadRequest();
+        }
+
+        private async Task UpdateClients(ContestSheetData contest, Category? category,
+            CancellationToken ctx = default)
+        {
+            if (category != null)
+            {
+                ContestType type = category.GetContestType();
+
+                if (type == ContestType.RoundRobin)
+                {
+                    var rrDto = contest.ToRoundRobinDto(category);
+                    await _hub.Clients.Group($"t{contest.TournamentId}c{contest.CategoryId}")
+                        .SendAsync("updateSheet", rrDto, ctx);
+                }
+                else
+                {
+                    var dto = contest.ToDTO();
+                    await _hub.Clients.Group($"t{contest.TournamentId}c{contest.CategoryId}")
+                        .SendAsync("updateSheet", dto, ctx);
+                }
+            }
         }
     }
 }

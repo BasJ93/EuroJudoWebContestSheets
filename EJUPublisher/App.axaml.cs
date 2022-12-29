@@ -31,7 +31,7 @@ namespace EJUPublisher
             ServiceProvider = new ServiceCollection()
                 .AddSingleton<IConfiguration>(configuration)
                 .AddSingleton<ILog>(LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType))
-                .AddSingleton<IEJUPublisherService, EJUPublisherService>()
+                .AddSingleton<IEJUPublisherService, EjuPublisherService>()
                 .AddScoped<MainViewModel>()
                 .BuildServiceProvider();
         }
