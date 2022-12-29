@@ -7,7 +7,7 @@ namespace EuroJudoWebContestSheets.Cache;
 
 public static class CustomDistributedCacheExtensions
 {
-    public static async Task<T> GetAsync<T>(this IDistributedCache cache, string key, CancellationToken ctx = default)
+    public static async Task<T?> GetAsync<T>(this IDistributedCache cache, string key, CancellationToken ctx = default)
     {
         string content = await cache.GetStringAsync(key, ctx);
         
@@ -24,7 +24,7 @@ public static class CustomDistributedCacheExtensions
         await cache.SetStringAsync(key, JsonConvert.SerializeObject(entry), ctx);
     }
     
-    public static bool TryGet<T>(this IDistributedCache cache, string key, out T entry)
+    public static bool TryGet<T>(this IDistributedCache cache, string key, out T? entry)
     {
         bool found = false;
         

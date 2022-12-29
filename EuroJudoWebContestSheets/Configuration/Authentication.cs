@@ -7,10 +7,8 @@ namespace EuroJudoWebContestSheets.Configuration;
 
 public static class Authentication
 {
-    public static void ConfigureAuthentication(this IServiceCollection services)
+    public static IServiceCollection ConfigureAuthentication(this IServiceCollection services)
     {
-        services.AddScoped<IGetApiKeyQuery ,InMemoryGetApiKeyQuery>();
-
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
@@ -26,5 +24,7 @@ public static class Authentication
 
         services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, UploaderAuthorizationHandler>();
+
+        return services;
     }
 }

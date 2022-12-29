@@ -1,22 +1,23 @@
 ﻿@using Microsoft.AspNetCore.Html
+@model EuroJudoWebContestSheets.Models.ViewModels.ContestSheetViewModel
+
 @{
-    ViewData["Title"] = ViewBag.Title;
+    ViewData["Title"] = @Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <script>
-    var categoryID = @ViewBag.CategoryID;
-    var tournamentID = @ViewBag.TournamentID;
-    var contestType = "@ViewBag.Type";
+    const categoryID = @Model.CategoryId;
+    const tournamentID = @Model.TournamentId;
 </script>
 
 
-<a href="/tournaments/Categories?tournamentID=@ViewBag.TournamentID" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>Toernooi</a>
+<a href="/tournaments/Categories?tournamentId=@Model.TournamentId" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>Toernooi</a>
 <!--Show the name of the category as the heading.-->
 <h2>@ViewBag.Title</h2>
 
 
-@(new HtmlString(ViewBag.SVGText))
+@(new HtmlString(Model.SvgText))
 
 
 @section scripts

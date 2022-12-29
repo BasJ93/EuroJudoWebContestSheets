@@ -1,8 +1,8 @@
 ﻿using EuroJudoWebContestSheets.Extentions;
-using EuroJudoWebContestSheets.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
+using EuroJudoWebContestSheets.Database.Models;
 
 namespace EuroJudoWebContestSheets.Hubs
 {

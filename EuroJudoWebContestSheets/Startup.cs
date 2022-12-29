@@ -1,4 +1,7 @@
-﻿using EuroJudoWebContestSheets.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EuroJudoWebContestSheets.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +12,11 @@ using Microsoft.Extensions.Hosting;
 using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
 using EuroJudoWebContestSheets.Configuration;
+using EuroJudoWebContestSheets.Database;
+using EuroJudoWebContestSheets.Models.DTO;
+using Microsoft.EntityFrameworkCore;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace EuroJudoWebContestSheets
 {
@@ -31,11 +39,11 @@ namespace EuroJudoWebContestSheets
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<dbContext>();
+            services.AddDatabase();
 
-            //services.AddControllers();
+            services.AddServiceLayers();
+            
             services.AddControllersWithViews();
-            //services.AddRazorPages();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             
@@ -43,12 +51,33 @@ namespace EuroJudoWebContestSheets
 
             services.AddCaching(Configuration);
 
-            services.AddSwaggerDocument();
+            services.AddOpenApiDocument(document =>
+            {
+                document.AddSecurity("apikey", Enumerable.Empty<string>(), new OpenApiSecurityScheme()
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "x-api-key",
+                    In = OpenApiSecurityApiKeyLocation.Header
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ContestSheetDbContext dbContext)
         {
+
+            List<string> pendingMigrations = dbContext.Database.GetPendingMigrations().ToList();
+
+            if (pendingMigrations.Any())
+            {
+                foreach (string pendingMigration in pendingMigrations)
+                {
+                    Console.WriteLine($"Pending migration: [{pendingMigration}]", pendingMigration);
+                }
+                
+                dbContext.Database.Migrate();                
+            }
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -81,7 +110,7 @@ namespace EuroJudoWebContestSheets
                     pattern: "{controller=ContestOrder}/{action=Index}");
 
                     endpoints.MapControllers();
-                    //endpoints.MapRazorPages();
+                    
                     endpoints.MapHub<TournamentHub>("/tournamentHub");
                     endpoints.MapHub<ContestOrderHub>("/contestOrderHub");
                 }

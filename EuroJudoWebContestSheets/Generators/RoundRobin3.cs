@@ -1,4 +1,4 @@
-using EuroJudoWebContestSheets.Models;
+using EuroJudoWebContestSheets.Database.Models;
 
 namespace EuroJudoWebContestSheets.Generators
 {

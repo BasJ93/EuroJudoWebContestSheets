@@ -35,13 +35,13 @@ public class ContestOrderController : ControllerBase
     /// <param name="ctx"></param>
     /// <returns>A JSON representation of a list of <see cref="ContestOrder"/></returns>
     [HttpGet]
-    [ProducesResponseType(typeof(List<ContestOrder>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ContestOrderDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ContestOrderLists(CancellationToken ctx)
     {
-        List<ContestOrder> contestOrders = await _cache.GetAsync<List<ContestOrder>>("contestOrders", ctx);
+        List<ContestOrderDto>? contestOrders = await _cache.GetAsync<List<ContestOrderDto>>("contestOrders", ctx);
             
-        if (contestOrders == default)
+        if (contestOrders == null)
         {
             return NotFound();
         }
@@ -57,7 +57,7 @@ public class ContestOrderController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Authorize(Policy = Policies.Uploader)]
-    public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrder> contestOrders, CancellationToken ctx)
+    public async Task<IActionResult> PostContestOrderLists([FromBody] List<ContestOrderDto> contestOrders, CancellationToken ctx)
     {
         await _cache.SetAsync("contestOrders", contestOrders, ctx);
         await _hub.Clients.All.SendAsync("updateContestOrder", contestOrders, ctx);

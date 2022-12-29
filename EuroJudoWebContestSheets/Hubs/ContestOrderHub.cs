@@ -21,7 +21,7 @@ namespace EuroJudoWebContestSheets.Hubs
             await base.OnConnectedAsync();
             await Clients.Client(Context.ConnectionId).SendAsync("connected", "Hello from ContestOrderHub");
             
-            List<ContestOrder> contestOrders = await _cache.GetAsync<List<ContestOrder>>("contestOrders");
+            List<ContestOrderDto>? contestOrders = await _cache.GetAsync<List<ContestOrderDto>>("contestOrders");
             
             if (contestOrders != default)
             {
@@ -29,7 +29,7 @@ namespace EuroJudoWebContestSheets.Hubs
             }
         }
 
-        public async Task updateContestOrder(List<ContestOrder> contestOrders)
+        public async Task updateContestOrder(List<ContestOrderDto> contestOrders)
         {
             await Clients.All.SendAsync("updateContestOrder", contestOrders);
         }

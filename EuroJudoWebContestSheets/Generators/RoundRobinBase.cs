@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using EuroJudoWebContestSheets.Database.Models;
 using EuroJudoWebContestSheets.Extentions;
 using EuroJudoWebContestSheets.Models;
 using EuroJudoWebContestSheets.Models.DTO;
@@ -38,13 +39,13 @@ namespace EuroJudoWebContestSheets.Generators
 
             foreach (var contest in category.SheetData)
             {
-                if (!string.IsNullOrEmpty(contest.CompeditorWhite))
+                if (!string.IsNullOrEmpty(contest.CompetitorWhite))
                 {
                     var sheetdescendants = sheet.Descendants();
                     var score = sheet.Descendants().Where(o => (string)o.Attribute("id") == (contest.Contest.ToString() + "W")).First();
                     score.SetValue(contest.ScoreWhite());
                 }
-                if (!string.IsNullOrEmpty(contest.CompeditorBlue))
+                if (!string.IsNullOrEmpty(contest.CompetitorBlue))
                 {
                     var score = sheet.Descendants().Where(o => (string)o.Attribute("id") == (contest.Contest.ToString() + "B")).First();
                     score.SetValue(contest.ScoreBlue());

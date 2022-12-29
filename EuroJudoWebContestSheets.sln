@@ -9,6 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EJUPublisher", "EJUPublishe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Tests", "EuroJudoWebContestSheets.Tests\EuroJudoWebContestSheets.Tests.csproj", "{6ADDDF1A-BA86-4BC2-AABB-EEDECC698E4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Models", "EuroJudoWebContestSheets.Models\EuroJudoWebContestSheets.Models.csproj", "{9C3F5BF3-BE19-48C8-BCC9-05449CA93BEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Database", "EuroJudoWebContestSheets.Database\EuroJudoWebContestSheets.Database.csproj", "{C496C244-59B2-4971-8651-18DF565F3336}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Authentication", "EuroJudoWebContestSheets.Authentication\EuroJudoWebContestSheets.Authentication.csproj", "{3302AEAE-7AB3-4D4F-9B4C-9E9F85B91C83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Authorization", "EuroJudoWebContestSheets.Authorization\EuroJudoWebContestSheets.Authorization.csproj", "{77A78C25-5CC5-4878-8A92-7E2BF095875B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +35,22 @@ Global
 		{6ADDDF1A-BA86-4BC2-AABB-EEDECC698E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ADDDF1A-BA86-4BC2-AABB-EEDECC698E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ADDDF1A-BA86-4BC2-AABB-EEDECC698E4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C3F5BF3-BE19-48C8-BCC9-05449CA93BEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C3F5BF3-BE19-48C8-BCC9-05449CA93BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C3F5BF3-BE19-48C8-BCC9-05449CA93BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C3F5BF3-BE19-48C8-BCC9-05449CA93BEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C496C244-59B2-4971-8651-18DF565F3336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C496C244-59B2-4971-8651-18DF565F3336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C496C244-59B2-4971-8651-18DF565F3336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C496C244-59B2-4971-8651-18DF565F3336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3302AEAE-7AB3-4D4F-9B4C-9E9F85B91C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3302AEAE-7AB3-4D4F-9B4C-9E9F85B91C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3302AEAE-7AB3-4D4F-9B4C-9E9F85B91C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3302AEAE-7AB3-4D4F-9B4C-9E9F85B91C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-using EuroJudoWebContestSheets.Models;
+using EuroJudoWebContestSheets.Database.Models;
 
 namespace EuroJudoWebContestSheets.Generators
 {
@@ -8,7 +8,6 @@ namespace EuroJudoWebContestSheets.Generators
 
         public RoundRobin4(Category category) : base(category, template)
         {
-            
         }
     }
 }

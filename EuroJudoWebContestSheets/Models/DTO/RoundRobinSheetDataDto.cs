@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EuroJudoWebContestSheets.Models.DTO
 {
     public class CompetitorDto
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = String.Empty;
 
         public int Score { get; set; }
 
@@ -15,6 +16,6 @@ namespace EuroJudoWebContestSheets.Models.DTO
 
     public class RoundRobinSheetDataDto : ContestSheetDataDto
     {
-        public List<CompetitorDto> Competitors { get; set; }
+        public IList<CompetitorDto> Competitors { get; set; } = new List<CompetitorDto>();
     }
 }

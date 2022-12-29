@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EuroJudoWebContestSheets.Database.Models;
 using EuroJudoWebContestSheets.Models;
 using EuroJudoWebContestSheets.Models.DTO;
 
@@ -53,7 +54,7 @@ namespace EuroJudoWebContestSheets.Extentions
 
         public static string GroupName(this ContestSheetData contest)
         {
-            return $"t{contest.TournamentID}c{contest.CategoryID}";
+            return $"t{contest.TournamentId}c{contest.CategoryId}";
         }
 
         public static ContestSheetDataDto ToDTO(this ContestSheetData contest)
@@ -61,12 +62,12 @@ namespace EuroJudoWebContestSheets.Extentions
             return new ContestSheetDataDto
             {
                 Contest = contest.Contest,
-                CompetitorWhite = contest.CompeditorWhite,
-                CompetitorBlue = contest.CompeditorBlue,
-                IponWhite = contest.IponWhite,
-                WazaariWhite = contest.WazaariWhite,
-                IponBlue = contest.IponBlue,
-                WazaariBlue = contest.WazaariBlue,
+                CompetitorWhite = contest.CompetitorWhite ?? string.Empty,
+                CompetitorBlue = contest.CompetitorBlue ?? string.Empty,
+                IponWhite = contest.IponWhite ?? 0,
+                WazaariWhite = contest.WazaariWhite ?? 0,
+                IponBlue = contest.IponBlue ?? 0,
+                WazaariBlue = contest.WazaariBlue ?? 0,
             };
         }
 
@@ -149,7 +150,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     category.TryGet(1, out ContestSheetData contest1);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorWhite,
+                        Name = contest1.CompetitorWhite,
                         Score = result1.Points,
                         Won = result1.Won,
                     });
@@ -157,7 +158,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     result2 = category.CalculateRR3Result(2);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorBlue,
+                        Name = contest1.CompetitorBlue,
                         Score = result2.Points,
                         Won = result2.Won,
                     });
@@ -166,7 +167,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     category.TryGet(2, out ContestSheetData contest2);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest2.CompeditorBlue,
+                        Name = contest2.CompetitorBlue,
                         Score = result3.Points,
                         Won = result3.Won,
                     });
@@ -181,7 +182,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     category.TryGet(1, out contest1);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorWhite,
+                        Name = contest1.CompetitorWhite,
                         Score = result1.Points,
                         Won = result1.Won,
                     });
@@ -189,7 +190,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     result2 = category.CalculateRR4Result(2);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorBlue,
+                        Name = contest1.CompetitorBlue,
                         Score = result2.Points,
                         Won = result2.Won,
                     });
@@ -199,7 +200,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     {
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompeditorWhite,
+                            Name = contest2.CompetitorWhite,
                             Score = result3.Points,
                             Won = result3.Won,
                         });
@@ -207,7 +208,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         result4 = category.CalculateRR4Result(4);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompeditorBlue,
+                            Name = contest2.CompetitorBlue,
                             Score = result4.Points,
                             Won = result4.Won,
                         });
@@ -223,7 +224,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     category.TryGet(1, out contest1);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorWhite,
+                        Name = contest1.CompetitorWhite,
                         Score = result1.Points,
                         Won = result1.Won,
                     });
@@ -231,7 +232,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     result2 = category.CalculateRR5Result(2);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorBlue,
+                        Name = contest1.CompetitorBlue,
                         Score = result2.Points,
                         Won = result2.Won,
                     });
@@ -241,7 +242,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     {
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompeditorWhite,
+                            Name = contest2.CompetitorWhite,
                             Score = result3.Points,
                             Won = result3.Won,
                         });
@@ -249,7 +250,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         result4 = category.CalculateRR5Result(4);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompeditorBlue,
+                            Name = contest2.CompetitorBlue,
                             Score = result4.Points,
                             Won = result4.Won,
                         });
@@ -260,7 +261,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         result5 = category.CalculateRR5Result(5);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest3.CompeditorBlue,
+                            Name = contest3.CompetitorBlue,
                             Score = result5.Points,
                             Won = result5.Won,
                         });
@@ -280,7 +281,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     category.TryGet(1, out contest1);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorWhite,
+                        Name = contest1.CompetitorWhite,
                         Score = result1.Points,
                         Won = result1.Won,
                     });
@@ -288,7 +289,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     result2 = category.CalculateRR6Result(2);
                     competitors.Add(new CompetitorDto
                     {
-                        Name = contest1.CompeditorBlue,
+                        Name = contest1.CompetitorBlue,
                         Score = result2.Points,
                         Won = result2.Won,
                     });
@@ -298,7 +299,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     {
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompeditorWhite,
+                            Name = contest2.CompetitorWhite,
                             Score = result3.Points,
                             Won = result3.Won,
                         });
@@ -306,7 +307,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         result4 = category.CalculateRR6Result(4);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompeditorBlue,
+                            Name = contest2.CompetitorBlue,
                             Score = result4.Points,
                             Won = result4.Won,
                         });
@@ -317,7 +318,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         result5 = category.CalculateRR6Result(5);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest3.CompeditorWhite,
+                            Name = contest3.CompetitorWhite,
                             Score = result5.Points,
                             Won = result5.Won,
                         });
@@ -325,7 +326,7 @@ namespace EuroJudoWebContestSheets.Extentions
                         result6 = category.CalculateRR6Result(6);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest3.CompeditorBlue,
+                            Name = contest3.CompetitorBlue,
                             Score = result6.Points,
                             Won = result6.Won,
                         });
@@ -345,12 +346,12 @@ namespace EuroJudoWebContestSheets.Extentions
             return new RoundRobinSheetDataDto
             {
                 Contest = contest.Contest,
-                CompetitorWhite = contest.CompeditorWhite,
-                CompetitorBlue = contest.CompeditorBlue,
-                IponWhite = contest.IponWhite,
-                WazaariWhite = contest.WazaariWhite,
-                IponBlue = contest.IponBlue,
-                WazaariBlue = contest.WazaariBlue,
+                CompetitorWhite = contest.CompetitorWhite ?? string.Empty,
+                CompetitorBlue = contest.CompetitorBlue ?? string.Empty,
+                IponWhite = contest.IponWhite ?? 0,
+                WazaariWhite = contest.WazaariWhite ?? 0,
+                IponBlue = contest.IponBlue ?? 0,
+                WazaariBlue = contest.WazaariBlue ?? 0,
                 Competitors = competitors,
             };
 
@@ -519,13 +520,13 @@ namespace EuroJudoWebContestSheets.Extentions
                     var contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 3 || s.Contest == 6 || s.Contest == 9);
                     return new EventResult
                     {
-                        Won = contests.Where(c => c.WhiteWon()).Count(),
+                        Won = contests.Count(c => c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreWhite()).Sum(),
                     };
                 case 2:
                     var asWhite = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 7 || s.Contest == 10);
                     var asBlue = category.SheetData.Where(s => s.Contest == 1);
-                    int won = asWhite.Where(c => c.WhiteWon()).Count();
+                    int won = asWhite.Count(c => c.WhiteWon());
                     int score = asWhite.Select(c => c.ScoreWhite()).Sum();
                     if (asBlue.FirstOrDefault() != default)
                     {
@@ -541,7 +542,7 @@ namespace EuroJudoWebContestSheets.Extentions
                 case 3:
                     asWhite = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 8);
                     asBlue = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 6);
-                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    won = asWhite.Count(c => c.WhiteWon()) + asBlue.Count(c => !c.WhiteWon());
                     score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
 
                     return new EventResult
@@ -552,7 +553,7 @@ namespace EuroJudoWebContestSheets.Extentions
                 case 4:
                     asWhite = category.SheetData.Where(s => s.Contest == 5);
                     contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 7 || s.Contest == 9);
-                    won = contests.Where(c => !c.WhiteWon()).Count();
+                    won = contests.Count(c => !c.WhiteWon());
                     score = contests.Select(c => c.ScoreBlue()).Sum();
                     if (asWhite.FirstOrDefault() != default)
                     {
@@ -568,7 +569,7 @@ namespace EuroJudoWebContestSheets.Extentions
                     contests = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 5 || s.Contest == 8 || s.Contest == 10);
                     return new EventResult
                     {
-                        Won = contests.Where(c => !c.WhiteWon()).Count(),
+                        Won = contests.Count(c => !c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreBlue()).Sum(),
                     };
                 default:
