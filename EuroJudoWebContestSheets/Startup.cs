@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EuroJudoWebContestSheets.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +12,8 @@ using EuroJudoWebContestSheets.Hubs;
 using Microsoft.AspNetCore.HttpOverrides;
 using EuroJudoWebContestSheets.Configuration;
 using EuroJudoWebContestSheets.Database;
-using EuroJudoWebContestSheets.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
-using NSwag.Generation.Processors.Security;
 
 namespace EuroJudoWebContestSheets
 {
