@@ -49,7 +49,7 @@ RUN tsc
 RUN npx webpack --config webpack.config.js
 
 #Compile C#
-RUN dotnet publish EuroJudoWebContestSheets.csproj -c Release -o out
+RUN dotnet publish -c Release -o out
 
 # Build the new image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime

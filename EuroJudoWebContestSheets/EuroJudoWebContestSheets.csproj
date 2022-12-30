@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EJUPublisher\EJUPublisher.csproj" />
     <ProjectReference Include="..\EuroJudoWebContestSheets.Authentication\EuroJudoWebContestSheets.Authentication.csproj" />
     <ProjectReference Include="..\EuroJudoWebContestSheets.Database\EuroJudoWebContestSheets.Database.csproj" />
     <ProjectReference Include="..\EuroJudoWebContestSheets.Models\EuroJudoWebContestSheets.Models.csproj" />
