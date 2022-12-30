@@ -23,6 +23,7 @@ RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPriva
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY EuroJudoWebContestSheets/*.csproj ./EuroJudoWebContestSheets/
+COPY EJUPublisher/*.csproj ./EJUPublisher/
 COPY EuroJudoWebContestSheets.Authentication/*.csproj ./EuroJudoWebContestSheets.Authentication/
 COPY EuroJudoWebContestSheets.Authorization/*.csproj ./EuroJudoWebContestSheets.Authorization/
 COPY EuroJudoWebContestSheets.Database/*.csproj ./EuroJudoWebContestSheets.Database/
