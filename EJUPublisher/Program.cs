@@ -20,28 +20,7 @@ namespace EJUPublisher
     {
         static void Main(string[] args)
         {
-            //var logRepository = LogManager.GetRepository();
-            //log4net.Config.XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-            AddLog4NetConfig();
-
-
-            /*if (!(logRepository.GetAppenders().Length > 0))
-            {
-                throw new Exception("No appenders found");
-            }
-            if (!logRepository.Configured)
-            {
-                throw new NotImplementedException();
-            }*/
-
-            var logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            logger.Info("App start");
-
-            //var EJUPublisher = serviceProvider.GetService<IEJUPublisherService>();
-
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-
-            //EJUPublisher.Publish();
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.

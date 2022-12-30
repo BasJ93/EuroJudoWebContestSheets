@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EuroJudoWebContestSheets.Database.Models;
 using EuroJudoWebContestSheets.Database.Repositories.Interfaces;
+using EuroJudoWebContestSheets.Extensions;
 using EuroJudoWebContestSheets.Models.Tournament;
 
 namespace EuroJudoWebContestSheets.Services.Tournament;
@@ -54,5 +55,17 @@ public class TournamentService : ITournamentService
         }
 
         return categories.Select(c => new CategoryDto(c.Id, c.TournamentId, c.CategoryName)).ToList();
+    }
+
+    public async Task<TournamentDto?> CreateTournament(CreateTournamentDto tournamentToCreate, CancellationToken ctx = default)
+    {
+        Database.Models.Tournament? existing = await _tournaments.ByName(tournamentToCreate.Name, ctx);
+
+        if (existing == null)
+        {
+            existing = await _tournaments.Insert(new Database.Models.Tournament(tournamentToCreate.Name), ctx);
+        }
+
+        return existing.ToDto();
     }
 }

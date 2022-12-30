@@ -1,4 +1,4 @@
-using EuroJudoWebContestSheets.Extentions;
+using EuroJudoWebContestSheets.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using EuroJudoWebContestSheets.Database.Models;

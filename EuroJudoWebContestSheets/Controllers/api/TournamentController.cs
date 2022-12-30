@@ -6,9 +6,11 @@ using EuroJudoWebContestSheets.Authentication;
 using EuroJudoWebContestSheets.Authorization;
 using EuroJudoWebContestSheets.Database.Models;
 using EuroJudoWebContestSheets.Database.Repositories.Interfaces;
-using EuroJudoWebContestSheets.Extentions;
+using EuroJudoWebContestSheets.Extensions;
 using EuroJudoWebContestSheets.Hubs;
 using EuroJudoWebContestSheets.Models;
+using EuroJudoWebContestSheets.Models.Tournament;
+using EuroJudoWebContestSheets.Services.Tournament;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,9 @@ namespace EuroJudoWebContestSheets.Controllers.api
     {
         private readonly ILogger<TournamentController> _logger;
 
+        private readonly ITournamentService _tournamentService;
+        private readonly ICategoryService _categoryService;
+        
         private readonly ITournamentsRepository _tournaments;
         private readonly ICategoriesRepository _categories;
         private readonly IContestSheetDataRepository _sheetData;
@@ -34,12 +39,14 @@ namespace EuroJudoWebContestSheets.Controllers.api
 
         public TournamentController(IHubContext<TournamentHub> hub, ITournamentsRepository tournaments,
             ICategoriesRepository categories, IContestSheetDataRepository sheetData,
-            ILogger<TournamentController> logger)
+            ILogger<TournamentController> logger, ITournamentService tournamentService, ICategoryService categoryService)
         {
             _tournaments = tournaments;
             _categories = categories;
             _sheetData = sheetData;
             _logger = logger;
+            _tournamentService = tournamentService;
+            _categoryService = categoryService;
             _hub = hub;
         }
 
@@ -113,25 +120,25 @@ namespace EuroJudoWebContestSheets.Controllers.api
         /// <returns></returns>
         [HttpPost]
         [Consumes("application/json")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(UnauthorizedProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ForbiddenProblemDetails), StatusCodes.Status403Forbidden)]
         [Authorize(Policy = Policies.Uploader)]
-        public async Task<IActionResult> PostCategoryData([FromBody, Required] Category category, CancellationToken ctx)
+        public async Task<IActionResult> PostCategoryData([FromBody, Required] CreateCategoryDto category, CancellationToken ctx)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _categories.Insert(category, ctx);
+                    CategoryDto? createdCategory = await _categoryService.CreateNewCategory(category, ctx);
+
+                    return Ok(createdCategory);
                 }
                 catch (Exception e)
                 {
                     return BadRequest(e);
                 }
-
-                return Ok();
             }
 
             return BadRequest();
@@ -140,38 +147,37 @@ namespace EuroJudoWebContestSheets.Controllers.api
         /// <summary>
         /// Endpoint for the uploader client to create a new tournament in the web database.
         /// </summary>
-        /// <param name="tournament"></param>
+        /// <param name="tournament">Request model containing the name of the tournament to create.</param>
         /// <param name="ctx">Cancellation token</param>
-        /// <returns></returns>
+        /// <returns>The data for the created tournament, both the provided name and the assigned id.</returns>
         [HttpPost]
         [Consumes("application/json")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(TournamentDto), StatusCodes.Status200OK)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(UnauthorizedProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ForbiddenProblemDetails), StatusCodes.Status403Forbidden)]
         [Authorize(Policy = Policies.Uploader)]
-        public async Task<IActionResult> PostTournamentData([FromBody, Required] Tournament tournament,
+        public async Task<IActionResult> PostTournamentData([FromBody, Required] CreateTournamentDto tournament,
             CancellationToken ctx)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _tournaments.Insert(tournament, ctx);
+                    TournamentDto? response = await _tournamentService.CreateTournament(tournament, ctx);
+                    return Ok(response);
                 }
                 catch (Exception e)
                 {
                     return BadRequest(e);
                 }
-
-                return Ok();
             }
 
             return BadRequest();
         }
 
         /// <summary>
-        /// Endpoint for the uploader client to retreive the category id for a given category.
+        /// Endpoint for the uploader client to retrieve the category id for a given category.
         /// </summary>
         /// <param name="tournamentID"></param>
         /// <param name="categoryShort"></param>

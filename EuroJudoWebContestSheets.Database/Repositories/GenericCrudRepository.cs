@@ -25,10 +25,12 @@ public class GenericCrudRepository<T> : IGenericCrudRepository<T> where T : Base
         return await Entities.SingleOrDefaultAsync(x => x.Id == id, ctx);
     }
 
-    public async Task Insert(T value, CancellationToken ctx = default)
+    public async Task<T> Insert(T value, CancellationToken ctx = default)
     {
         await Entities.AddAsync(value, ctx);
         await Db.SaveChangesAsync(ctx);
+
+        return value;
     }
 
     public async Task<T?> Update(T value, CancellationToken ctx = default)

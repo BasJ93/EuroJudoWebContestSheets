@@ -61,13 +61,16 @@
         <RowDefinition Height="1*" />
         <RowDefinition Height="1*" />
         <RowDefinition Height="1*" />
-        <RowDefinition Height="4*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
+        <RowDefinition Height="1*" />
       </Grid.RowDefinitions>
 
-      <Label Grid.Row="0" Grid.ColumnSpan="3" Content="Configuration" Classes="h1"/>
+      <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="Configuration" Classes="h1"/>
       
       <Label Grid.Row="1" Grid.Column="0" Content="EJU Server" />
-      <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding EJUServer, Mode=TwoWay}" />
+      <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding EjuServer, Mode=TwoWay}" />
       
       <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Buffersize per tatami" />
       <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding BufferSizePerTatami, Mode=TwoWay}" />
@@ -78,9 +81,14 @@
       <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Number of contests" />
       <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding NumberOfContests, Mode=TwoWay}" />
       
-      <Button Grid.Row="5" Content="Start" Command="{Binding StartListenerCommand}"/>
-      <Button Grid.Row="5" Grid.Column="1" Content="Update" Command="{Binding UpdateListenerCommand}" />
-      <Button Grid.Row="5" Grid.Column="2" Content="Stop" Command="{Binding StopListenerCommand}" />
+      <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" IsChecked="{Binding UploadContests, Mode=TwoWay}">Upload contest order</CheckBox>
+      <CheckBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" IsChecked="{Binding UploadResults, Mode=TwoWay}">Upload contest results</CheckBox>
+      
+      <Button Grid.Row="7" Grid.Column="0" Content="Start" Command="{Binding StartListenerCommand}"/>
+      <Button Grid.Row="7" Grid.Column="1" Content="Update" Command="{Binding UpdateListenerCommand}" />
+      <Button Grid.Row="7" Grid.Column="2" Content="Stop" Command="{Binding StopListenerCommand}" />
+      
+      <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Content="Configure tournament" Command="{Binding ConfigureTournamentCommand}" />
     </Grid>
     
   </Grid>

@@ -5,9 +5,9 @@ using EuroJudoWebContestSheets.Database.Models;
 using EuroJudoWebContestSheets.Models;
 using EuroJudoWebContestSheets.Models.DTO;
 
-namespace EuroJudoWebContestSheets.Extentions
+namespace EuroJudoWebContestSheets.Extensions
 {
-    public static class ContestDataExtentions
+    public static class ContestDataExtensions
     {
         public static int ScoreWhite(this ContestSheetData contest)
         {

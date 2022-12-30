@@ -3,7 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using EuroJudoWebContestSheets.Database.Models;
-using EuroJudoWebContestSheets.Extentions;
+using EuroJudoWebContestSheets.Extensions;
 using EuroJudoWebContestSheets.Models;
 using EuroJudoWebContestSheets.Models.DTO;
 

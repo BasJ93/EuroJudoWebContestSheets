@@ -10,12 +10,15 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Reflection;
+using EJUPublisher.Configuration;
+using EuroJudoProtocols.ShowFights;
+using EuroJudoProtocols.ShowFights.Models;
 
 namespace EJUPublisher
 {
     public class App : Application
     {
-        private IServiceProvider ServiceProvider;
+        private IServiceProvider _serviceProvider;
 
         public override void Initialize()
         {
@@ -27,12 +30,23 @@ namespace EJUPublisher
 
             IConfigurationRoot configuration = builder.Build();
 
+            ShowFightsConfiguration showFightsConfiguration = configuration.GetSection("EuroJudo").Get<ShowFightsConfiguration>(); 
+            IWebConfiguration webConfiguration = configuration.GetSection("Web").Get<WebConfiguration>();
+            IContestOrderConfiguration contestOrderConfiguration =
+                configuration.GetSection("ContestOrder").Get<ContestOrderConfiguration>();
+            
             //setup our DI
-            ServiceProvider = new ServiceCollection()
+            _serviceProvider = new ServiceCollection()
+                .AddLogging()
                 .AddSingleton<IConfiguration>(configuration)
-                .AddSingleton<ILog>(LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType))
+                .AddSingleton(showFightsConfiguration)
+                .AddSingleton(webConfiguration)
+                .AddSingleton(contestOrderConfiguration)
+                .AddSingleton<IShowFightsClient, ShowFightsClient>()
                 .AddSingleton<IEJUPublisherService, EjuPublisherService>()
                 .AddScoped<MainViewModel>()
+                .AddScoped<TournamentManagementView>()
+                .AddScoped<TournamentManagementViewModel>()
                 .BuildServiceProvider();
         }
 
@@ -40,7 +54,7 @@ namespace EJUPublisher
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainView(ServiceProvider);
+                desktop.MainWindow = new MainView(_serviceProvider);
             }
 
             base.OnFrameworkInitializationCompleted();

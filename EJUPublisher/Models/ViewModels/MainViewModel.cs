@@ -3,81 +3,111 @@ using Microsoft.Extensions.Configuration;
 using ReactiveUI;
 using System;
 using System.Reactive;
+using EuroJudoProtocols.ShowFights.Models;
 
 namespace EJUPublisher.Models.ViewModels
 {
     public class MainViewModel : ReactiveObject
     {
-        private IConfiguration Configuration;
-        private IEJUPublisherService PublisherService;
+        private readonly IConfiguration _configuration;
+        private readonly IEJUPublisherService _publisherService;
+        private readonly TournamentManagementView _tournamentManagementView;
+        private readonly ShowFightsConfiguration _showFightsConfiguration;
 
         private string _ejuServer;
-        public string EJUServer
+        public string EjuServer
         {
             get => _ejuServer;
 
             set
             {
-                Configuration["EJUServer"] = value;
+                _configuration["EJUServer"] = value;
                 this.RaiseAndSetIfChanged(ref _ejuServer, value);
             }
         }
 
-        private int numberOfTatami;
+        private int _numberOfTatami;
         public int NumberOfTatami
         {
-            get => numberOfTatami;
+            get => _numberOfTatami;
             set
             {
-                Configuration["NumberOfTatami"] = value.ToString();
-                this.RaiseAndSetIfChanged(ref numberOfTatami, value);
+                _configuration["NumberOfTatami"] = value.ToString();
+                this.RaiseAndSetIfChanged(ref _numberOfTatami, value);
             }
         }
 
-        private int numberOfContests;
+        private int _numberOfContests;
         public int NumberOfContests
         {
-            get => numberOfContests;
+            get => _numberOfContests;
             set
             {
-                Configuration["NumberOfContests"] = value.ToString();
-                this.RaiseAndSetIfChanged(ref numberOfContests, value);
+                _configuration["NumberOfContests"] = value.ToString();
+                this.RaiseAndSetIfChanged(ref _numberOfContests, value);
             }
         }
 
-        private int bufferSizePerTatami;
+        private int _bufferSizePerTatami;
 
         public int BufferSizePerTatami
         {
-            get => bufferSizePerTatami;
+            get => _bufferSizePerTatami;
             set
             {
-                Configuration["BufferSizePerTatami"] = value.ToString();
-                this.RaiseAndSetIfChanged(ref bufferSizePerTatami, value);
+                _configuration["BufferSizePerTatami"] = value.ToString();
+                this.RaiseAndSetIfChanged(ref _bufferSizePerTatami, value);
             }
         }
 
+        private bool _uploadContests;
+
+        public bool UploadContests
+        {
+            get => _uploadContests;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _uploadContests, value);
+            }
+        }
+        
+        private bool _uploadResults;
+
+        public bool UploadResults
+        {
+            get => _uploadResults;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _uploadResults, value);
+            }
+        }
+        
         public AvaloniaList<string> LogLines { get; } = new AvaloniaList<string>();
 
         public ReactiveCommand<Unit, Unit> StartListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> UpdateListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> StopListenerCommand { get; }
+        public ReactiveCommand<Unit, Unit> ConfigureTournamentCommand { get; }
 
-        public MainViewModel(IEJUPublisherService publisherService, IConfiguration configuration)
+        public MainViewModel(IEJUPublisherService publisherService, IConfiguration configuration, TournamentManagementView tournamentManagementView, ShowFightsConfiguration showFightsConfiguration)
         {
-            PublisherService = publisherService;
-            Configuration = configuration;
+            _publisherService = publisherService;
+            _configuration = configuration;
+            _tournamentManagementView = tournamentManagementView;
+            _showFightsConfiguration = showFightsConfiguration;
 
-            EJUServer = configuration["EJUServer"];
-            NumberOfContests = Convert.ToInt32(configuration["NumberOfContests"]);
-            NumberOfTatami = Convert.ToInt32(configuration["NumberOfTatami"]);
-            BufferSizePerTatami = Convert.ToInt32(configuration["BufferSizePerTatami"]);
+            EjuServer = _showFightsConfiguration.EjuServer;
+            NumberOfContests = _showFightsConfiguration.NumberOfFights;
+            NumberOfTatami = _showFightsConfiguration.NumberOfTatami;
+            BufferSizePerTatami = _showFightsConfiguration.BufferSizePerTatami;
 
-            StartListenerCommand = ReactiveCommand.Create(PublisherService.Start);
-            StopListenerCommand = ReactiveCommand.Create(PublisherService.Stop);
-            UpdateListenerCommand = ReactiveCommand.Create(PublisherService.RefreshConfiguration);
+            StartListenerCommand = ReactiveCommand.Create(_publisherService.Start);
+            StopListenerCommand = ReactiveCommand.Create(_publisherService.Stop);
+            UpdateListenerCommand = ReactiveCommand.Create(_publisherService.RefreshConfiguration);
 
-            PublisherService.DataReceivedLogEvent += HandleNewLogLine;
+            ConfigureTournamentCommand = ReactiveCommand.Create(_tournamentManagementView.Show);
+
+            _publisherService.DataReceivedLogEvent += HandleNewLogLine;
         }
 
         private void HandleNewLogLine(object sender, string logline)
