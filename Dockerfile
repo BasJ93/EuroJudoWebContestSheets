@@ -33,6 +33,10 @@ RUN dotnet restore
 
 # copy everything else and build app
 COPY EuroJudoWebContestSheets/. ./EuroJudoWebContestSheets/
+COPY EuroJudoWebContestSheets.Authentication/. ./EuroJudoWebContestSheets.Authentication/
+COPY EuroJudoWebContestSheets.Authorization/. ./EuroJudoWebContestSheets.Authorization/
+COPY EuroJudoWebContestSheets.Database/. ./EuroJudoWebContestSheets.Database/
+COPY EuroJudoWebContestSheets.Models/. ./EuroJudoWebContestSheets.Models/
 WORKDIR /app/EuroJudoWebContestSheets
 
 # Install dependancies
