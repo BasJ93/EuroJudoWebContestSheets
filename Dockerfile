@@ -23,7 +23,6 @@ RUN dotnet nuget add source https://baget.basjanssen.eu/v3/index.json -n MyPriva
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY EuroJudoWebContestSheets/*.csproj ./EuroJudoWebContestSheets/
-COPY EJUPublisher/*.csproj ./EJUPublisher/
 COPY EuroJudoWebContestSheets.Authentication/*.csproj ./EuroJudoWebContestSheets.Authentication/
 COPY EuroJudoWebContestSheets.Authorization/*.csproj ./EuroJudoWebContestSheets.Authorization/
 COPY EuroJudoWebContestSheets.Database/*.csproj ./EuroJudoWebContestSheets.Database/
@@ -45,7 +44,7 @@ RUN tsc
 RUN npx webpack --config webpack.config.js
 
 #Compile C#
-RUN dotnet publish -c Release -o out
+RUN dotnet publish EuroJudoWebContestSheets.csproj -c Release -o out
 
 # Build the new image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
