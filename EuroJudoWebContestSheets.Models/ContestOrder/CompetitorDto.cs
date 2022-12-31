@@ -1,9 +1,9 @@
 ﻿namespace EuroJudoWebContestSheets.Models.ContestOrder
 {
-    public class CompetitorDto
+    public sealed record CompetitorDto(string Name, string FirstName, string MiddleName)
     {
-        public string Name { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
+        public string Name { get; set; } = Name;
+        public string FirstName { get; set; } = FirstName;
+        public string MiddleName { get; set; } = MiddleName;
     }
 }

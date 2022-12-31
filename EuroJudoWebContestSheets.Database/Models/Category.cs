@@ -12,15 +12,21 @@
         public virtual Tournament? Tournament { get; set; }
         public virtual IList<ContestSheetData>? SheetData { get; set; }
 
-        public bool TryGet(int contestIndex, out ContestSheetData contest)
+        public bool TryGet(int contestIndex, out ContestSheetData? contest)
         {
-            contest = SheetData.FirstOrDefault(o => o.Contest == contestIndex);
-            if(contest == null)
+            if (SheetData != null)
             {
-                return false;
+                contest = SheetData.FirstOrDefault(o => o.Contest == contestIndex);
+                if (contest == null)
+                {
+                    return false;
+                }
+
+                return true;
             }
 
-            return true;
+            contest = null;
+            return false;
         }
     }
 }

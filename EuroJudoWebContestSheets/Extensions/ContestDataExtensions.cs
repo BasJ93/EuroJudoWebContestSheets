@@ -4,11 +4,43 @@ using System.Linq;
 using EuroJudoWebContestSheets.Database.Models;
 using EuroJudoWebContestSheets.Models;
 using EuroJudoWebContestSheets.Models.DTO;
+using EuroJudoWebContestSheets.Models.Tournament;
+using ContestSheetDataDto = EuroJudoWebContestSheets.Models.DTO.ContestSheetDataDto;
 
 namespace EuroJudoWebContestSheets.Extensions
 {
     public static class ContestDataExtensions
     {
+        public static ContestSheetData UpdateFromQuery(this ContestSheetData contest, UploadContestResultDto contestData)
+        {
+            contest.CompetitorWhite = contestData.CompetitorWhite;
+            contest.CompetitorBlue = contestData.CompetitorBlue;
+
+            switch (contestData.ScoreWhite)
+            {
+                case 10:
+                    contest.IponWhite = 1;
+                    break;
+                case 7:
+                    contest.WazaariWhite = 1;
+                    break;
+            }
+            
+            switch (contestData.ScoreBlue)
+            {
+                case 10:
+                    contest.IponBlue = 1;
+                    break;
+                case 7:
+                    contest.WazaariBlue = 1;
+                    break;
+            }
+            
+            contest.ShowSimpleScore = contestData.ShowSimpleScore;
+
+            return contest;
+        }
+        
         public static int ScoreWhite(this ContestSheetData contest)
         {
             if (contest.IponWhite == 1 || contest.WazaariWhite == 2)
@@ -131,8 +163,16 @@ namespace EuroJudoWebContestSheets.Extensions
             };
         }
 
+        /// <summary>
+        /// Convert the data in the database to the dto used to render the contest sheet.
+        /// </summary>
+        /// <param name="contest"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public static RoundRobinSheetDataDto ToRoundRobinDto(this ContestSheetData contest, Category category)
         {
+            // The contests are only extracted to retrieve the competitor names.
+
             List<CompetitorDto> competitors = new List<CompetitorDto>();
             EventResult result1;
             EventResult result2;
@@ -147,7 +187,7 @@ namespace EuroJudoWebContestSheets.Extensions
             {
                 case 3:
                     result1 = category.CalculateRR3Result(1);
-                    category.TryGet(1, out ContestSheetData contest1);
+                    category.TryGet(1, out ContestSheetData? contest1);
                     competitors.Add(new CompetitorDto
                     {
                         Name = contest1.CompetitorWhite,
@@ -164,7 +204,7 @@ namespace EuroJudoWebContestSheets.Extensions
                     });
 
                     result3 = category.CalculateRR3Result(3);
-                    category.TryGet(2, out ContestSheetData contest2);
+                    category.TryGet(2, out ContestSheetData? contest2);
                     competitors.Add(new CompetitorDto
                     {
                         Name = contest2.CompetitorBlue,
@@ -279,57 +319,69 @@ namespace EuroJudoWebContestSheets.Extensions
                 case 6:
                     result1 = category.CalculateRR6Result(1);
                     category.TryGet(1, out contest1);
-                    competitors.Add(new CompetitorDto
+                    if (contest1 != null)
                     {
-                        Name = contest1.CompetitorWhite,
-                        Score = result1.Points,
-                        Won = result1.Won,
-                    });
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest1.CompetitorWhite ?? string.Empty,
+                            Score = result1.Points,
+                            Won = result1.Won,
+                        });
+                    }
 
                     result2 = category.CalculateRR6Result(2);
-                    competitors.Add(new CompetitorDto
+                    if (contest1 != null)
                     {
-                        Name = contest1.CompetitorBlue,
-                        Score = result2.Points,
-                        Won = result2.Won,
-                    });
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest1.CompetitorBlue ?? string.Empty,
+                            Score = result2.Points,
+                            Won = result2.Won,
+                        });
+                    }
 
                     result3 = category.CalculateRR6Result(3);
                     if (category.TryGet(2, out contest2))
                     {
-                        competitors.Add(new CompetitorDto
+                        if (contest2 != null)
                         {
-                            Name = contest2.CompetitorWhite,
-                            Score = result3.Points,
-                            Won = result3.Won,
-                        });
+                            competitors.Add(new CompetitorDto
+                            {
+                                Name = contest2.CompetitorWhite ?? string.Empty,
+                                Score = result3.Points,
+                                Won = result3.Won,
+                            });
 
-                        result4 = category.CalculateRR6Result(4);
-                        competitors.Add(new CompetitorDto
-                        {
-                            Name = contest2.CompetitorBlue,
-                            Score = result4.Points,
-                            Won = result4.Won,
-                        });
+                            result4 = category.CalculateRR6Result(4);
+                            competitors.Add(new CompetitorDto
+                            {
+                                Name = contest2.CompetitorBlue ?? string.Empty,
+                                Score = result4.Points,
+                                Won = result4.Won,
+                            });
+                        }
                     }
 
                     if (category.TryGet(3, out contest3))
                     {
-                        result5 = category.CalculateRR6Result(5);
-                        competitors.Add(new CompetitorDto
+                        if (contest3 != null)
                         {
-                            Name = contest3.CompetitorWhite,
-                            Score = result5.Points,
-                            Won = result5.Won,
-                        });
+                            result5 = category.CalculateRR6Result(5);
+                            competitors.Add(new CompetitorDto
+                            {
+                                Name = contest3.CompetitorWhite ?? string.Empty,
+                                Score = result5.Points,
+                                Won = result5.Won,
+                            });
 
-                        result6 = category.CalculateRR6Result(6);
-                        competitors.Add(new CompetitorDto
-                        {
-                            Name = contest3.CompetitorBlue,
-                            Score = result6.Points,
-                            Won = result6.Won,
-                        });
+                            result6 = category.CalculateRR6Result(6);
+                            competitors.Add(new CompetitorDto
+                            {
+                                Name = contest3.CompetitorBlue ?? string.Empty,
+                                Score = result6.Points,
+                                Won = result6.Won,
+                            });
+                        }
                     }
 
                     if (category.TryGet(15, out finalContest))

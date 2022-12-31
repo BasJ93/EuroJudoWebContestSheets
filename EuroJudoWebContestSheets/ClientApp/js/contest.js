@@ -54,7 +54,7 @@ class ContestOrder extends HTMLElement {
             .catch(err => console.error('SignalR Connection Error: ', err));
     }
     fetchInitialData() {
-        fetch('/ContestOrder/ContestOrderLists')
+        fetch('api/ContestOrder/ContestOrderLists')
             .then(results => {
             return results.json();
         })

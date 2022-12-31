@@ -2,9 +2,125 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"
-        Width="640" Height="480"
+        mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="480"
+        Width="320" Height="480"
         x:Class="EJUPublisher.TournamentManagementView"
         Title="TournamentManagementView">
-    Welcome to Avalonia!
+    <Window.Styles>
+        <Style Selector="Label.h1">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style Selector="Label.h2">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+        <Style Selector="Label.center">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Label">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+            <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="0.1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Tournament Configuration" Classes="h1" />
+
+            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Tournament" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Items="{Binding Tournaments, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedTournament, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!-- TODO: Section to create a category on the remote -->
+            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Remote categories" Classes="h2" />
+            <ListBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Items="{Binding Categories}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- TODO: Overview of categories on the server for the given tournament -->
+            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Content="Create category" Classes="h2" />
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Name" />
+                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding CategoryName, Mode=TwoWay}"></TextBox>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Short" Classes="center" />
+                <Label Grid.Row="2" Grid.Column="1" Content="Weight" Classes="center" />
+                <Label Grid.Row="2" Grid.Column="2" Content="Size" Classes="center" />
+
+                <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding CategoryShort, Mode=TwoWay}"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CategoryWeight, Mode=TwoWay}"/>
+                <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding CategorySize, Mode=TwoWay}"/>
+                <Button Grid.Row="3" Grid.Column="3" Content="Create" Command="{Binding CreateCategoryCommand}"/>
+
+            </Grid>
+            
+            <Button Grid.Row="6" Grid.Column="0" Content="Reload tournaments" Command="{Binding LoadTournamentsCommand}" />
+            <Button Grid.Row="6" Grid.Column="1" Content="Save" Command="{Binding SaveConfigurationCommand}" />
+        </Grid>
+    </Grid>
 </Window>

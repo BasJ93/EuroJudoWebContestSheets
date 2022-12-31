@@ -1,18 +1,17 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using EJUPublisher.Models.ViewModels;
-using log4net;
-using log4net.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
-using System.Reflection;
 using EJUPublisher.Configuration;
+using EJUPublisher.Services;
+using EJUPublisher.Services.Interfaces;
 using EuroJudoProtocols.ShowFights;
 using EuroJudoProtocols.ShowFights.Models;
+using Microsoft.Extensions.Logging;
 
 namespace EJUPublisher
 {
@@ -34,16 +33,25 @@ namespace EJUPublisher
             IWebConfiguration webConfiguration = configuration.GetSection("Web").Get<WebConfiguration>();
             IContestOrderConfiguration contestOrderConfiguration =
                 configuration.GetSection("ContestOrder").Get<ContestOrderConfiguration>();
+            IContestSheetsConfiguration contestSheetsConfiguration =
+                configuration.GetSection("ContestSheets").Get<ContestSheetsConfiguration>();
+            IUploadConfig uploadConfig = new UploadConfig();
             
             //setup our DI
             _serviceProvider = new ServiceCollection()
-                .AddLogging()
+                .AddLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddConsole();
+                })
                 .AddSingleton<IConfiguration>(configuration)
                 .AddSingleton(showFightsConfiguration)
                 .AddSingleton(webConfiguration)
                 .AddSingleton(contestOrderConfiguration)
+                .AddSingleton(contestSheetsConfiguration)
+                .AddSingleton(uploadConfig)
                 .AddSingleton<IShowFightsClient, ShowFightsClient>()
-                .AddSingleton<IEJUPublisherService, EjuPublisherService>()
+                .AddSingleton<IEjuPublisherService, EjuPublisherService>()
+                .AddSingleton<IWebTournamentService, WebTournamentService>()
                 .AddScoped<MainViewModel>()
                 .AddScoped<TournamentManagementView>()
                 .AddScoped<TournamentManagementViewModel>()

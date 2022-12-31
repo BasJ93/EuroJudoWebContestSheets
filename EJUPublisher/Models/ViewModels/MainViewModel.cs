@@ -1,18 +1,21 @@
 ﻿using Avalonia.Collections;
 using Microsoft.Extensions.Configuration;
 using ReactiveUI;
-using System;
 using System.Reactive;
+using Avalonia.Controls;
+using EJUPublisher.Configuration;
+using EJUPublisher.Services.Interfaces;
 using EuroJudoProtocols.ShowFights.Models;
 
 namespace EJUPublisher.Models.ViewModels
 {
-    public class MainViewModel : ReactiveObject
+    public sealed class MainViewModel : ReactiveObject
     {
         private readonly IConfiguration _configuration;
-        private readonly IEJUPublisherService _publisherService;
+        private readonly IEjuPublisherService _publisherService;
         private readonly TournamentManagementView _tournamentManagementView;
         private readonly ShowFightsConfiguration _showFightsConfiguration;
+        private readonly IUploadConfig _uploadConfig;
 
         private string _ejuServer;
         public string EjuServer
@@ -21,6 +24,7 @@ namespace EJUPublisher.Models.ViewModels
 
             set
             {
+                _showFightsConfiguration.EjuServer = value;
                 _configuration["EJUServer"] = value;
                 this.RaiseAndSetIfChanged(ref _ejuServer, value);
             }
@@ -32,6 +36,7 @@ namespace EJUPublisher.Models.ViewModels
             get => _numberOfTatami;
             set
             {
+                _showFightsConfiguration.NumberOfTatami = value;
                 _configuration["NumberOfTatami"] = value.ToString();
                 this.RaiseAndSetIfChanged(ref _numberOfTatami, value);
             }
@@ -43,6 +48,7 @@ namespace EJUPublisher.Models.ViewModels
             get => _numberOfContests;
             set
             {
+                _showFightsConfiguration.NumberOfFights = value;
                 _configuration["NumberOfContests"] = value.ToString();
                 this.RaiseAndSetIfChanged(ref _numberOfContests, value);
             }
@@ -55,6 +61,7 @@ namespace EJUPublisher.Models.ViewModels
             get => _bufferSizePerTatami;
             set
             {
+                _showFightsConfiguration.BufferSizePerTatami = value;
                 _configuration["BufferSizePerTatami"] = value.ToString();
                 this.RaiseAndSetIfChanged(ref _bufferSizePerTatami, value);
             }
@@ -67,6 +74,7 @@ namespace EJUPublisher.Models.ViewModels
             get => _uploadContests;
             set
             {
+                _uploadConfig.UploadContest = value;
                 this.RaiseAndSetIfChanged(ref _uploadContests, value);
             }
         }
@@ -78,24 +86,32 @@ namespace EJUPublisher.Models.ViewModels
             get => _uploadResults;
             set
             {
+                _uploadConfig.UploadResults = value;
                 this.RaiseAndSetIfChanged(ref _uploadResults, value);
             }
         }
         
-        public AvaloniaList<string> LogLines { get; } = new AvaloniaList<string>();
+        public AvaloniaList<string> LogLines { get; } = new();
 
         public ReactiveCommand<Unit, Unit> StartListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> UpdateListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> StopListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> ConfigureTournamentCommand { get; }
 
-        public MainViewModel(IEJUPublisherService publisherService, IConfiguration configuration, TournamentManagementView tournamentManagementView, ShowFightsConfiguration showFightsConfiguration)
+        public MainViewModel(IEjuPublisherService publisherService, IConfiguration configuration, TournamentManagementView tournamentManagementView, ShowFightsConfiguration showFightsConfiguration, IUploadConfig uploadConfig)
         {
             _publisherService = publisherService;
             _configuration = configuration;
             _tournamentManagementView = tournamentManagementView;
             _showFightsConfiguration = showFightsConfiguration;
+            _uploadConfig = uploadConfig;
 
+            tournamentManagementView.Closing += (s, e) =>
+            {
+                ((Window)s)?.Hide();
+                e.Cancel = true;
+            };
+            
             EjuServer = _showFightsConfiguration.EjuServer;
             NumberOfContests = _showFightsConfiguration.NumberOfFights;
             NumberOfTatami = _showFightsConfiguration.NumberOfTatami;
@@ -103,7 +119,7 @@ namespace EJUPublisher.Models.ViewModels
 
             StartListenerCommand = ReactiveCommand.Create(_publisherService.Start);
             StopListenerCommand = ReactiveCommand.Create(_publisherService.Stop);
-            UpdateListenerCommand = ReactiveCommand.Create(_publisherService.RefreshConfiguration);
+            UpdateListenerCommand = ReactiveCommand.Create(() =>_publisherService.RefreshConfiguration(_showFightsConfiguration));
 
             ConfigureTournamentCommand = ReactiveCommand.Create(_tournamentManagementView.Show);
 
