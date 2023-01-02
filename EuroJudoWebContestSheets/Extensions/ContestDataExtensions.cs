@@ -9,9 +9,19 @@ using ContestSheetDataDto = EuroJudoWebContestSheets.Models.DTO.ContestSheetData
 
 namespace EuroJudoWebContestSheets.Extensions
 {
+    /// <summary>
+    /// Extensions methods on the <see cref="ContestSheetData"/> domain object.
+    /// </summary>
     public static class ContestDataExtensions
     {
-        public static ContestSheetData UpdateFromQuery(this ContestSheetData contest, UploadContestResultDto contestData)
+        /// <summary>
+        /// Update a <see cref="ContestSheetData"/> object from a <see cref="UploadContestResultDto"/>.
+        /// </summary>
+        /// <param name="contest">The (implicit) database object to update.</param>
+        /// <param name="contestData">The result dto to use for the update.</param>
+        /// <returns>The updates database object.</returns>
+        public static ContestSheetData UpdateFromQuery(this ContestSheetData contest,
+            UploadContestResultDto contestData)
         {
             contest.CompetitorWhite = contestData.CompetitorWhite;
             contest.CompetitorBlue = contestData.CompetitorBlue;
@@ -25,7 +35,7 @@ namespace EuroJudoWebContestSheets.Extensions
                     contest.WazaariWhite = 1;
                     break;
             }
-            
+
             switch (contestData.ScoreBlue)
             {
                 case 10:
@@ -35,55 +45,82 @@ namespace EuroJudoWebContestSheets.Extensions
                     contest.WazaariBlue = 1;
                     break;
             }
-            
+
             contest.ShowSimpleScore = contestData.ShowSimpleScore;
 
             return contest;
         }
-        
+
+        /// <summary>
+        /// Determine the numeric score for the competitor in white.
+        /// </summary>
+        /// <param name="contest">The (implicit) database object to update.</param>
+        /// <returns>The numeric score.</returns>
         public static int ScoreWhite(this ContestSheetData contest)
         {
             if (contest.IponWhite == 1 || contest.WazaariWhite == 2)
             {
                 return 10;
             }
+
             if (contest.WazaariWhite == 1)
             {
                 return 7;
             }
+
             return 0;
         }
 
+        /// <summary>
+        /// Determine the numeric score for the competitor in blue.
+        /// </summary>
+        /// <param name="contest">The (implicit) database object to update.</param>
+        /// <returns>The numeric score.</returns>
         public static int ScoreBlue(this ContestSheetData contest)
         {
             if (contest.IponBlue == 1 || contest.WazaariBlue == 2)
             {
                 return 10;
             }
+
             if (contest.WazaariBlue == 1)
             {
                 return 7;
             }
+
             return 0;
         }
 
+        /// <summary>
+        /// Determine whether white won. 
+        /// </summary>
+        /// <param name="contest">The (implicit) database object to update.</param>
+        /// <returns>A bool indicating if white won.</returns>
         public static bool WhiteWon(this ContestSheetData contest)
         {
             if (contest.IponWhite == 1)
             {
                 return true;
             }
+
             if (contest.WazaariWhite == 2)
             {
                 return true;
             }
+
             if (contest.WazaariWhite == 1 && contest.IponBlue == 0 && contest.WazaariBlue == 0)
             {
                 return true;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// Return the group name used to update the frontend. 
+        /// </summary>
+        /// <param name="contest">The (implicit) database object to update.</param>
+        /// <returns>The group name as a string.</returns>
         public static string GroupName(this ContestSheetData contest)
         {
             return $"t{contest.TournamentId}c{contest.CategoryId}";
@@ -118,7 +155,8 @@ namespace EuroJudoWebContestSheets.Extensions
             };
         }
 
-        public static RedisRoundRobinContestSheetDataDto ToRedisDTO(this RoundRobinSheetDataDto contest, ContestType type)
+        public static RedisRoundRobinContestSheetDataDto ToRedisDTO(this RoundRobinSheetDataDto contest,
+            ContestType type)
         {
             return new RedisRoundRobinContestSheetDataDto
             {
@@ -181,66 +219,79 @@ namespace EuroJudoWebContestSheets.Extensions
             EventResult result5;
             EventResult result6;
 
-            ContestSheetData finalContest;
+            ContestSheetData? finalContest;
 
             switch (category.SheetSize)
             {
                 case 3:
                     result1 = category.CalculateRR3Result(1);
-                    category.TryGet(1, out ContestSheetData? contest1);
-                    competitors.Add(new CompetitorDto
+                    if (category.TryGet(1, out ContestSheetData? contest1) && contest1 != null)
                     {
-                        Name = contest1.CompetitorWhite,
-                        Score = result1.Points,
-                        Won = result1.Won,
-                    });
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest1.CompetitorWhite ?? string.Empty,
+                            Score = result1.Points,
+                            Won = result1.Won,
+                        });
+                    }
 
                     result2 = category.CalculateRR3Result(2);
-                    competitors.Add(new CompetitorDto
+                    if (contest1 != null)
                     {
-                        Name = contest1.CompetitorBlue,
-                        Score = result2.Points,
-                        Won = result2.Won,
-                    });
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest1.CompetitorBlue ?? string.Empty,
+                            Score = result2.Points,
+                            Won = result2.Won,
+                        });
+                    }
 
                     result3 = category.CalculateRR3Result(3);
-                    category.TryGet(2, out ContestSheetData? contest2);
-                    competitors.Add(new CompetitorDto
+                    if (category.TryGet(2, out ContestSheetData? contest2) && contest2 != null)
                     {
-                        Name = contest2.CompetitorBlue,
-                        Score = result3.Points,
-                        Won = result3.Won,
-                    });
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest2.CompetitorBlue ?? string.Empty,
+                            Score = result3.Points,
+                            Won = result3.Won,
+                        });
+                    }
 
                     if (category.TryGet(3, out finalContest))
                     {
                         RankCompetitors();
                     }
+
                     break;
                 case 4:
                     result1 = category.CalculateRR4Result(1);
-                    category.TryGet(1, out contest1);
-                    competitors.Add(new CompetitorDto
-                    {
-                        Name = contest1.CompetitorWhite,
-                        Score = result1.Points,
-                        Won = result1.Won,
-                    });
-
-                    result2 = category.CalculateRR4Result(2);
-                    competitors.Add(new CompetitorDto
-                    {
-                        Name = contest1.CompetitorBlue,
-                        Score = result2.Points,
-                        Won = result2.Won,
-                    });
-
-                    result3 = category.CalculateRR4Result(3);
-                    if (category.TryGet(2, out contest2))
+                    if (category.TryGet(1, out contest1) && contest1 != null)
                     {
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompetitorWhite,
+                            Name = contest1.CompetitorWhite ?? string.Empty,
+                            Score = result1.Points,
+                            Won = result1.Won,
+                        });
+                    }
+
+                    result2 = category.CalculateRR4Result(2);
+                    if (contest1 != null)
+                    {
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest1.CompetitorBlue ?? string.Empty,
+                            Score = result2.Points,
+                            Won = result2.Won,
+                        });
+                    }
+
+                    result3 = category.CalculateRR4Result(3);
+                    if (category.TryGet(2, out contest2) && contest2 != null)
+                    {
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest2.CompetitorWhite ?? string.Empty,
                             Score = result3.Points,
                             Won = result3.Won,
                         });
@@ -248,7 +299,7 @@ namespace EuroJudoWebContestSheets.Extensions
                         result4 = category.CalculateRR4Result(4);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompetitorBlue,
+                            Name = contest2.CompetitorBlue ?? string.Empty,
                             Score = result4.Points,
                             Won = result4.Won,
                         });
@@ -258,31 +309,37 @@ namespace EuroJudoWebContestSheets.Extensions
                     {
                         RankCompetitors();
                     }
+
                     break;
                 case 5:
                     result1 = category.CalculateRR5Result(1);
-                    category.TryGet(1, out contest1);
-                    competitors.Add(new CompetitorDto
-                    {
-                        Name = contest1.CompetitorWhite,
-                        Score = result1.Points,
-                        Won = result1.Won,
-                    });
-
-                    result2 = category.CalculateRR5Result(2);
-                    competitors.Add(new CompetitorDto
-                    {
-                        Name = contest1.CompetitorBlue,
-                        Score = result2.Points,
-                        Won = result2.Won,
-                    });
-
-                    result3 = category.CalculateRR5Result(3);
-                    if (category.TryGet(2, out contest2))
+                    if (category.TryGet(1, out contest1) && contest1 != null)
                     {
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompetitorWhite,
+                            Name = contest1.CompetitorWhite ?? string.Empty,
+                            Score = result1.Points,
+                            Won = result1.Won,
+                        });
+                    }
+
+                    result2 = category.CalculateRR5Result(2);
+                    if (contest1 != null)
+                    {
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest1.CompetitorBlue ?? string.Empty,
+                            Score = result2.Points,
+                            Won = result2.Won,
+                        });
+                    }
+
+                    result3 = category.CalculateRR5Result(3);
+                    if (category.TryGet(2, out contest2) && contest2 != null)
+                    {
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest2.CompetitorWhite ?? string.Empty,
                             Score = result3.Points,
                             Won = result3.Won,
                         });
@@ -290,18 +347,18 @@ namespace EuroJudoWebContestSheets.Extensions
                         result4 = category.CalculateRR5Result(4);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest2.CompetitorBlue,
+                            Name = contest2.CompetitorBlue ?? string.Empty,
                             Score = result4.Points,
                             Won = result4.Won,
                         });
                     }
 
-                    if (category.TryGet(3, out var contest3))
+                    if (category.TryGet(3, out var contest3) && contest3 != null)
                     {
                         result5 = category.CalculateRR5Result(5);
                         competitors.Add(new CompetitorDto
                         {
-                            Name = contest3.CompetitorBlue,
+                            Name = contest3.CompetitorBlue ?? string.Empty,
                             Score = result5.Points,
                             Won = result5.Won,
                         });
@@ -311,15 +368,11 @@ namespace EuroJudoWebContestSheets.Extensions
                     {
                         RankCompetitors();
                     }
-                    else
-                    {
 
-                    }
                     break;
                 case 6:
                     result1 = category.CalculateRR6Result(1);
-                    category.TryGet(1, out contest1);
-                    if (contest1 != null)
+                    if (category.TryGet(1, out contest1) && contest1 != null)
                     {
                         competitors.Add(new CompetitorDto
                         {
@@ -341,57 +394,48 @@ namespace EuroJudoWebContestSheets.Extensions
                     }
 
                     result3 = category.CalculateRR6Result(3);
-                    if (category.TryGet(2, out contest2))
+                    if (category.TryGet(2, out contest2) && contest2 != null)
                     {
-                        if (contest2 != null)
+                        competitors.Add(new CompetitorDto
                         {
-                            competitors.Add(new CompetitorDto
-                            {
-                                Name = contest2.CompetitorWhite ?? string.Empty,
-                                Score = result3.Points,
-                                Won = result3.Won,
-                            });
+                            Name = contest2.CompetitorWhite ?? string.Empty,
+                            Score = result3.Points,
+                            Won = result3.Won,
+                        });
 
-                            result4 = category.CalculateRR6Result(4);
-                            competitors.Add(new CompetitorDto
-                            {
-                                Name = contest2.CompetitorBlue ?? string.Empty,
-                                Score = result4.Points,
-                                Won = result4.Won,
-                            });
-                        }
+                        result4 = category.CalculateRR6Result(4);
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest2.CompetitorBlue ?? string.Empty,
+                            Score = result4.Points,
+                            Won = result4.Won,
+                        });
                     }
 
-                    if (category.TryGet(3, out contest3))
+                    if (category.TryGet(3, out contest3) && contest3 != null)
                     {
-                        if (contest3 != null)
+                        result5 = category.CalculateRR6Result(5);
+                        competitors.Add(new CompetitorDto
                         {
-                            result5 = category.CalculateRR6Result(5);
-                            competitors.Add(new CompetitorDto
-                            {
-                                Name = contest3.CompetitorWhite ?? string.Empty,
-                                Score = result5.Points,
-                                Won = result5.Won,
-                            });
+                            Name = contest3.CompetitorWhite ?? string.Empty,
+                            Score = result5.Points,
+                            Won = result5.Won,
+                        });
 
-                            result6 = category.CalculateRR6Result(6);
-                            competitors.Add(new CompetitorDto
-                            {
-                                Name = contest3.CompetitorBlue ?? string.Empty,
-                                Score = result6.Points,
-                                Won = result6.Won,
-                            });
-                        }
+                        result6 = category.CalculateRR6Result(6);
+                        competitors.Add(new CompetitorDto
+                        {
+                            Name = contest3.CompetitorBlue ?? string.Empty,
+                            Score = result6.Points,
+                            Won = result6.Won,
+                        });
                     }
 
                     if (category.TryGet(15, out finalContest))
                     {
                         RankCompetitors();
                     }
-                    else
-                    {
 
-                    }
                     break;
             }
 
@@ -410,11 +454,11 @@ namespace EuroJudoWebContestSheets.Extensions
             void RankCompetitors()
             {
                 // Rank the competitors by won contests, then by points. Then assing the ranking.
-                var ranked = competitors.OrderByDescending(c => c.Won).ThenByDescending(c => c.Score);
+                var ranked = competitors.OrderByDescending(c => c.Won).ThenByDescending(c => c.Score).ToList();
 
                 for (int i = 1; i < ranked.Count() + 1; i++)
                 {
-                    competitors.Where(c => c.Name == ranked.ElementAt(i - 1).Name).First().Position = i;
+                    competitors.First(c => c.Name == ranked.ElementAt(i - 1).Name).Position = i;
                 }
             }
         }
@@ -428,7 +472,6 @@ namespace EuroJudoWebContestSheets.Extensions
                 case 3:
                 case 4:
                 case 5:
-                    return ContestType.RoundRobin;
                 case 6:
                     return ContestType.RoundRobin;
                 case 7:
@@ -465,20 +508,25 @@ namespace EuroJudoWebContestSheets.Extensions
             }
         }
 
-        public static EventResult CalculateRR3Result(this Category category, int competitor)
+        private static EventResult CalculateRR3Result(this Category category, int competitor)
         {
+            if (category.SheetData == null)
+            {
+                return new EventResult();
+            }
+            
             switch (competitor)
             {
                 case 1:
-                    var contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 2);
+                    List<ContestSheetData> contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 2).ToList();
                     return new EventResult
                     {
-                        Won = contests.Where(c => c.WhiteWon()).Count(),
+                        Won = contests.Count(c => c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreWhite()).Sum(),
                     };
                 case 2:
-                    var asWhite = category.SheetData.Where(s => s.Contest == 3).FirstOrDefault();
-                    var asBlue = category.SheetData.Where(s => s.Contest == 2).FirstOrDefault();
+                    var asWhite = category.SheetData.FirstOrDefault(s => s.Contest == 3);
+                    var asBlue = category.SheetData.FirstOrDefault(s => s.Contest == 2);
                     int won = 0;
                     int score = 0;
                     if (asWhite != default)
@@ -486,6 +534,7 @@ namespace EuroJudoWebContestSheets.Extensions
                         won += asWhite.WhiteWon() ? 1 : 0;
                         score += asWhite.ScoreWhite();
                     }
+
                     if (asBlue != default)
                     {
                         won += asBlue.WhiteWon() ? 0 : 1;
@@ -498,32 +547,37 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 3:
-                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 3);
+                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 3).ToList();
                     return new EventResult
                     {
-                        Won = contests.Where(c => !c.WhiteWon()).Count(),
+                        Won = contests.Count(c => !c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreBlue()).Sum(),
                     };
                 default:
-                    return default;
+                    return new EventResult();
             }
         }
 
-        public static EventResult CalculateRR4Result(this Category category, int competitor)
+        private static EventResult CalculateRR4Result(this Category category, int competitor)
         {
+            if (category.SheetData == null)
+            {
+                return new EventResult();
+            }
+            
             switch (competitor)
             {
                 case 1:
-                    var contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 3 || s.Contest == 5);
+                    List<ContestSheetData> contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 3 || s.Contest == 5).ToList();
                     return new EventResult
                     {
-                        Won = contests.Where(c => c.WhiteWon()).Count(),
+                        Won = contests.Count(c => c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreWhite()).Sum(),
                     };
                 case 2:
-                    var asWhite = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 6);
-                    var asBlue = category.SheetData.Where(s => s.Contest == 1).FirstOrDefault();
-                    int won = asWhite.Where(c => c.WhiteWon()).Count();
+                    List<ContestSheetData> asWhite = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 6).ToList();
+                    var asBlue = category.SheetData.FirstOrDefault(s => s.Contest == 1);
+                    int won = asWhite.Count(c => c.WhiteWon());
                     int score = asWhite.Select(c => c.ScoreWhite()).Sum();
                     if (asBlue != default)
                     {
@@ -537,9 +591,9 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 3:
-                    var asWhite2 = category.SheetData.Where(s => s.Contest == 2).FirstOrDefault();
-                    var asBlue2 = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 5);
-                    won = asBlue2.Where(c => !c.WhiteWon()).Count();
+                    var asWhite2 = category.SheetData.FirstOrDefault(s => s.Contest == 2);
+                    List<ContestSheetData> asBlue2 = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 5).ToList();
+                    won = asBlue2.Count(c => !c.WhiteWon());
                     score = asBlue2.Select(c => c.ScoreBlue()).Sum();
                     if (asWhite2 != default)
                     {
@@ -553,37 +607,43 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 4:
-                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 3 || s.Contest == 6);
+                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 3 || s.Contest == 6).ToList();
                     return new EventResult
                     {
-                        Won = contests.Where(c => !c.WhiteWon()).Count(),
+                        Won = contests.Count(c => !c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreBlue()).Sum(),
                     };
                 default:
-                    return default;
+                    return new EventResult();
             }
         }
 
-        public static EventResult CalculateRR5Result(this Category category, int competitor)
+        private static EventResult CalculateRR5Result(this Category category, int competitor)
         {
+            if (category.SheetData == null)
+            {
+                return new EventResult();
+            }
+            
             switch (competitor)
             {
                 case 1:
-                    var contests = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 3 || s.Contest == 6 || s.Contest == 9);
+                    List<ContestSheetData> contests = category.SheetData.Where(s =>
+                        s.Contest == 1 || s.Contest == 3 || s.Contest == 6 || s.Contest == 9).ToList();
                     return new EventResult
                     {
                         Won = contests.Count(c => c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreWhite()).Sum(),
                     };
                 case 2:
-                    var asWhite = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 7 || s.Contest == 10);
-                    var asBlue = category.SheetData.Where(s => s.Contest == 1);
+                    List<ContestSheetData> asWhite = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 7 || s.Contest == 10).ToList();
+                    List<ContestSheetData> asBlue = category.SheetData.Where(s => s.Contest == 1).ToList();
                     int won = asWhite.Count(c => c.WhiteWon());
                     int score = asWhite.Select(c => c.ScoreWhite()).Sum();
                     if (asBlue.FirstOrDefault() != default)
                     {
-                        won += asBlue.FirstOrDefault().WhiteWon() ? 0 : 1;
-                        score += asBlue.FirstOrDefault().ScoreBlue();
+                        won += asBlue.First().WhiteWon() ? 0 : 1;
+                        score += asBlue.First().ScoreBlue();
                     }
 
                     return new EventResult
@@ -592,8 +652,8 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 3:
-                    asWhite = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 8);
-                    asBlue = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 6);
+                    asWhite = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 8).ToList();
+                    asBlue = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 6).ToList();
                     won = asWhite.Count(c => c.WhiteWon()) + asBlue.Count(c => !c.WhiteWon());
                     score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
 
@@ -603,47 +663,56 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 4:
-                    asWhite = category.SheetData.Where(s => s.Contest == 5);
-                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 7 || s.Contest == 9);
+                    asWhite = category.SheetData.Where(s => s.Contest == 5).ToList();
+                    contests = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 7 || s.Contest == 9).ToList();
                     won = contests.Count(c => !c.WhiteWon());
                     score = contests.Select(c => c.ScoreBlue()).Sum();
                     if (asWhite.FirstOrDefault() != default)
                     {
-                        won += asWhite.FirstOrDefault().WhiteWon() ? 1 : 0;
-                        score += asWhite.FirstOrDefault().ScoreWhite();
+                        won += asWhite.First().WhiteWon() ? 1 : 0;
+                        score += asWhite.First().ScoreWhite();
                     }
+
                     return new EventResult
                     {
                         Won = won,
                         Points = score,
                     };
                 case 5:
-                    contests = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 5 || s.Contest == 8 || s.Contest == 10);
+                    contests = category.SheetData.Where(s =>
+                        s.Contest == 3 || s.Contest == 5 || s.Contest == 8 || s.Contest == 10).ToList();
                     return new EventResult
                     {
                         Won = contests.Count(c => !c.WhiteWon()),
                         Points = contests.Select(c => c.ScoreBlue()).Sum(),
                     };
                 default:
-                    return default;
+                    return new EventResult();
             }
         }
 
-        public static EventResult CalculateRR6Result(this Category category, int competitor)
+        private static EventResult CalculateRR6Result(this Category category, int competitor)
         {
+            if (category.SheetData == null)
+            {
+                return new EventResult();
+            }
+            
             switch (competitor)
             {
                 case 1:
-                    var asWhite = category.SheetData.Where(s => s.Contest == 1 || s.Contest == 4 || s.Contest == 7 || s.Contest == 10 || s.Contest == 13);
+                    List<ContestSheetData> asWhite = category.SheetData.Where(s =>
+                        s.Contest == 1 || s.Contest == 4 || s.Contest == 7 || s.Contest == 10 || s.Contest == 13).ToList();
                     return new EventResult
                     {
-                        Won = asWhite.Where(c => c.WhiteWon()).Count(),
+                        Won = asWhite.Count(c => c.WhiteWon()),
                         Points = asWhite.Select(c => c.ScoreWhite()).Sum(),
                     };
                 case 2:
-                    asWhite = category.SheetData.Where(s => s.Contest == 5 || s.Contest == 8 || s.Contest == 12 || s.Contest == 14);
-                    var asBlue = category.SheetData.Where(s => s.Contest == 1);
-                    int won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    asWhite = category.SheetData.Where(s =>
+                        s.Contest == 5 || s.Contest == 8 || s.Contest == 12 || s.Contest == 14).ToList();
+                    List<ContestSheetData> asBlue = category.SheetData.Where(s => s.Contest == 1).ToList();
+                    int won = asWhite.Count(c => c.WhiteWon()) + asBlue.Count(c => !c.WhiteWon());
                     int score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
 
                     return new EventResult
@@ -652,9 +721,9 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 3:
-                    asWhite = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 9 || s.Contest == 15);
-                    asBlue = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 12);
-                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    asWhite = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 9 || s.Contest == 15).ToList();
+                    asBlue = category.SheetData.Where(s => s.Contest == 4 || s.Contest == 12).ToList();
+                    won = asWhite.Count(c => c.WhiteWon()) + asBlue.Count(c => !c.WhiteWon());
                     score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
 
                     return new EventResult
@@ -663,9 +732,9 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 4:
-                    asWhite = category.SheetData.Where(s => s.Contest == 5 || s.Contest == 11);
-                    asBlue = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 7 || s.Contest == 14);
-                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    asWhite = category.SheetData.Where(s => s.Contest == 5 || s.Contest == 11).ToList();
+                    asBlue = category.SheetData.Where(s => s.Contest == 2 || s.Contest == 7 || s.Contest == 14).ToList();
+                    won = asWhite.Count(c => c.WhiteWon()) + asBlue.Count(c => !c.WhiteWon());
                     score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
                     return new EventResult
                     {
@@ -673,9 +742,10 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 5:
-                    asWhite = category.SheetData.Where(s => s.Contest == 3);
-                    asBlue = category.SheetData.Where(s => s.Contest == 6 || s.Contest == 9 || s.Contest == 11 || s.Contest == 13);
-                    won = asWhite.Where(c => c.WhiteWon()).Count() + asBlue.Where(c => !c.WhiteWon()).Count();
+                    asWhite = category.SheetData.Where(s => s.Contest == 3).ToList();
+                    asBlue = category.SheetData.Where(s =>
+                        s.Contest == 6 || s.Contest == 9 || s.Contest == 11 || s.Contest == 13).ToList();
+                    won = asWhite.Count(c => c.WhiteWon()) + asBlue.Count(c => !c.WhiteWon());
                     score = asWhite.Select(c => c.ScoreWhite()).Sum() + asBlue.Select(c => c.ScoreBlue()).Sum();
                     return new EventResult
                     {
@@ -683,14 +753,15 @@ namespace EuroJudoWebContestSheets.Extensions
                         Points = score,
                     };
                 case 6:
-                    asBlue = category.SheetData.Where(s => s.Contest == 3 || s.Contest == 6 || s.Contest == 9 || s.Contest == 11 || s.Contest == 13);
+                    asBlue = category.SheetData.Where(s =>
+                        s.Contest == 3 || s.Contest == 6 || s.Contest == 9 || s.Contest == 11 || s.Contest == 13).ToList();
                     return new EventResult
                     {
-                        Won = asBlue.Where(c => !c.WhiteWon()).Count(),
+                        Won = asBlue.Count(c => !c.WhiteWon()),
                         Points = asBlue.Select(c => c.ScoreBlue()).Sum(),
                     };
                 default:
-                    return default;
+                    return new EventResult();
             }
         }
     }

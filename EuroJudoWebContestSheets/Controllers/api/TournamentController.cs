@@ -101,7 +101,7 @@ namespace EuroJudoWebContestSheets.Controllers.api
                     return Ok();
                 }
 
-                _logger.LogInformation($"Updating existing contest [{existingContest.Id}].");
+                _logger.LogInformation("Updating existing contest [{contestId}].", existingContest.Id);
                 existingContest = existingContest.UpdateFromQuery(contestData);
                 if (category != null)
                 {
