@@ -12,6 +12,6 @@ public interface ITournamentService
     Task<TournamentDto?> ById(int id, CancellationToken ctx = default);
     
     Task<IList<CategoryDto>> CategoriesForTournament(int id, CancellationToken ctx = default);
-    
-    
+
+    Task<TournamentDto?> CreateTournament(CreateTournamentDto tournamentToCreate, CancellationToken ctx = default);
 }

@@ -15,9 +15,9 @@
         public int? ShidoBlue { get; set; }
         public bool ShowSimpleScore { get; set; }
         
-        public virtual Tournament Tournament { get; set; }
+        public virtual Tournament? Tournament { get; set; }
         
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
 
         public void UpdateFromQuery(ContestSheetData queryData)
         {

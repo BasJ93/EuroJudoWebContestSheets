@@ -8,6 +8,7 @@ public static class ServiceLayers
     public static IServiceCollection AddServiceLayers(this IServiceCollection services)
     {
         services.AddScoped<ITournamentService, TournamentService>();
+        services.AddScoped<ICategoryService, CategoryService>();
         
         return services;
     }

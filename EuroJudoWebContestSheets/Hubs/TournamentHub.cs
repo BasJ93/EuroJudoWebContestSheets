@@ -1,4 +1,4 @@
-﻿using EuroJudoWebContestSheets.Extentions;
+﻿using EuroJudoWebContestSheets.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;

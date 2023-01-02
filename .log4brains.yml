@@ -1,0 +1,11 @@
+project:
+  name: EuroJudoWebContestSheets
+  tz: Europe/Amsterdam
+  adrFolder: ./docs/adr
+  packages:
+    - name: ejuweb
+      path: ./EuroJudoWebContestSheets
+      adrFolder: ./EuroJudoWebContestSheets/docs/adr
+    - name: ejupublisher
+      path: ./EJUPublisher
+      adrFolder: ./EJUPublisher/docs/adr

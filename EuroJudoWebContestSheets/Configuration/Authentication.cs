@@ -1,5 +1,7 @@
 using EuroJudoWebContestSheets.Authentication;
 using EuroJudoWebContestSheets.Authorization;
+using EuroJudoWebContestSheets.Authorization.AuthorizationHandlers;
+using EuroJudoWebContestSheets.Authorization.Requirements;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 

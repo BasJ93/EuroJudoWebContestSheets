@@ -74,7 +74,7 @@ class ContestOrder extends HTMLElement {
     }
 
     fetchInitialData() {
-        fetch('/ContestOrder/ContestOrderLists')
+        fetch('api/ContestOrder/ContestOrderLists')
             .then(results => {
                 return results.json();
             })

@@ -5,6 +5,7 @@
     <TypeScriptToolsVersion>4.9</TypeScriptToolsVersion>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
