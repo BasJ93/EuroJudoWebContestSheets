@@ -86,14 +86,14 @@ namespace EJUPublisher.Services
             _showFights.StartListener(_cancellationToken.Token);
 
             DataReceivedLogEvent?.Invoke(this,
-                $"{DateTime.Now.ToLongTimeString()} Started ShowFights Listener for {_showFightsConfiguration.EjuServer}:{_showFightsConfiguration.EjuServerPort}");
+                $"{DateTime.Now:HH:mm:ss} Started ShowFights Listener for {_showFightsConfiguration.EjuServer}:{_showFightsConfiguration.EjuServerPort}");
         }
 
         /// <inheritdoc />
         public void Stop()
         {
             _cancellationToken.Cancel();
-            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now.ToLongTimeString()} Stopped ShowFights Listener");
+            DataReceivedLogEvent?.Invoke(this, $"{DateTime.Now:HH:mm:ss} Stopped ShowFights Listener");
         }
 
         private async void PublishContests(object sender, IEnumerable<Contest> contests)
@@ -102,7 +102,7 @@ namespace EJUPublisher.Services
             
             var grouped = contests.GroupBy(c => c.Tatami);
             var ordered = grouped.OrderBy(g => g.Key);
-            var filtered = ordered.Where(g => g.Key != 0);
+            var filtered = ordered.Where(g => g.Key != 0).ToList();
             //var skipped = ordered.Skip(1);
 
             // Extract the correct number of contests.
@@ -134,13 +134,13 @@ namespace EJUPublisher.Services
                     var result = await _httpClient.PostAsync(_uploadPath, requestBody);
 
                     DataReceivedLogEvent?.Invoke(this,
-                        $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: {result.IsSuccessStatusCode}");
+                        $"{DateTime.Now:HH:mm:ss} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: {result.IsSuccessStatusCode}");
                     _logger.LogDebug("Contest order upload. Success [{success}]. Reason [{reason}]", result.IsSuccessStatusCode, result.StatusCode);
                 }
                 catch (Exception ex)
                 {
                     DataReceivedLogEvent?.Invoke(this,
-                        $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: False. Reason: {ex.Message}");
+                        $"{DateTime.Now:HH:mm:ss} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: False. Reason: {ex.Message}");
                 }
             }
 
