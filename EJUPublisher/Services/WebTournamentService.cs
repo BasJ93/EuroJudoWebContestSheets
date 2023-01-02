@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using EJUPublisher.Configuration;
+using EJUPublisher.Models;
 using EJUPublisher.Services.Interfaces;
 using EuroJudoProtocols.ShowFights.Models;
 using EuroJudoWebContestSheets.Models.Tournament;
@@ -14,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace EJUPublisher.Services;
 
+/// <inheritdoc />
 public sealed class WebTournamentService : IWebTournamentService
 {
     private readonly ILogger<WebTournamentService> _logger;
@@ -36,6 +38,7 @@ public sealed class WebTournamentService : IWebTournamentService
         _httpClient.DefaultRequestHeaders.Add("X-Api-Key", _webConfiguration.ApiKey);
     }
     
+    /// <inheritdoc />
     public async Task<CategoryDto> CreateNewCategory(CreateCategoryDto category, CancellationToken ctx)
     {
         Uri uploadPath = new Uri($"{_webConfiguration.WebServer}{_contestSheetsConfiguration.CreateContestPath}");
@@ -66,11 +69,13 @@ public sealed class WebTournamentService : IWebTournamentService
         }
     }
 
+    /// <inheritdoc />
     public int GetActiveTournament()
     {
         return _contestSheetsConfiguration.TournamentId;
     }
 
+    /// <inheritdoc />
     public async Task<IList<TournamentDto>> GetAvailableTournaments(CancellationToken ctx = default)
     {
         Uri requestUri = new Uri($"{_webConfiguration.WebServer}{_contestSheetsConfiguration.TournamentsPath}");
@@ -96,6 +101,7 @@ public sealed class WebTournamentService : IWebTournamentService
         return default;
     }
 
+    /// <inheritdoc />
     public async Task<IList<CategoryDto>> GetAvailableCategoriesForTournament(int id, CancellationToken ctx = default)
     {
         Uri requestUri = new Uri($"{_webConfiguration.WebServer}{_contestSheetsConfiguration.GetCategoriesForTournamentPath}?tournamentId={id}");
@@ -121,6 +127,7 @@ public sealed class WebTournamentService : IWebTournamentService
         return default;
     }
 
+    /// <inheritdoc />
     public async Task<int?> GetIdForCategory(string categoryShort, string weight, CancellationToken ctx = default)
     {
         if (_remoteCategories.ContainsKey((categoryShort, weight)))
@@ -157,12 +164,14 @@ public sealed class WebTournamentService : IWebTournamentService
         return null;
     }
 
+    /// <inheritdoc />
     public void SetActiveTournament(int tournamentId)
     {
         _logger.LogInformation("Current tournament set to [{tournamentId}]", tournamentId);
         _contestSheetsConfiguration.TournamentId = tournamentId;
     }
     
+    /// <inheritdoc />
     public async Task<bool> UploadContestResult(Contest contest, CancellationToken ctx = default)
     {
         int? categoryId = await GetIdForCategory(contest.Short, contest.Weight, ctx);
@@ -198,5 +207,46 @@ public sealed class WebTournamentService : IWebTournamentService
             //    $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: {result.IsSuccessStatusCode}");
         }
         return false;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> UploadContestResult(QueuedUpload contest, CancellationToken ctx = default)
+    {
+        Uri uploadPath = new Uri($"{_webConfiguration.WebServer}{_contestSheetsConfiguration.ContestResultPath}");
+
+        if (contest.ContestResult.CategoryId == 0)
+        {
+            int? categoryId = await GetIdForCategory(contest.Short, contest.Weight, ctx);
+            if (categoryId == null)
+            {
+                return false;
+            }
+
+            contest.ContestResult.CategoryId = categoryId.Value;
+        }
+        
+        
+        StringContent requestBody = new StringContent(JsonConvert.SerializeObject(contest.ContestResult), Encoding.UTF8,
+            "application/json");
+
+        try
+        {
+            HttpResponseMessage result = await _httpClient.PostAsync(uploadPath, requestBody, ctx);
+
+            if (result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception during result upload.");
+            return false;
+        }
+            
+        //DataReceivedLogEvent?.Invoke(this,
+        //    $"{DateTime.Now.ToLongTimeString()} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: {result.IsSuccessStatusCode}");
     }
 }

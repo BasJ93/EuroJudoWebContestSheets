@@ -18,9 +18,10 @@ namespace EJUPublisher.Services
     public sealed class EjuPublisherService : IEjuPublisherService
     {
         private readonly ILogger<EjuPublisherService> _logger;
-        
+
         private readonly IShowFightsClient _showFights;
         private readonly IWebTournamentService _tournamentService;
+        private readonly IFailedUploadQueue _failedUploadQueue;
 
         private readonly IWebConfiguration _webConfiguration;
         private readonly IContestOrderConfiguration _contestOrderConfiguration;
@@ -36,7 +37,8 @@ namespace EJUPublisher.Services
 
         public EjuPublisherService(ILogger<EjuPublisherService> logger, IShowFightsClient showFights,
             IWebConfiguration webConfiguration, IContestOrderConfiguration contestOrderConfiguration,
-            ShowFightsConfiguration showFightsConfiguration, IUploadConfig uploadConfig, IWebTournamentService tournamentService)
+            ShowFightsConfiguration showFightsConfiguration, IUploadConfig uploadConfig,
+            IWebTournamentService tournamentService, IFailedUploadQueue failedUploadQueue)
         {
             _logger = logger;
             _showFights = showFights;
@@ -45,11 +47,12 @@ namespace EJUPublisher.Services
             _showFightsConfiguration = showFightsConfiguration;
             _uploadConfig = uploadConfig;
             _tournamentService = tournamentService;
+            _failedUploadQueue = failedUploadQueue;
 
             _cancellationToken = new CancellationTokenSource();
 
             _showFights.ContestsUpdated += PublishContests;
-            
+
             _uploadPath = $"{_webConfiguration.WebServer}{_contestOrderConfiguration.Path}";
 
             _httpClient = new HttpClient();
@@ -99,7 +102,7 @@ namespace EJUPublisher.Services
         private async void PublishContests(object sender, IEnumerable<Contest> contests)
         {
             List<ContestOrderDto> contestOrder = new();
-            
+
             var grouped = contests.GroupBy(c => c.Tatami);
             var ordered = grouped.OrderBy(g => g.Key);
             var filtered = ordered.Where(g => g.Key != 0).ToList();
@@ -135,7 +138,8 @@ namespace EJUPublisher.Services
 
                     DataReceivedLogEvent?.Invoke(this,
                         $"{DateTime.Now:HH:mm:ss} New data received consisting of {contestOrder.SelectMany(c => c.Contests).Count()} contests. Upload success: {result.IsSuccessStatusCode}");
-                    _logger.LogDebug("Contest order upload. Success [{success}]. Reason [{reason}]", result.IsSuccessStatusCode, result.StatusCode);
+                    _logger.LogDebug("Contest order upload. Success [{success}]. Reason [{reason}]",
+                        result.IsSuccessStatusCode, result.StatusCode);
                 }
                 catch (Exception ex)
                 {
@@ -152,7 +156,10 @@ namespace EJUPublisher.Services
 
                     foreach (Contest contestResult in selected)
                     {
-                        bool succes = await _tournamentService.UploadContestResult(contestResult);
+                        if (!await _tournamentService.UploadContestResult(contestResult))
+                        {
+                            await _failedUploadQueue.AddToQueue(contestResult);
+                        }
                     }
                 }
             }

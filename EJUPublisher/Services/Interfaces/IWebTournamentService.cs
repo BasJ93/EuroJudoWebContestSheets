@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using EJUPublisher.Models;
 using EuroJudoProtocols.ShowFights.Models;
 using EuroJudoWebContestSheets.Models.Tournament;
 
@@ -59,4 +60,12 @@ public interface IWebTournamentService
     /// <param name="ctx">Cancellation token</param>
     /// <returns>A bool indicating success.</returns>
     Task<bool> UploadContestResult(Contest contest, CancellationToken ctx = default);
+    
+    /// <summary>
+    /// Upload the queued result of a contest to the webserver.
+    /// </summary>
+    /// <param name="contest">The contest to upload.</param>
+    /// <param name="ctx">Cancellation token</param>
+    /// <returns>A bool indicating success.</returns>
+    Task<bool> UploadContestResult(QueuedUpload contest, CancellationToken ctx = default);
 }

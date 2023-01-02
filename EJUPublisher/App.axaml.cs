@@ -5,6 +5,7 @@ using EJUPublisher.Models.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.ComponentModel;
 using System.IO;
 using EJUPublisher.Configuration;
 using EJUPublisher.Services;
@@ -29,26 +30,25 @@ namespace EJUPublisher
 
             IConfigurationRoot configuration = builder.Build();
 
-            ShowFightsConfiguration showFightsConfiguration = configuration.GetSection("EuroJudo").Get<ShowFightsConfiguration>(); 
+            ShowFightsConfiguration showFightsConfiguration =
+                configuration.GetSection("EuroJudo").Get<ShowFightsConfiguration>();
             IWebConfiguration webConfiguration = configuration.GetSection("Web").Get<WebConfiguration>();
             IContestOrderConfiguration contestOrderConfiguration =
                 configuration.GetSection("ContestOrder").Get<ContestOrderConfiguration>();
             IContestSheetsConfiguration contestSheetsConfiguration =
                 configuration.GetSection("ContestSheets").Get<ContestSheetsConfiguration>();
             IUploadConfig uploadConfig = new UploadConfig();
-            
+
             //setup our DI
             _serviceProvider = new ServiceCollection()
-                .AddLogging(loggingBuilder =>
-                {
-                    loggingBuilder.AddConsole();
-                })
+                .AddLogging(loggingBuilder => { loggingBuilder.AddConsole(); })
                 .AddSingleton<IConfiguration>(configuration)
                 .AddSingleton(showFightsConfiguration)
                 .AddSingleton(webConfiguration)
                 .AddSingleton(contestOrderConfiguration)
                 .AddSingleton(contestSheetsConfiguration)
                 .AddSingleton(uploadConfig)
+                .AddSingleton<IFailedUploadQueue, FailedUploadQueue>()
                 .AddSingleton<IShowFightsClient, ShowFightsClient>()
                 .AddSingleton<IEjuPublisherService, EjuPublisherService>()
                 .AddSingleton<IWebTournamentService, WebTournamentService>()
@@ -63,9 +63,20 @@ namespace EJUPublisher
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainView(_serviceProvider);
+
+                desktop.MainWindow.Closing += MainWindowOnClosing;
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        private void MainWindowOnClosing(object sender, CancelEventArgs e)
+        {
+            // TODO: handle storing anything left in the queue to disk, including the tournamentId and the category cache.
+
+            IFailedUploadQueue queue = _serviceProvider.GetService<IFailedUploadQueue>();
+
+            queue.FlushToDisk();
         }
     }
 }

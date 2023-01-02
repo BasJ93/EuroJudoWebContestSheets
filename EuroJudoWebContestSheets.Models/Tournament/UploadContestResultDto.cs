@@ -4,7 +4,7 @@ public sealed record UploadContestResultDto(int TournamentId, int CategoryId, in
     string? CompetitorBlue, int? ScoreWhite, int? ScoreBlue, bool ShowSimpleScore)
 {
     public int TournamentId { get; } = TournamentId;
-    public int CategoryId { get; } = CategoryId;
+    public int CategoryId { get; set; } = CategoryId;
     public int Contest { get; } = Contest;
     public string? CompetitorWhite { get; } = CompetitorWhite;
     public string? CompetitorBlue { get; } = CompetitorBlue;
