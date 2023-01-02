@@ -44,7 +44,7 @@
       
       <Label Grid.Row="0" Content="Debug log" Classes="h1" />
       
-      <ListBox Grid.Row="1" Items="{Binding LogLines}" />
+      <ListBox Grid.Row="1" Items="{Binding LogLines}" SelectedItem="{Binding SelectedLogLine, Mode=OneWay}" AutoScrollToSelectedItem="True" />
       
     </Grid>
 

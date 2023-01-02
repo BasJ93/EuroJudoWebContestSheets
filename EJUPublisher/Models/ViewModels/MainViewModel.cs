@@ -93,6 +93,14 @@ namespace EJUPublisher.Models.ViewModels
         
         public AvaloniaList<string> LogLines { get; } = new();
 
+        private string _selectedLogLine;
+        
+        public string SelectedLogLine
+        {
+            get => _selectedLogLine;
+            set => this.RaiseAndSetIfChanged(ref _selectedLogLine, value);
+        }
+
         public ReactiveCommand<Unit, Unit> StartListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> UpdateListenerCommand { get; }
         public ReactiveCommand<Unit, Unit> StopListenerCommand { get; }
@@ -126,9 +134,10 @@ namespace EJUPublisher.Models.ViewModels
             _publisherService.DataReceivedLogEvent += HandleNewLogLine;
         }
 
-        private void HandleNewLogLine(object sender, string logline)
+        private void HandleNewLogLine(object sender, string logLine)
         {
-            LogLines.Add(logline);
+            LogLines.Add(logLine);
+            SelectedLogLine = logLine;
         }
 
     }
