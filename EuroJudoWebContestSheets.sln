@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Au
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroJudoWebContestSheets.Authorization", "EuroJudoWebContestSheets.Authorization\EuroJudoWebContestSheets.Authorization.csproj", "{77A78C25-5CC5-4878-8A92-7E2BF095875B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EJUPublisher.Tests", "EJUPublisher.Tests\EJUPublisher.Tests.csproj", "{79796746-B738-43B0-8165-D4CE30F569C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A78C25-5CC5-4878-8A92-7E2BF095875B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79796746-B738-43B0-8165-D4CE30F569C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79796746-B738-43B0-8165-D4CE30F569C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79796746-B738-43B0-8165-D4CE30F569C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79796746-B738-43B0-8165-D4CE30F569C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

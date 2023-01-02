@@ -216,7 +216,7 @@ public sealed class WebTournamentService : IWebTournamentService
 
         if (contest.ContestResult.CategoryId == 0)
         {
-            int? categoryId = await GetIdForCategory(contest.Short, contest.Weight, ctx);
+            int? categoryId = await GetIdForCategory(contest.ShortName, contest.Weight, ctx);
             if (categoryId == null)
             {
                 return false;

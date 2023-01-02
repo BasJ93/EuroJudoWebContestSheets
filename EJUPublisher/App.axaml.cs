@@ -62,6 +62,8 @@ namespace EJUPublisher
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                LoadQueue();
+                
                 desktop.MainWindow = new MainView(_serviceProvider);
 
                 desktop.MainWindow.Closing += MainWindowOnClosing;
@@ -72,11 +74,21 @@ namespace EJUPublisher
 
         private void MainWindowOnClosing(object sender, CancelEventArgs e)
         {
-            // TODO: handle storing anything left in the queue to disk, including the tournamentId and the category cache.
-
             IFailedUploadQueue queue = _serviceProvider.GetService<IFailedUploadQueue>();
 
             queue.FlushToDisk();
+        }
+
+        private void LoadQueue()
+        {
+            IConfiguration configuration = _serviceProvider.GetService<IConfiguration>();
+
+            if (bool.TryParse(configuration["AutoLoadFailedQueue"], out bool autoUpload) && autoUpload)
+            {
+                IFailedUploadQueue queue = _serviceProvider.GetService<IFailedUploadQueue>();
+                
+                queue.ReadFromDisk();
+            }
         }
     }
 }
